@@ -9,11 +9,14 @@ const TEXT_STYLE: Phaser.Types.GameObjects.Text.TextStyle = {
 };
 
 export class FoundationReadyScene extends Phaser.Scene {
+  private canReturn = false;
+
   constructor() {
     super('FoundationReady');
   }
 
   create(): void {
+    this.canReturn = false;
     this.cameras.main.setBackgroundColor(COLORS.skyLight);
     this.drawBackground();
 
@@ -50,6 +53,11 @@ export class FoundationReadyScene extends Phaser.Scene {
 
     this.createBackButton();
     this.markReady();
+    this.time.delayedCall(500, () => {
+      this.canReturn = true;
+      const shell = document.querySelector<HTMLElement>('#game-shell');
+      if (shell) shell.dataset.inputReady = 'true';
+    });
 
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     this.cameras.main.fadeIn(reducedMotion ? 0 : 220, 234, 246, 239);
@@ -90,6 +98,7 @@ export class FoundationReadyScene extends Phaser.Scene {
     button.add([face, label]);
     button.setSize(440, 124).setInteractive({ useHandCursor: true });
     const goBack = (): void => {
+      if (!this.canReturn) return;
       this.scene.start('Welcome');
     };
     this.input.on(Phaser.Input.Events.POINTER_UP, goBack);

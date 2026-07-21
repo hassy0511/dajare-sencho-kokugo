@@ -268,6 +268,7 @@ export class WelcomeScene extends Phaser.Scene {
     if (shell) {
       shell.dataset.ready = 'true';
       shell.dataset.scene = 'welcome';
+      delete shell.dataset.inputReady;
     }
     if (window.__DSK_APP__) {
       window.__DSK_APP__.ready = true;

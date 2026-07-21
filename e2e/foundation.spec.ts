@@ -33,6 +33,7 @@ test('起動画面から基盤版の完了画面へ進み、タイトルへ戻�
   await expect(page.locator('#game-status')).toHaveText(
     'しゅっぱつの じゅんびが できました。タイトルへ もどれます',
   );
+  await expect(shell).toHaveAttribute('data-input-ready', 'true');
   await page.screenshot({ path: testInfo.outputPath('pr-1-foundation-ready.png'), fullPage: true });
 
   await tapGamePoint(page, canvas, 405, 900);
