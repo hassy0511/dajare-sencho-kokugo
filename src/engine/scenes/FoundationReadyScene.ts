@@ -53,11 +53,6 @@ export class FoundationReadyScene extends Phaser.Scene {
 
     this.createBackButton();
     this.markReady();
-    this.time.delayedCall(500, () => {
-      this.canReturn = true;
-      const shell = document.querySelector<HTMLElement>('#game-shell');
-      if (shell) shell.dataset.inputReady = 'true';
-    });
 
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     this.cameras.main.fadeIn(reducedMotion ? 0 : 220, 234, 246, 239);
@@ -96,14 +91,23 @@ export class FoundationReadyScene extends Phaser.Scene {
       .setOrigin(0.5);
 
     button.add([face, label]);
-    button.setSize(440, 124).setInteractive({ useHandCursor: true });
+    button.setInteractive(
+      new Phaser.Geom.Rectangle(-220, -62, 440, 124),
+      Phaser.Geom.Rectangle.Contains,
+    );
+    button.input!.cursor = 'pointer';
     const goBack = (): void => {
       if (!this.canReturn) return;
       this.scene.start('Welcome');
     };
-    this.input.on(Phaser.Input.Events.POINTER_UP, goBack);
+    this.time.delayedCall(500, () => {
+      this.canReturn = true;
+      button.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, goBack);
+      const shell = document.querySelector<HTMLElement>('#game-shell');
+      if (shell) shell.dataset.inputReady = 'true';
+    });
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
-      this.input.off(Phaser.Input.Events.POINTER_UP, goBack);
+      button.off(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, goBack);
     });
   }
 

@@ -191,7 +191,11 @@ export class WelcomeScene extends Phaser.Scene {
       .setOrigin(0.5);
 
     button.add([shadow, face, label]);
-    button.setSize(500, 142).setInteractive({ useHandCursor: true });
+    button.setInteractive(
+      new Phaser.Geom.Rectangle(-250, -72, 500, 142),
+      Phaser.Geom.Rectangle.Contains,
+    );
+    button.input!.cursor = 'pointer';
 
     button.on(Phaser.Input.Events.GAMEOBJECT_POINTER_DOWN, () => {
       button.setScale(0.96).setY(888);
