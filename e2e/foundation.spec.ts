@@ -1,0 +1,60 @@
+import { expect, test } from '@playwright/test';
+
+test('起動画面が表示され、ボタン操作に反応する', async ({ page }, testInfo) => {
+  await page.goto('./');
+
+  const shell = page.locator('#game-shell');
+  const canvas = page.locator('canvas');
+  await expect(shell).toHaveAttribute('data-ready', 'true');
+  await expect(canvas).toBeVisible();
+  await expect(canvas).toHaveAttribute('width', '810');
+  await expect(canvas).toHaveAttribute('height', '1080');
+
+  await page.screenshot({ path: testInfo.outputPath('pr-1-welcome.png'), fullPage: true });
+
+  await canvas.click({ position: { x: 405, y: 882 } });
+  await expect(shell).toHaveAttribute('data-adventure-started', 'true');
+  await expect(page.locator('#game-status')).toHaveText('ぼうけんの じゅんびが できました');
+});
+
+test('PWAマニフェストとService Workerが有効で、オフライン再起動できる', async ({
+  context,
+  page,
+}) => {
+  await page.goto('./');
+  await expect(page.locator('#game-shell')).toHaveAttribute('data-ready', 'true');
+
+  const manifestResponse = await page.request.get('./manifest.webmanifest');
+  expect(manifestResponse.ok()).toBe(true);
+  const manifest = (await manifestResponse.json()) as { display?: string; orientation?: string };
+  expect(manifest.display).toBe('standalone');
+  expect(manifest.orientation).toBe('portrait');
+
+  await page.evaluate(async () => {
+    await navigator.serviceWorker.ready;
+  });
+  await expect(page.locator('html')).toHaveAttribute('data-offline-ready', 'true', {
+    timeout: 30_000,
+  });
+  await page.goto('./');
+  await page.waitForFunction(() => navigator.serviceWorker.controller !== null);
+
+  const cachedUrls = await page.evaluate(async () => {
+    const cacheNames = await caches.keys();
+    const requests = await Promise.all(
+      cacheNames.map(async (cacheName) => (await caches.open(cacheName)).keys()),
+    );
+    return requests.flat().map((request) => request.url);
+  });
+  expect(
+    cachedUrls.some((url) => new URL(url).pathname.endsWith('/dajare-sencho-kokugo/index.html')),
+  ).toBe(true);
+
+  await context.setOffline(true);
+  // A protocol-level forced reload can intentionally bypass a Service Worker once.
+  // Navigating to the same URL models closing and reopening the installed PWA.
+  await page.goto('./', { waitUntil: 'domcontentloaded' });
+  await expect(page.locator('#game-shell')).toHaveAttribute('data-ready', 'true');
+  await expect(page.locator('canvas')).toBeVisible();
+  await context.setOffline(false);
+});
