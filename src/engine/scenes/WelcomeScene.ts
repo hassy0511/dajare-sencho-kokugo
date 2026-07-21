@@ -203,6 +203,12 @@ export class WelcomeScene extends Phaser.Scene {
       button.setY(882);
       this.showFoundationReady(button, label);
     });
+
+    const advance = (): void => this.showFoundationReady(button, label);
+    this.input.on(Phaser.Input.Events.POINTER_UP, advance);
+    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
+      this.input.off(Phaser.Input.Events.POINTER_UP, advance);
+    });
   }
 
   private showFoundationReady(

@@ -89,7 +89,13 @@ export class FoundationReadyScene extends Phaser.Scene {
 
     button.add([face, label]);
     button.setSize(440, 124).setInteractive({ useHandCursor: true });
-    button.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => this.scene.start('Welcome'));
+    const goBack = (): void => {
+      this.scene.start('Welcome');
+    };
+    this.input.on(Phaser.Input.Events.POINTER_UP, goBack);
+    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
+      this.input.off(Phaser.Input.Events.POINTER_UP, goBack);
+    });
   }
 
   private markReady(): void {
