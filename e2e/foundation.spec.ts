@@ -1,4 +1,20 @@
 import { expect, test } from '@playwright/test';
+import type { Locator, Page } from '@playwright/test';
+
+async function tapGamePoint(
+  page: Page,
+  canvas: Locator,
+  gameX: number,
+  gameY: number,
+): Promise<void> {
+  const box = await canvas.boundingBox();
+  if (!box) throw new Error('ゲームCanvasの表示領域を取得できません。');
+
+  await page.touchscreen.tap(
+    box.x + (box.width * gameX) / 810,
+    box.y + (box.height * gameY) / 1080,
+  );
+}
 
 test('起動画面から基盤版の完了画面へ進み、タイトルへ戻れる', async ({ page }, testInfo) => {
   await page.goto('./');
@@ -12,14 +28,14 @@ test('起動画面から基盤版の完了画面へ進み、タイトルへ戻�
 
   await page.screenshot({ path: testInfo.outputPath('pr-1-welcome.png'), fullPage: true });
 
-  await canvas.click({ position: { x: 405, y: 882 } });
+  await tapGamePoint(page, canvas, 405, 882);
   await expect(shell).toHaveAttribute('data-scene', 'foundation-ready');
   await expect(page.locator('#game-status')).toHaveText(
     'しゅっぱつの じゅんびが できました。タイトルへ もどれます',
   );
   await page.screenshot({ path: testInfo.outputPath('pr-1-foundation-ready.png'), fullPage: true });
 
-  await canvas.click({ position: { x: 405, y: 900 } });
+  await tapGamePoint(page, canvas, 405, 900);
   await expect(shell).toHaveAttribute('data-scene', 'welcome');
 });
 
