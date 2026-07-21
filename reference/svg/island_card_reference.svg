@@ -1,0 +1,25 @@
+<svg viewBox="0 0 160 112" width="100%" height="100%" aria-hidden="true">
+  <rect x="0" y="0" width="160" height="112" fill="#3AA6C9"/>
+  <path d="M0 30 Q20 24 40 30 T80 30 T120 30 T160 30" fill="none" stroke="#FFFDF7" stroke-width="2.5" opacity="0.5" stroke-linecap="round"/>
+  <ellipse cx="80" cy="86" rx="62" ry="22" fill="#EEDFB0" stroke="#3D3323" stroke-width="2.5"/>
+  <path d="M18 86 A62 22 0 0 0 80 108 L80 64 A62 22 0 0 0 18 86 Z" fill="#D8C48E"/>
+  <path d="M46 70 C44 52 48 40 44 30" fill="none" stroke="#8A6543" stroke-width="4" stroke-linecap="round"/>
+  <g stroke="#3D3323" stroke-width="1.5">
+    <path d="M44 30 Q30 24 26 32 Q36 34 44 30" fill="#7FB069"/>
+    <path d="M44 30 Q58 24 62 32 Q52 34 44 30" fill="#7FB069"/>
+    <path d="M44 30 Q36 18 42 14 Q46 24 44 30" fill="#4E7E3F"/>
+  </g>
+  <g stroke="#3D3323" stroke-width="2">
+    <rect x="88" y="62" width="34" height="22" rx="3" fill="#C9622E"/>
+    <path d="M88 62 Q105 52 122 62 L122 68 L88 68 Z" fill="#A84A20"/>
+    <rect x="102" y="64" width="6" height="8" rx="1.5" fill="#F2C14E" stroke-width="1.5"/>
+  </g>
+  <circle cx="76" cy="80" r="6" fill="#F2C14E" stroke="#3D3323" stroke-width="1.5"/>
+  <circle cx="64" cy="86" r="5" fill="#F2C14E" stroke="#3D3323" stroke-width="1.5"/>
+  <g transform="translate(34,84) scale(0.5)">
+    <ellipse cx="0" cy="0" rx="16" ry="11" fill="#E8705A" stroke="#3D3323" stroke-width="3"/>
+    <circle cx="-7" cy="-14" r="5" fill="#FFFDF7" stroke="#3D3323" stroke-width="2.5"/>
+    <circle cx="7" cy="-14" r="5" fill="#FFFDF7" stroke="#3D3323" stroke-width="2.5"/>
+    <circle cx="-6" cy="-14" r="2" fill="#3D3323"/><circle cx="8" cy="-14" r="2" fill="#3D3323"/>
+  </g>
+</svg>

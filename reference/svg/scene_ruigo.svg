@@ -1,0 +1,22 @@
+<svg viewBox="0 0 120 120" width="100%" height="100%" aria-hidden="true">
+  <rect x="0" y="0" width="120" height="120" fill="#1F4E66"/>
+  <path d="M0 104 Q24 96 44 104 T84 104 T120 102 L120 120 L0 120 Z" fill="#173B4E" stroke="#3D3323" stroke-width="2"/>
+  <g stroke="#3D3323" stroke-width="2">
+    <path d="M20 104 Q16 84 24 74 Q26 84 24 90 Q32 78 34 70 Q36 84 30 94 Q36 90 40 84 Q38 98 28 104 Z" fill="#F2A0B4"/>
+    <path d="M20 104 Q16 84 24 74 Q22 88 22 96 Z" fill="#E07A94"/>
+    <path d="M92 104 Q88 88 94 78 Q96 88 94 94 Q100 84 102 76 Q104 90 98 98 Q104 94 106 90 Q104 100 96 104 Z" fill="#E8934A"/>
+    <path d="M92 104 Q88 88 94 78 Q92 92 92 98 Z" fill="#C9622E"/>
+  </g>
+  <ellipse class="bd-arch" cx="60" cy="64" rx="24" ry="14" fill="#7EE0D0" opacity="0"/>
+  <g stroke="#3D3323" stroke-width="2">
+    <path d="M38 64 Q48 54 56 64 Q48 74 38 64 Z" fill="#F2C14E"/>
+    <path d="M38 64 Q43 59 48 58 L48 70 Q43 69 38 64 Z" fill="#D4A63C"/>
+    <path d="M38 64 L32 58 L32 70 Z" fill="#D4A63C"/>
+    <path d="M82 64 Q72 54 64 64 Q72 74 82 64 Z" fill="#F2C14E"/>
+    <path d="M82 64 Q77 59 72 58 L72 70 Q77 69 82 64 Z" fill="#D4A63C"/>
+    <path d="M82 64 L88 58 L88 70 Z" fill="#D4A63C"/>
+  </g>
+  <circle cx="51" cy="62" r="1.8" fill="#3D3323"/>
+  <circle cx="69" cy="62" r="1.8" fill="#3D3323"/>
+  <circle cx="60" cy="42" r="2.5" fill="#7EE0D0"/><circle cx="56" cy="32" r="2" fill="#7EE0D0"/><circle cx="64" cy="24" r="2" fill="#7EE0D0"/>
+</svg>

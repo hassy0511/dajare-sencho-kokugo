@@ -1,0 +1,15 @@
+<svg viewBox="0 0 120 120" width="100%" height="100%" aria-hidden="true">
+  <rect x="0" y="0" width="120" height="120" fill="#E4F0DC"/>
+  <rect x="0" y="92" width="120" height="28" fill="#9DBB7E"/>
+  <ellipse class="bd-arch" cx="60" cy="70" rx="14" ry="20" fill="#F5C56B" opacity="0"/>
+  <path d="M24 92 L30 52 L36 92 Z" fill="#8A6543" stroke="#3D3323" stroke-width="2"/>
+  <ellipse cx="30" cy="42" rx="22" ry="18" fill="#7FB069" stroke="#3D3323" stroke-width="2"/>
+  <path d="M14 46 A22 18 0 0 0 30 60 L30 24 A22 18 0 0 0 14 46Z" fill="#4E7E3F"/>
+  <path d="M84 92 L90 46 L96 92 Z" fill="#8A6543" stroke="#3D3323" stroke-width="2"/>
+  <ellipse cx="90" cy="36" rx="24" ry="20" fill="#7FB069" stroke="#3D3323" stroke-width="2"/>
+  <path d="M72 40 A24 20 0 0 0 90 56 L90 16 A24 20 0 0 0 72 40Z" fill="#4E7E3F"/>
+  <ellipse cx="48" cy="100" rx="5" ry="6" fill="#B07B4A" stroke="#3D3323" stroke-width="1.5"/>
+  <path d="M43 97 Q48 92 53 97" fill="#8A6543" stroke="#3D3323" stroke-width="1.5"/>
+  <ellipse cx="70" cy="102" rx="6" ry="4" fill="#D96A52" stroke="#3D3323" stroke-width="1.5"/>
+  <rect x="68" y="102" width="4" height="6" fill="#F1E6C8" stroke="#3D3323" stroke-width="1.5"/>
+</svg>

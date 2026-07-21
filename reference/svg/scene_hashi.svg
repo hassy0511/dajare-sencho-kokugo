@@ -1,0 +1,19 @@
+<svg viewBox="0 0 120 120" width="100%" height="100%" aria-hidden="true">
+  <rect x="0" y="0" width="120" height="120" fill="#E9DFC4"/>
+  <path d="M0 120 L0 66 Q16 60 24 66 L24 120 Z" fill="#A89A80" stroke="#3D3323" stroke-width="2"/>
+  <path d="M120 120 L120 66 Q104 60 96 66 L96 120 Z" fill="#A89A80" stroke="#3D3323" stroke-width="2"/>
+  <path d="M10 26 A50 50 0 0 1 110 26" fill="none" stroke="#E8705A" stroke-width="6"/>
+  <path d="M16 32 A44 44 0 0 1 104 32" fill="none" stroke="#F2C14E" stroke-width="6"/>
+  <path d="M22 38 A38 38 0 0 1 98 38" fill="none" stroke="#5B9FC4" stroke-width="6"/>
+  <path d="M24 70 Q60 84 96 70" fill="none" stroke="#8A6543" stroke-width="3"/>
+  <g fill="#B07B4A" stroke="#3D3323" stroke-width="1.5">
+    <rect x="30" y="72" width="10" height="6" rx="1" transform="rotate(6 35 75)"/>
+    <rect x="44" y="76" width="10" height="6" rx="1" transform="rotate(3 49 79)"/>
+    <rect x="58" y="77" width="10" height="6" rx="1"/>
+    <rect x="72" y="75" width="10" height="6" rx="1" transform="rotate(-4 77 78)"/>
+    <rect x="84" y="72" width="10" height="6" rx="1" transform="rotate(-7 89 75)"/>
+  </g>
+  <path d="M24 66 Q60 78 96 66" fill="none" stroke="#6E4A28" stroke-width="2"/>
+  <ellipse class="bd-arch" cx="60" cy="76" rx="14" ry="8" fill="#F5C56B" opacity="0"/>
+  <path d="M70 46 Q78 42 80 34 Q72 36 70 46Z" fill="#8E7BC4" stroke="#3D3323" stroke-width="1.5"/>
+</svg>

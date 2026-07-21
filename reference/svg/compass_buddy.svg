@@ -1,0 +1,19 @@
+<svg viewBox="0 0 100 100" width="100" height="100" aria-hidden="true">
+  <circle cx="50" cy="50" r="46" fill="#D4A63C" stroke="#3D3323" stroke-width="2.5"/>
+  <circle cx="50" cy="50" r="38" fill="#F5EEDC" stroke="#3D3323" stroke-width="1.5"/>
+  <g stroke="#6B5D48" stroke-width="2" stroke-linecap="round">
+    <line x1="50" y1="14" x2="50" y2="20"/><line x1="86" y1="50" x2="80" y2="50"/>
+    <line x1="50" y1="86" x2="50" y2="80"/><line x1="14" y1="50" x2="20" y2="50"/>
+  </g>
+  <g class="bd-needle"><path d="M50 22 L56 50 L50 58 L44 50 Z" fill="#C9622E" stroke="#3D3323" stroke-width="1.5"/></g>
+  <g class="bd-face bd-face-normal"><circle cx="42" cy="64" r="3" fill="#3D3323"/><circle cx="58" cy="64" r="3" fill="#3D3323"/></g>
+  <g class="bd-face bd-face-happy" style="display:none">
+    <path d="M38 63 Q42 67 46 63" fill="none" stroke="#3D3323" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M54 63 Q58 67 62 63" fill="none" stroke="#3D3323" stroke-width="2.5" stroke-linecap="round"/></g>
+  <g class="bd-face bd-face-oops" style="display:none">
+    <path d="M38 65 L46 62" fill="none" stroke="#3D3323" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M62 65 L54 62" fill="none" stroke="#3D3323" stroke-width="2.5" stroke-linecap="round"/></g>
+  <g class="bd-face bd-face-super" style="display:none">
+    <path d="M42 60 l1.8 3.6 4 .6 -2.9 2.8 .7 4 -3.6 -1.9 -3.6 1.9 .7 -4 -2.9 -2.8 4 -.6z" fill="#E8934A"/>
+    <path d="M58 60 l1.8 3.6 4 .6 -2.9 2.8 .7 4 -3.6 -1.9 -3.6 1.9 .7 -4 -2.9 -2.8 4 -.6z" fill="#E8934A"/></g>
+</svg>
