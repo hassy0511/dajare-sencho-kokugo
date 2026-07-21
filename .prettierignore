@@ -1,0 +1,11 @@
+dist
+coverage
+node_modules
+playwright-report
+test-results
+public/assets/fonts/*.woff
+public/icons/*.png
+reference
+AGENTS.md
+CLAUDE.md
+docs

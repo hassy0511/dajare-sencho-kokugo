@@ -4,7 +4,7 @@
 
 ## ステータス
 
-**設計完了・実装着手前。** 実装エージェントは `AGENTS.md` から読み始めること。
+**PR-1 プロジェクト基盤を実装済み。** Phaser 起動画面、PWA、CI/CD、フォント、Vitest、Playwright が動作する。次は `docs/09_implementation_plan.md` の PR-2。
 
 ## コンセプト
 
@@ -19,14 +19,20 @@
 AGENTS.md      # AIエージェント向け指示書(最初に読む)
 docs/          # 設計書一式(00〜09、番号順)
 reference/     # bouken-drill から抽出した移植素材(参照専用)
-src/           # ゲーム本体(実装フェーズで作成)
+src/           # Phaser ゲーム本体
+public/        # PWAアイコン・同梱フォント等
+scripts/       # アイコン・フォント生成
+tests/         # Vitest ユニットテスト
+e2e/           # Playwright E2E・スクリーンショット
 ```
 
-## 開発(実装フェーズで確定)
+## 開発
 
 ```bash
-npm install
+npm install           # Node.js 22 / npm 10
 npm run dev        # 開発サーバ
+npm run lint       # ESLint
+npm run typecheck  # TypeScript strict
 npm run test       # ユニットテスト(Vitest)
 npm run e2e        # E2E+スクリーンショット(Playwright)
 npm run build      # 本番ビルド → GitHub Actions で GitHub Pages へ自動デプロイ
