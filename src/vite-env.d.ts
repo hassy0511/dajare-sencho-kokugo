@@ -4,7 +4,6 @@
 interface Window {
   __DSK_APP__?: {
     ready: boolean;
-    adventureStarted: boolean;
     scene: string;
   };
 }

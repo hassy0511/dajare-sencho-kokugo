@@ -14,7 +14,6 @@ async function start(): Promise<void> {
 
   window.__DSK_APP__ = {
     ready: false,
-    adventureStarted: false,
     scene: 'boot',
   };
 

@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 
-test('起動画面が表示され、ボタン操作に反応する', async ({ page }, testInfo) => {
+test('起動画面から基盤版の完了画面へ進み、タイトルへ戻れる', async ({ page }, testInfo) => {
   await page.goto('./');
 
   const shell = page.locator('#game-shell');
@@ -13,8 +13,14 @@ test('起動画面が表示され、ボタン操作に反応する', async ({ pa
   await page.screenshot({ path: testInfo.outputPath('pr-1-welcome.png'), fullPage: true });
 
   await canvas.click({ position: { x: 405, y: 882 } });
-  await expect(shell).toHaveAttribute('data-adventure-started', 'true');
-  await expect(page.locator('#game-status')).toHaveText('ぼうけんの じゅんびが できました');
+  await expect(shell).toHaveAttribute('data-scene', 'foundation-ready');
+  await expect(page.locator('#game-status')).toHaveText(
+    'しゅっぱつの じゅんびが できました。タイトルへ もどれます',
+  );
+  await page.screenshot({ path: testInfo.outputPath('pr-1-foundation-ready.png'), fullPage: true });
+
+  await canvas.click({ position: { x: 405, y: 900 } });
+  await expect(shell).toHaveAttribute('data-scene', 'welcome');
 });
 
 test('PWAマニフェストとService Workerが有効で、オフライン再起動できる', async ({
