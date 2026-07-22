@@ -9,5 +9,8 @@ interface Window {
     answerIndex?: number;
     score?: number;
     stars?: number;
+    storyPage?: number;
+    islandId?: string;
+    stageId?: string;
   };
 }

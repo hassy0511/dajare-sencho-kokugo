@@ -7,6 +7,8 @@ import { COLORS, GAME_FONT, GAME_HEIGHT, GAME_WIDTH } from '../constants';
 import { ChoiceQType } from '../qtypes/ChoiceQType';
 
 export class QuizScene extends Phaser.Scene {
+  private islandId = 'g1-moji';
+  private stageId = 'g1-moji-seion';
   private questions: ChoiceQuestion[] = [];
   private questionIndex = 0;
   private score = 0;
@@ -21,11 +23,19 @@ export class QuizScene extends Phaser.Scene {
     super('Quiz');
   }
 
+  init(data: { islandId?: string; stageId?: string }): void {
+    this.islandId = data.islandId ?? 'g1-moji';
+    this.stageId = data.stageId ?? 'g1-moji-seion';
+  }
+
   create(): void {
     const sea = loadSea();
     const pool = loadHiraWordPool();
-    const stage = sea.islands[0]?.stages[0];
-    if (!stage) throw new Error('最初のステージが見つかりません。');
+    const stage = sea.islands
+      .find((island) => island.id === this.islandId)
+      ?.stages.find((candidate) => candidate.id === this.stageId);
+    if (!stage) throw new Error(`ステージが見つかりません: ${this.stageId}`);
+    if (!stage.gen) throw new Error('このステージの問題はまだ準備中です。');
     this.questions = questionGenerators[stage.gen](pool.items, stage.n, Date.now());
     this.questionIndex = 0;
     this.score = 0;
@@ -181,7 +191,7 @@ export class QuizScene extends Phaser.Scene {
       shell.dataset.inputReady = 'true';
     }
     if (status)
-      status.textContent = `${this.questionIndex + 1}もんめ。${question.emphasis}の はじめの もじを えらびます`;
+      status.textContent = `${this.questionIndex + 1}もんめ。えに あう ことばを えらびます`;
     if (window.__DSK_APP__) {
       window.__DSK_APP__.ready = true;
       window.__DSK_APP__.scene = 'quiz';
@@ -195,7 +205,16 @@ export class QuizScene extends Phaser.Scene {
     this.choiceType?.destroy();
     const shell = document.querySelector<HTMLElement>('#game-shell');
     if (shell) delete shell.dataset.inputReady;
-    this.scene.start('Result', { score: this.score, total: this.questions.length });
+    const stage = loadSea()
+      .islands.find((island) => island.id === this.islandId)
+      ?.stages.find((candidate) => candidate.id === this.stageId);
+    this.scene.start('Result', {
+      score: this.score,
+      total: this.questions.length,
+      islandId: this.islandId,
+      stageId: this.stageId,
+      treasure: stage?.treasure ?? 'ひかりの ひらがなたま',
+    });
   }
 
   private cleanup(): void {

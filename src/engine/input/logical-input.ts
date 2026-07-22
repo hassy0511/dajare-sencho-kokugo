@@ -18,11 +18,11 @@ export function addGameTapListener(
   surface: HTMLElement,
   onTap: (point: LogicalPoint) => void,
 ): () => void {
-  let lastTouchAt = 0;
+  let lastTapAt = 0;
   const handle = (event: Event): void => {
     const now = Date.now();
-    if (event.type === 'touchstart') lastTouchAt = now;
-    if (event.type === 'pointerdown' && now - lastTouchAt < 500) return;
+    if (now - lastTapAt < 250) return;
+    lastTapAt = now;
     const point = clientPoint(event);
     if (!point) return;
     const box = surface.getBoundingClientRect();

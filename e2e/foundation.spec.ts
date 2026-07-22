@@ -16,7 +16,8 @@ async function tapGamePoint(
   );
 }
 
-test('起動画面から10問に全問正解し、結果を保存してタイトルへ戻れる', async ({ page }, testInfo) => {
+test('物語と選択画面を通り、絵を読む8問をクリアしてマップへ戻れる', async ({ page }, testInfo) => {
+  await page.addInitScript(() => localStorage.clear());
   await page.goto('./');
 
   const shell = page.locator('#game-shell');
@@ -29,6 +30,32 @@ test('起動画面から10問に全問正解し、結果を保存してタイト
   await page.screenshot({ path: testInfo.outputPath('welcome.png'), fullPage: true });
 
   await tapGamePoint(page, canvas, 405, 882);
+  await expect(shell).toHaveAttribute('data-scene', 'sea-select');
+  await page.screenshot({ path: testInfo.outputPath('sea-select.png'), fullPage: true });
+
+  await tapGamePoint(page, canvas, 405, 315);
+  await expect(shell).toHaveAttribute('data-scene', 'challenge-story');
+  await page.screenshot({ path: testInfo.outputPath('challenge-story.png'), fullPage: true });
+  await tapGamePoint(page, canvas, 405, 910);
+  await expect.poll(() => page.evaluate(() => window.__DSK_APP__?.storyPage)).toBe(1);
+  await tapGamePoint(page, canvas, 405, 910);
+  await expect.poll(() => page.evaluate(() => window.__DSK_APP__?.storyPage)).toBe(2);
+  await tapGamePoint(page, canvas, 405, 910);
+  await expect(shell).toHaveAttribute('data-scene', 'island-select');
+  await page.screenshot({ path: testInfo.outputPath('island-select.png'), fullPage: true });
+
+  await tapGamePoint(page, canvas, 220, 315);
+  await expect(shell).toHaveAttribute('data-scene', 'island-map');
+  await expect(shell).toHaveAttribute('data-island', 'g1-moji');
+  await page.screenshot({ path: testInfo.outputPath('moji-island-map.png'), fullPage: true });
+
+  await tapGamePoint(page, canvas, 590, 245);
+  await expect(page.locator('#game-status')).toHaveText(/じゅんびちゅう/);
+  await tapGamePoint(page, canvas, 220, 245);
+  await expect(shell).toHaveAttribute('data-scene', 'stage-intro');
+  await page.screenshot({ path: testInfo.outputPath('stage-intro.png'), fullPage: true });
+
+  await tapGamePoint(page, canvas, 405, 835);
   await expect(shell).toHaveAttribute('data-scene', 'quiz');
   await expect(shell).toHaveAttribute('data-input-ready', 'true');
   await page.screenshot({ path: testInfo.outputPath('quiz-first-question.png'), fullPage: true });
@@ -39,13 +66,13 @@ test('起動画面から10問に全問正解し、結果を保存してタイト
     { x: 220, y: 855 },
     { x: 590, y: 855 },
   ];
-  for (let index = 0; index < 10; index += 1) {
+  for (let index = 0; index < 8; index += 1) {
     const answer = await page.evaluate(() => window.__DSK_APP__?.answerIndex);
     if (answer === undefined) throw new Error(`${index + 1}問目の正解位置を取得できません。`);
     const center = centers[answer];
     if (!center) throw new Error(`正解位置 ${answer} が選択肢の範囲外です。`);
     await tapGamePoint(page, canvas, center.x, center.y);
-    if (index < 9) await expect(shell).toHaveAttribute('data-question', String(index + 1));
+    if (index < 7) await expect(shell).toHaveAttribute('data-question', String(index + 1));
   }
 
   await expect(shell).toHaveAttribute('data-scene', 'result');
@@ -55,11 +82,18 @@ test('起動画面から10問に全問正解し、結果を保存してタイト
   await page.screenshot({ path: testInfo.outputPath('result-three-stars.png'), fullPage: true });
 
   await tapGamePoint(page, canvas, 580, 790);
-  await expect(shell).toHaveAttribute('data-scene', 'welcome');
+  await expect(shell).toHaveAttribute('data-scene', 'island-map');
+  await expect(shell).toHaveAttribute('data-island', 'g1-moji');
 });
 
 test('横長画面でもCanvas全体が収まり、下部の操作へ進める', async ({ page }, testInfo) => {
   await page.setViewportSize({ width: 1280, height: 720 });
+  await page.addInitScript(() => {
+    localStorage.setItem(
+      'dsk_state',
+      JSON.stringify({ v: 1, stages: {}, seen: { 'challenge:g1': true } }),
+    );
+  });
   await page.goto('./');
 
   const shell = page.locator('#game-shell');
@@ -77,20 +111,11 @@ test('横長画面でもCanvas全体が収まり、下部の操作へ進める',
     fullPage: true,
   });
   await tapGamePoint(page, canvas, 405, 882);
-  await expect(shell).toHaveAttribute('data-scene', 'quiz');
-  const answer = await page.evaluate(() => window.__DSK_APP__?.answerIndex);
-  if (answer === undefined) throw new Error('正解位置を取得できません。');
-  const wrongAnswer = (answer + 1) % 4;
-  const centers = [
-    { x: 220, y: 680 },
-    { x: 590, y: 680 },
-    { x: 220, y: 855 },
-    { x: 590, y: 855 },
-  ];
-  const wrongCenter = centers[wrongAnswer];
-  if (!wrongCenter) throw new Error('不正解位置が選択肢の範囲外です。');
-  await tapGamePoint(page, canvas, wrongCenter.x, wrongCenter.y);
-  await expect(page.locator('#game-status')).toHaveText(/^おしい!/);
+  await expect(shell).toHaveAttribute('data-scene', 'sea-select');
+  await tapGamePoint(page, canvas, 405, 315);
+  await expect(shell).toHaveAttribute('data-scene', 'island-select');
+  await tapGamePoint(page, canvas, 220, 315);
+  await expect(shell).toHaveAttribute('data-scene', 'island-map');
 });
 
 test('PWAマニフェストとService Workerが有効で、オフライン再起動できる', async ({

@@ -7,6 +7,9 @@ import { recordStageResult } from '../save/state';
 interface ResultData {
   score?: number;
   total?: number;
+  islandId?: string;
+  stageId?: string;
+  treasure?: string;
 }
 
 export function starsForResult(score: number, total: number): number {
@@ -20,6 +23,9 @@ export function starsForResult(score: number, total: number): number {
 export class ResultScene extends Phaser.Scene {
   private score = 0;
   private total = 10;
+  private islandId = 'g1-moji';
+  private stageId = 'g1-moji-seion';
+  private treasure = 'ひかりの ひらがなたま';
   private cleanupInput?: () => void;
   private leaving = false;
 
@@ -30,12 +36,15 @@ export class ResultScene extends Phaser.Scene {
   init(data: ResultData): void {
     this.score = data.score ?? 0;
     this.total = data.total ?? 10;
+    this.islandId = data.islandId ?? 'g1-moji';
+    this.stageId = data.stageId ?? 'g1-moji-seion';
+    this.treasure = data.treasure ?? 'ひかりの ひらがなたま';
     this.leaving = false;
   }
 
   create(): void {
     const stars = starsForResult(this.score, this.total);
-    recordStageResult('g1-moji-seion', this.score, this.total, stars);
+    recordStageResult(this.stageId, this.score, this.total, stars);
     this.drawResult(stars);
     this.bindButtons();
     this.markReady(stars);
@@ -74,7 +83,7 @@ export class ResultScene extends Phaser.Scene {
     this.add
       .text(
         405,
-        550,
+        535,
         stars === 3 ? 'ぜんぶ よめたね!\nことばの おたから はっけん!' : 'ことばを よく みつけたね!',
         {
           fontFamily: GAME_FONT,
@@ -86,8 +95,16 @@ export class ResultScene extends Phaser.Scene {
         },
       )
       .setOrigin(0.5);
+    this.add
+      .text(405, 650, stars > 0 ? this.treasure : 'つぎは きっと みつかるよ!', {
+        fontFamily: GAME_FONT,
+        color: '#9b3f41',
+        fontSize: '25px',
+        fontStyle: 'bold',
+      })
+      .setOrigin(0.5);
     this.drawButton(230, 790, 'もういちど', COLORS.coral, COLORS.coralDark);
-    this.drawButton(580, 790, 'タイトルへ', COLORS.green, COLORS.greenDark);
+    this.drawButton(580, 790, 'マップへ', COLORS.green, COLORS.greenDark);
   }
 
   private drawButton(x: number, y: number, label: string, fill: number, shadow: number): void {
@@ -115,14 +132,14 @@ export class ResultScene extends Phaser.Scene {
     this.cleanupInput = addGameTapListener(surface, ({ x, y }) => {
       if (this.leaving || Math.abs(y - 790) > 75) return;
       if (Math.abs(x - 230) <= 165) this.leaveFor('Quiz');
-      else if (Math.abs(x - 580) <= 165) this.leaveFor('Welcome');
+      else if (Math.abs(x - 580) <= 165) this.leaveFor('IslandMap');
     });
   }
 
-  private leaveFor(scene: 'Quiz' | 'Welcome'): void {
+  private leaveFor(scene: 'Quiz' | 'IslandMap'): void {
     this.leaving = true;
     this.cleanupInput?.();
-    this.scene.start(scene);
+    this.scene.start(scene, { islandId: this.islandId, stageId: this.stageId });
   }
 
   private markReady(stars: number): void {

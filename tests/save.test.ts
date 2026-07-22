@@ -13,7 +13,7 @@ function memoryStorage(): Pick<Storage, 'getItem' | 'setItem'> {
 describe('進行保存', () => {
   it('不正な保存値では初期状態へ戻る', () => {
     const storage = { getItem: () => '{not-json' };
-    expect(loadState(storage)).toEqual({ v: 1, stages: {} });
+    expect(loadState(storage)).toEqual({ v: 1, stages: {}, seen: {} });
   });
 
   it('自己ベストを下げずにクリア状態を保存する', () => {

@@ -241,7 +241,10 @@ export class WelcomeScene extends Phaser.Scene {
     const fadeTimer = window.setTimeout(
       () => {
         this.cameras.main.fadeOut(reducedMotion ? 0 : 220, 234, 246, 239);
-        sceneTimer = window.setTimeout(() => this.scene.start('Quiz'), reducedMotion ? 0 : 220);
+        sceneTimer = window.setTimeout(
+          () => this.scene.start('SeaSelect'),
+          reducedMotion ? 0 : 220,
+        );
       },
       reducedMotion ? 0 : 420,
     );
