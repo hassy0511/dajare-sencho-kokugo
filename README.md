@@ -4,7 +4,7 @@
 
 ## ステータス
 
-**PR-1 プロジェクト基盤を実装済み。** Phaser 起動画面、PWA、CI/CD、フォント、Vitest、Playwright が動作する。次は `docs/09_implementation_plan.md` の PR-2。
+**PR-2 の遊べる縦切りを実装済み。** 「ひらがなの すなはま」で10問の4択クイズ、正誤演出、星評価、進捗保存、再挑戦まで遊べる。Phaser、PWA、CI/CD、Vitest、Playwright も動作する。
 
 ## コンセプト
 

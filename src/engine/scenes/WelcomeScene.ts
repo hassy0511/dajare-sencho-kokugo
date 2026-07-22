@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 
 import { COLORS, GAME_FONT, GAME_HEIGHT, GAME_TITLE, GAME_WIDTH, SAFE_AREA } from '../constants';
+import { addGameTapListener } from '../input/logical-input';
 
 const TEXT_STYLE: Phaser.Types.GameObjects.Text.TextStyle = {
   fontFamily: GAME_FONT,
@@ -183,7 +184,7 @@ export class WelcomeScene extends Phaser.Scene {
     face.strokeRoundedRect(-250, -72, 500, 132, 32);
 
     const label = this.add
-      .text(0, -8, 'いまの ばんを みる', {
+      .text(0, -8, 'ぼうけんを はじめる', {
         ...TEXT_STYLE,
         color: '#fff7d0',
         fontSize: '34px',
@@ -204,25 +205,18 @@ export class WelcomeScene extends Phaser.Scene {
     button.on(Phaser.Input.Events.GAMEOBJECT_POINTER_OUT, () => {
       button.setScale(1).setY(882);
     });
-    const inputSurface = this.game.canvas.parentElement ?? this.game.canvas;
-    const advance = (): void => {
-      this.showFoundationReady(button, label);
-    };
-    inputSurface.addEventListener('pointerdown', advance, true);
-    inputSurface.addEventListener('pointerup', advance, true);
-    inputSurface.addEventListener('touchstart', advance, true);
-    inputSurface.addEventListener('touchend', advance, true);
-    inputSurface.addEventListener('click', advance, true);
+    const inputSurface = this.game.canvas;
+    const cleanupInput = addGameTapListener(inputSurface, ({ x, y }) => {
+      if (Math.abs(x - GAME_WIDTH / 2) <= 260 && Math.abs(y - 882) <= 80) {
+        this.startAdventure(button, label);
+      }
+    });
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
-      inputSurface.removeEventListener('pointerdown', advance, true);
-      inputSurface.removeEventListener('pointerup', advance, true);
-      inputSurface.removeEventListener('touchstart', advance, true);
-      inputSurface.removeEventListener('touchend', advance, true);
-      inputSurface.removeEventListener('click', advance, true);
+      cleanupInput();
     });
   }
 
-  private showFoundationReady(
+  private startAdventure(
     button: Phaser.GameObjects.Container,
     label: Phaser.GameObjects.Text,
   ): void {
@@ -247,10 +241,7 @@ export class WelcomeScene extends Phaser.Scene {
     const fadeTimer = window.setTimeout(
       () => {
         this.cameras.main.fadeOut(reducedMotion ? 0 : 220, 234, 246, 239);
-        sceneTimer = window.setTimeout(
-          () => this.scene.start('FoundationReady'),
-          reducedMotion ? 0 : 220,
-        );
+        sceneTimer = window.setTimeout(() => this.scene.start('Quiz'), reducedMotion ? 0 : 220);
       },
       reducedMotion ? 0 : 420,
     );
@@ -286,7 +277,7 @@ export class WelcomeScene extends Phaser.Scene {
   private markReady(): void {
     const status = document.querySelector<HTMLElement>('#game-status');
     const shell = document.querySelector<HTMLElement>('#game-shell');
-    if (status) status.textContent = 'いまの ばんを みる ボタンが あります';
+    if (status) status.textContent = 'ぼうけんを はじめる ボタンが あります';
     if (shell) {
       shell.dataset.ready = 'true';
       shell.dataset.scene = 'welcome';

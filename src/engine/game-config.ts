@@ -2,8 +2,9 @@ import Phaser from 'phaser';
 
 import { GAME_HEIGHT, GAME_WIDTH } from './constants';
 import { BootScene } from './scenes/BootScene';
-import { FoundationReadyScene } from './scenes/FoundationReadyScene';
 import { PreloadScene } from './scenes/PreloadScene';
+import { QuizScene } from './scenes/QuizScene';
+import { ResultScene } from './scenes/ResultScene';
 import { WelcomeScene } from './scenes/WelcomeScene';
 
 export function createGameConfig(parent: HTMLElement): Phaser.Types.Core.GameConfig {
@@ -30,6 +31,6 @@ export function createGameConfig(parent: HTMLElement): Phaser.Types.Core.GameCon
         capture: true,
       },
     },
-    scene: [BootScene, PreloadScene, WelcomeScene, FoundationReadyScene],
+    scene: [BootScene, PreloadScene, WelcomeScene, QuizScene, ResultScene],
   };
 }
