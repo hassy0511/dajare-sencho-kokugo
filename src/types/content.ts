@@ -64,7 +64,7 @@ export interface IslandDefinition {
 
 export interface StoryPage {
   speaker: string;
-  role: 'captain' | 'sumizo' | 'buddy';
+  role: 'dajare-sencho' | 'sumizo' | 'buddy';
   text: string;
 }
 

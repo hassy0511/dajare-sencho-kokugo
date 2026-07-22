@@ -6,7 +6,7 @@
 |---|---|---|
 | `words_kokugo.json` | 国語プール: 漢字1年80字(g1a/g1b)・カタカナ語60(kanji.kana)・反対語60・助数詞32・短文読解25・類義語30 | `docs/05` のスキーマへ変換して `data/` に配置。反対語・類義語は2年生用に温存 |
 | `gen_functions_reference.js` | 国語系出題ロジックの参考実装(4択生成・重複防止キーの考え方) | TypeScript の gen 関数へ移植する際の仕様参照 |
-| `svg/captain_dajare.svg` | キャプテン・ダジャーレ(表情3種を `dj-face-*` グループで内包) | そのまま利用可 |
+| `svg/captain_dajare.svg` | ダジャーレせんちょうの旧素材(ファイル名は移植元のまま。表情3種を `dj-face-*` グループで内包) | 参照専用 |
 | `svg/compass_buddy.svg` | 相棒コンパス(表情4種 `bd-face-*`、針 `bd-needle`) | そのまま利用可 |
 | `svg/hench_hasamy_reference.svg` | 前作の子分ハサミー | **新キャラ(スミゾー等)を描く際の品質・構造見本**(本作には登場しない) |
 | `svg/scene_*.svg` | 国語系ステージのシーン絵(いせき/しんでん/はし/かぞえ/よみ/るいご/もり) | マップノード絵として流用 |

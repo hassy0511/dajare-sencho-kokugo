@@ -35,7 +35,7 @@ export const seaSchema = z.object({
     .array(
       z.object({
         speaker: z.string().min(1),
-        role: z.enum(['captain', 'sumizo', 'buddy']),
+        role: z.enum(['dajare-sencho', 'sumizo', 'buddy']),
         text: z.string().min(1),
       }),
     )

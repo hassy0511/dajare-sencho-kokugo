@@ -60,7 +60,12 @@ export class ChallengeStoryScene extends Phaser.Scene {
     const speaker = this.add
       .text(405, 555, page.speaker, {
         fontFamily: GAME_FONT,
-        color: page.role === 'captain' ? '#9b3f41' : page.role === 'sumizo' ? '#60467d' : '#176b72',
+        color:
+          page.role === 'dajare-sencho'
+            ? '#9b3f41'
+            : page.role === 'sumizo'
+              ? '#60467d'
+              : '#176b72',
         fontSize: '27px',
         fontStyle: 'bold',
       })
