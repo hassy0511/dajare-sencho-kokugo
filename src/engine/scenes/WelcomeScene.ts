@@ -16,6 +16,7 @@ export class WelcomeScene extends Phaser.Scene {
   }
 
   create(): void {
+    this.started = false;
     this.drawWorld();
 
     const ship = this.drawShip();
@@ -203,15 +204,21 @@ export class WelcomeScene extends Phaser.Scene {
     button.on(Phaser.Input.Events.GAMEOBJECT_POINTER_OUT, () => {
       button.setScale(1).setY(882);
     });
-    button.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => {
-      button.setY(882);
+    const inputSurface = this.game.canvas.parentElement ?? this.game.canvas;
+    const advance = (): void => {
       this.showFoundationReady(button, label);
-    });
-
-    const advance = (): void => this.showFoundationReady(button, label);
-    this.input.on(Phaser.Input.Events.POINTER_UP, advance);
+    };
+    inputSurface.addEventListener('pointerdown', advance, true);
+    inputSurface.addEventListener('pointerup', advance, true);
+    inputSurface.addEventListener('touchstart', advance, true);
+    inputSurface.addEventListener('touchend', advance, true);
+    inputSurface.addEventListener('click', advance, true);
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
-      this.input.off(Phaser.Input.Events.POINTER_UP, advance);
+      inputSurface.removeEventListener('pointerdown', advance, true);
+      inputSurface.removeEventListener('pointerup', advance, true);
+      inputSurface.removeEventListener('touchstart', advance, true);
+      inputSurface.removeEventListener('touchend', advance, true);
+      inputSurface.removeEventListener('click', advance, true);
     });
   }
 
@@ -236,9 +243,20 @@ export class WelcomeScene extends Phaser.Scene {
     if (status) status.textContent = 'つぎの がめんへ すすみます';
 
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    this.time.delayedCall(reducedMotion ? 0 : 420, () => {
-      this.cameras.main.fadeOut(reducedMotion ? 0 : 220, 234, 246, 239);
-      this.time.delayedCall(reducedMotion ? 0 : 220, () => this.scene.start('FoundationReady'));
+    let sceneTimer: number | undefined;
+    const fadeTimer = window.setTimeout(
+      () => {
+        this.cameras.main.fadeOut(reducedMotion ? 0 : 220, 234, 246, 239);
+        sceneTimer = window.setTimeout(
+          () => this.scene.start('FoundationReady'),
+          reducedMotion ? 0 : 220,
+        );
+      },
+      reducedMotion ? 0 : 420,
+    );
+    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
+      window.clearTimeout(fadeTimer);
+      if (sceneTimer !== undefined) window.clearTimeout(sceneTimer);
     });
   }
 

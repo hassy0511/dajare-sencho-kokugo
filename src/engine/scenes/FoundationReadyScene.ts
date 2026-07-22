@@ -93,24 +93,33 @@ export class FoundationReadyScene extends Phaser.Scene {
       Phaser.Geom.Rectangle.Contains,
     );
     button.input!.cursor = 'pointer';
-    let pressedAfterReady = false;
+    const inputSurface = this.game.canvas.parentElement ?? this.game.canvas;
+    let armed = false;
+    let returning = false;
+    let returnTimer: number | undefined;
     const armBack = (): void => {
-      pressedAfterReady = true;
+      armed = true;
     };
     const goBack = (): void => {
-      if (!pressedAfterReady) return;
-      pressedAfterReady = false;
-      this.scene.start('Welcome');
+      if (!armed || returning) return;
+      returning = true;
+      returnTimer = window.setTimeout(() => this.scene.start('Welcome'), 400);
     };
-    this.time.delayedCall(500, () => {
-      this.input.on(Phaser.Input.Events.POINTER_DOWN, armBack);
-      this.input.on(Phaser.Input.Events.POINTER_UP, goBack);
+    const readyTimer = window.setTimeout(() => {
+      inputSurface.addEventListener('pointerdown', armBack, true);
+      inputSurface.addEventListener('pointerup', goBack, true);
+      inputSurface.addEventListener('touchstart', armBack, true);
+      inputSurface.addEventListener('touchend', goBack, true);
       const shell = document.querySelector<HTMLElement>('#game-shell');
       if (shell) shell.dataset.inputReady = 'true';
-    });
+    }, 500);
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
-      this.input.off(Phaser.Input.Events.POINTER_DOWN, armBack);
-      this.input.off(Phaser.Input.Events.POINTER_UP, goBack);
+      window.clearTimeout(readyTimer);
+      if (returnTimer !== undefined) window.clearTimeout(returnTimer);
+      inputSurface.removeEventListener('pointerdown', armBack, true);
+      inputSurface.removeEventListener('pointerup', goBack, true);
+      inputSurface.removeEventListener('touchstart', armBack, true);
+      inputSurface.removeEventListener('touchend', goBack, true);
     });
   }
 
