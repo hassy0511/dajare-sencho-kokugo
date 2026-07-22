@@ -16,6 +16,7 @@ export class WelcomeScene extends Phaser.Scene {
   }
 
   create(): void {
+    this.started = false;
     this.drawWorld();
 
     const ship = this.drawShip();
@@ -204,9 +205,11 @@ export class WelcomeScene extends Phaser.Scene {
       button.setScale(1).setY(882);
     });
     const canvas = this.game.canvas;
-    const advance = (): void => this.showFoundationReady(button, label);
+    const advance = (): void => {
+      this.showFoundationReady(button, label);
+    };
     canvas.addEventListener('pointerup', advance);
-    canvas.addEventListener('touchend', advance, { passive: true });
+    canvas.addEventListener('touchend', advance);
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
       canvas.removeEventListener('pointerup', advance);
       canvas.removeEventListener('touchend', advance);

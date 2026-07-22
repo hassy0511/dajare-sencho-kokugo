@@ -38,6 +38,34 @@ test('起動画面から基盤版の完了画面へ進み、タイトルへ戻�
 
   await tapGamePoint(page, canvas, 405, 900);
   await expect(shell).toHaveAttribute('data-scene', 'welcome');
+
+  await tapGamePoint(page, canvas, 405, 882);
+  await expect(shell).toHaveAttribute('data-scene', 'foundation-ready');
+  await expect(shell).toHaveAttribute('data-input-ready', 'true');
+  await tapGamePoint(page, canvas, 405, 900);
+  await expect(shell).toHaveAttribute('data-scene', 'welcome');
+});
+
+test('横長画面でもCanvas全体が収まり、下部の操作へ進める', async ({ page }, testInfo) => {
+  await page.setViewportSize({ width: 1280, height: 720 });
+  await page.goto('./');
+
+  const shell = page.locator('#game-shell');
+  const canvas = page.locator('canvas');
+  await expect(shell).toHaveAttribute('data-scene', 'welcome');
+
+  const box = await canvas.boundingBox();
+  if (!box) throw new Error('ゲームCanvasの表示領域を取得できません。');
+  expect(box.width).toBeLessThanOrEqual(1280);
+  expect(box.height).toBeLessThanOrEqual(720);
+  expect(box.width / box.height).toBeCloseTo(810 / 1080, 2);
+
+  await page.screenshot({
+    path: testInfo.outputPath('pr-3-landscape-welcome.png'),
+    fullPage: true,
+  });
+  await tapGamePoint(page, canvas, 405, 882);
+  await expect(shell).toHaveAttribute('data-scene', 'foundation-ready');
 });
 
 test('PWAマニフェストとService Workerが有効で、オフライン再起動できる', async ({

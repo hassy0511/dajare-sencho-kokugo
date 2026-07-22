@@ -94,26 +94,19 @@ export class FoundationReadyScene extends Phaser.Scene {
     );
     button.input!.cursor = 'pointer';
     const canvas = this.game.canvas;
-    let pressedAfterReady = false;
-    const armBack = (): void => {
-      pressedAfterReady = true;
-    };
+    let returning = false;
     const goBack = (): void => {
-      if (!pressedAfterReady) return;
-      pressedAfterReady = false;
-      this.scene.start('Welcome');
+      if (returning) return;
+      returning = true;
+      this.time.delayedCall(50, () => this.scene.start('Welcome'));
     };
     this.time.delayedCall(500, () => {
-      canvas.addEventListener('pointerdown', armBack);
-      canvas.addEventListener('touchstart', armBack, { passive: true });
       canvas.addEventListener('pointerup', goBack);
-      canvas.addEventListener('touchend', goBack, { passive: true });
+      canvas.addEventListener('touchend', goBack);
       const shell = document.querySelector<HTMLElement>('#game-shell');
       if (shell) shell.dataset.inputReady = 'true';
     });
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
-      canvas.removeEventListener('pointerdown', armBack);
-      canvas.removeEventListener('touchstart', armBack);
       canvas.removeEventListener('pointerup', goBack);
       canvas.removeEventListener('touchend', goBack);
     });
