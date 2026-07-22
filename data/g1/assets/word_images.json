@@ -1,0 +1,123 @@
+{
+  "version": 1,
+  "generator": {
+    "provider": "OpenAI",
+    "model": "Images 2.0",
+    "mode": "built-in imagegen",
+    "stylePrompt": "Premium Japanese children's picture-book illustration for first graders; soft gouache and colored-pencil texture; rounded shapes; dark warm-brown hand-drawn outline; gentle two-tone shading; plain warm ivory background; centered subject with generous padding; no text, letters, border, watermark, logo, or photorealism."
+  },
+  "items": [
+    {
+      "key": "cat",
+      "word": "ねこ",
+      "src": "assets/images/words/cat.png",
+      "alt": "オレンジいろの ねこ",
+      "subjectPrompt": "One friendly orange tabby cat, full-body and sitting, cheerful, exactly one cat."
+    },
+    {
+      "key": "dog",
+      "word": "いぬ",
+      "src": "assets/images/words/dog.png",
+      "alt": "ちゃいろの いぬ",
+      "subjectPrompt": "One friendly light-brown floppy-eared puppy, full-body and sitting, no collar."
+    },
+    {
+      "key": "umbrella",
+      "word": "かさ",
+      "src": "assets/images/words/umbrella.png",
+      "alt": "あかい かさ",
+      "subjectPrompt": "One open coral-red rain umbrella with a curved wooden handle."
+    },
+    {
+      "key": "octopus",
+      "word": "たこ",
+      "src": "assets/images/words/octopus.png",
+      "alt": "あかい たこ",
+      "subjectPrompt": "One friendly pink-red octopus with exactly eight visible arms, no clothing."
+    },
+    {
+      "key": "ship",
+      "word": "ふね",
+      "src": "assets/images/words/ship.png",
+      "alt": "きの ほかけぶね",
+      "subjectPrompt": "One small wooden sailboat with a single cream sail and a coral pennant, no people."
+    },
+    {
+      "key": "peach",
+      "word": "もも",
+      "src": "assets/images/words/peach.png",
+      "alt": "はっぱの ついた もも",
+      "subjectPrompt": "One whole ripe pink peach with one small green leaf and a short stem."
+    },
+    {
+      "key": "mountain",
+      "word": "やま",
+      "src": "assets/images/words/mountain.png",
+      "alt": "みどりの やま",
+      "subjectPrompt": "One rounded green mountain peak with a cream rocky top and simple darker-green patches."
+    },
+    {
+      "key": "star",
+      "word": "ほし",
+      "src": "assets/images/words/star.png",
+      "alt": "きんいろの ほし",
+      "subjectPrompt": "One simple golden five-point star with softly rounded points, no face."
+    },
+    {
+      "key": "flower",
+      "word": "はな",
+      "src": "assets/images/words/flower.png",
+      "alt": "あかい はな",
+      "subjectPrompt": "One red flower with five rounded petals, a golden center, green stem, and two leaves."
+    },
+    {
+      "key": "cow",
+      "word": "うし",
+      "src": "assets/images/words/cow.png",
+      "alt": "しろくろの うし",
+      "subjectPrompt": "One friendly full-body black-and-white cow with small rounded horns."
+    },
+    {
+      "key": "sky",
+      "word": "そら",
+      "src": "assets/images/words/sky.png",
+      "alt": "あおい そらと しろい くも",
+      "subjectPrompt": "A large rounded patch of clear blue sky with exactly one white cloud; no sun, birds, or ground."
+    },
+    {
+      "key": "bear",
+      "word": "くま",
+      "src": "assets/images/words/bear.png",
+      "alt": "ちゃいろの くま",
+      "subjectPrompt": "One friendly full-body sitting brown bear with round ears, no clothes."
+    },
+    {
+      "key": "bird",
+      "word": "とり",
+      "src": "assets/images/words/bird.png",
+      "alt": "あおい とり",
+      "subjectPrompt": "One friendly full-body side-view blue bird with a small coral beak, no branch."
+    },
+    {
+      "key": "monkey",
+      "word": "さる",
+      "src": "assets/images/words/monkey.png",
+      "alt": "ちゃいろの さる",
+      "subjectPrompt": "One friendly full-body sitting brown monkey with a curled tail, no clothes or fruit."
+    },
+    {
+      "key": "bug",
+      "word": "むし",
+      "src": "assets/images/words/bug.png",
+      "alt": "あかい てんとうむし",
+      "subjectPrompt": "One red ladybug viewed slightly from above, with six visible legs and black spots."
+    },
+    {
+      "key": "house",
+      "word": "いえ",
+      "src": "assets/images/words/house.png",
+      "alt": "あかい やねの いえ",
+      "subjectPrompt": "One simple complete house with a coral roof, cream walls, teal door, and two windows."
+    }
+  ]
+}

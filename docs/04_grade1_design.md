@@ -33,7 +33,7 @@
 
 | # | id | なまえ | skill / skillRef | 出題 | n |
 |---|---|---|---|---|---|
-| 1 | `g1-moji-seion` | ひらがなの すなはま | 清音のよみ / 1-2知技(1)ウ | choice: 絵+カタカナ語→正しいひらがな表記を4択(pool: `hiraWords`) | 8 |
+| 1 | `g1-moji-seion` | ひらがなの すなはま | 清音のよみ / 1-2知技(1)ウ | choice: Images 2.0の絵→正しいひらがな表記を4択(pool: `hiraWords` 16語) | 10 |
 | 2 | `g1-moji-dakuon` | だくてんの いわば | 濁音・半濁音 / 同上 | choice: 「か゛」系の正誤・絵に合う表記選び(pool: `hiraWords.dakuon`) | 8 |
 | 3 | `g1-moji-sokuon` | ちいさい「っ」の どうくつ | 促音 / 同上 | choice: 「きて/きって」絵に合う方を選ぶ(pool: `hiraWords.sokuon`) | 8 |
 | 4 | `g1-moji-chouon` | のばしおんの みさき | 長音・撥音 / 同上 | choice: 「おかあさん/おかーさん/おかさん」正表記(pool: `hiraWords.chouon`) | 8 |

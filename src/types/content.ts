@@ -22,6 +22,25 @@ export interface HiraWordPool {
   items: HiraWordItem[];
 }
 
+export interface WordImageAsset {
+  key: string;
+  word: string;
+  src: string;
+  alt: string;
+  subjectPrompt: string;
+}
+
+export interface WordImageLibrary {
+  version: 1;
+  generator: {
+    provider: string;
+    model: string;
+    mode: string;
+    stylePrompt: string;
+  };
+  items: WordImageAsset[];
+}
+
 export interface StageDefinition {
   id: string;
   name: string;

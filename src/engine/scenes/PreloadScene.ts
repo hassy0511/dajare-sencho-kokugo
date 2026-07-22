@@ -1,10 +1,15 @@
 import Phaser from 'phaser';
 
+import { preloadWordImages } from '../assets/word-image-library';
 import { COLORS, GAME_FONT, GAME_HEIGHT, GAME_WIDTH } from '../constants';
 
 export class PreloadScene extends Phaser.Scene {
   constructor() {
     super('Preload');
+  }
+
+  preload(): void {
+    preloadWordImages(this);
   }
 
   create(): void {
