@@ -1,0 +1,179 @@
+import Phaser from 'phaser';
+
+import { loadSea } from '../../content/loader';
+import type { StageDefinition } from '../../types/content';
+import { COLORS, GAME_FONT, GAME_HEIGHT, GAME_WIDTH } from '../constants';
+import { addGameTapListener } from '../input/logical-input';
+
+interface StageIntroData {
+  islandId?: string;
+  stageId?: string;
+}
+
+export class StageIntroScene extends Phaser.Scene {
+  private islandId = 'g1-moji';
+  private stageId = 'g1-moji-seion';
+  private cleanupInput?: () => void;
+  private leaving = false;
+
+  constructor() {
+    super('StageIntro');
+  }
+
+  init(data: StageIntroData): void {
+    this.islandId = data.islandId ?? 'g1-moji';
+    this.stageId = data.stageId ?? 'g1-moji-seion';
+    this.leaving = false;
+  }
+
+  create(): void {
+    const stage = this.findStage();
+    this.drawBeach(stage);
+    this.bindInput();
+    this.markReady(stage);
+    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => this.cleanupInput?.());
+  }
+
+  private findStage(): StageDefinition {
+    const island = loadSea().islands.find((candidate) => candidate.id === this.islandId);
+    const stage = island?.stages.find((candidate) => candidate.id === this.stageId);
+    if (!stage) throw new Error(`ステージが見つかりません: ${this.stageId}`);
+    return stage;
+  }
+
+  private drawBeach(stage: StageDefinition): void {
+    const background = this.add.graphics();
+    background.fillStyle(COLORS.sky).fillRect(0, 0, GAME_WIDTH, 420);
+    background.fillStyle(COLORS.sea).fillRect(0, 420, GAME_WIDTH, 300);
+    background.fillStyle(COLORS.sand).fillRect(0, 720, GAME_WIDTH, GAME_HEIGHT - 720);
+    background
+      .fillStyle(0xffe08b)
+      .lineStyle(5, COLORS.ink, 1)
+      .fillCircle(675, 125, 58)
+      .strokeCircle(675, 125, 58);
+    background
+      .lineStyle(6, COLORS.foam, 0.9)
+      .beginPath()
+      .moveTo(0, 690)
+      .lineTo(120, 675)
+      .lineTo(250, 700)
+      .lineTo(390, 680)
+      .lineTo(540, 704)
+      .lineTo(680, 678)
+      .lineTo(810, 695)
+      .strokePath();
+
+    const card = this.add.graphics();
+    card.fillStyle(COLORS.cream).lineStyle(6, COLORS.ink, 1);
+    card.fillRoundedRect(70, 105, 670, 610, 42).strokeRoundedRect(70, 105, 670, 610, 42);
+    this.add
+      .text(405, 175, stage.name, {
+        fontFamily: GAME_FONT,
+        color: '#3d3323',
+        fontSize: '42px',
+        fontStyle: 'bold',
+      })
+      .setOrigin(0.5);
+    this.add
+      .text(405, 250, stage.skill, {
+        fontFamily: GAME_FONT,
+        color: '#176b72',
+        fontSize: '27px',
+        fontStyle: 'bold',
+      })
+      .setOrigin(0.5);
+
+    const treasure = this.add.graphics();
+    treasure
+      .fillStyle(0xffd65a)
+      .lineStyle(6, COLORS.ink, 1)
+      .fillCircle(405, 390, 88)
+      .strokeCircle(405, 390, 88);
+    treasure.fillStyle(COLORS.cream).lineStyle(5, COLORS.ink, 1);
+    treasure.fillRoundedRect(358, 340, 94, 100, 22).strokeRoundedRect(358, 340, 94, 100, 22);
+    this.add
+      .text(405, 386, 'あ', {
+        fontFamily: GAME_FONT,
+        color: '#9b3f41',
+        fontSize: '58px',
+        fontStyle: 'bold',
+      })
+      .setOrigin(0.5);
+    this.add
+      .text(405, 505, stage.intro, {
+        fontFamily: GAME_FONT,
+        color: '#3d3323',
+        fontSize: '30px',
+        fontStyle: 'bold',
+        align: 'center',
+        wordWrap: { width: 560 },
+      })
+      .setOrigin(0.5);
+    this.add
+      .text(405, 610, `おたから: ${stage.treasure}`, {
+        fontFamily: GAME_FONT,
+        color: '#9b3f41',
+        fontSize: '23px',
+      })
+      .setOrigin(0.5);
+
+    this.drawButton(405, 835, 500, 'ちょうせんする!', COLORS.coral, COLORS.coralDark);
+    this.drawButton(405, 970, 340, 'マップへ もどる', COLORS.green, COLORS.greenDark);
+  }
+
+  private drawButton(
+    x: number,
+    y: number,
+    width: number,
+    label: string,
+    fill: number,
+    shadow: number,
+  ): void {
+    const button = this.add.graphics();
+    button.fillStyle(shadow).lineStyle(5, COLORS.ink, 1);
+    button
+      .fillRoundedRect(x - width / 2, y - 55, width, 120, 30)
+      .strokeRoundedRect(x - width / 2, y - 55, width, 120, 30);
+    button.fillStyle(fill).lineStyle(5, COLORS.ink, 1);
+    button
+      .fillRoundedRect(x - width / 2, y - 65, width, 116, 30)
+      .strokeRoundedRect(x - width / 2, y - 65, width, 116, 30);
+    this.add
+      .text(x, y - 8, label, {
+        fontFamily: GAME_FONT,
+        color: '#fff7d0',
+        fontSize: '31px',
+        fontStyle: 'bold',
+      })
+      .setOrigin(0.5);
+  }
+
+  private bindInput(): void {
+    this.cleanupInput = addGameTapListener(this.game.canvas, ({ x, y }) => {
+      if (this.leaving || Math.abs(x - 405) > 270) return;
+      if (y >= 750 && y <= 910) this.go('Quiz');
+      else if (y >= 915 && y <= 1045) this.go('IslandMap');
+    });
+  }
+
+  private go(scene: 'Quiz' | 'IslandMap'): void {
+    this.leaving = true;
+    this.cleanupInput?.();
+    this.scene.start(scene, { islandId: this.islandId, stageId: this.stageId });
+  }
+
+  private markReady(stage: StageDefinition): void {
+    const shell = document.querySelector<HTMLElement>('#game-shell');
+    const status = document.querySelector<HTMLElement>('#game-status');
+    if (shell) {
+      shell.dataset.scene = 'stage-intro';
+      shell.dataset.stage = stage.id;
+      shell.dataset.inputReady = 'true';
+    }
+    if (status) status.textContent = `${stage.name}に ちょうせんできます`;
+    if (window.__DSK_APP__) {
+      window.__DSK_APP__.scene = 'stage-intro';
+      window.__DSK_APP__.stageId = stage.id;
+    }
+  }
+}

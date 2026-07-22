@@ -4,7 +4,8 @@ export interface ChoiceQuestion {
   key: string;
   type: 'choice';
   prompt: string;
-  emphasis: string;
+  emphasis: string | null;
+  visual: string | null;
   choices: string[];
   answer: number;
   explanation: string;
@@ -12,6 +13,7 @@ export interface ChoiceQuestion {
 
 export interface HiraWordItem {
   w: string;
+  visual: string;
 }
 
 export interface HiraWordPool {
@@ -28,16 +30,29 @@ export interface StageDefinition {
   skillRef: string;
   intro: string;
   n: number;
-  gen: 'hiraSeion';
+  gen: 'hiraPicture' | null;
+  status: 'playable' | 'planned';
+  treasure: string;
 }
 
 export interface IslandDefinition {
   id: string;
   name: string;
+  subtitle: string;
+  symbol: string;
   stages: StageDefinition[];
 }
 
+export interface StoryPage {
+  speaker: string;
+  role: 'captain' | 'sumizo' | 'buddy';
+  text: string;
+}
+
 export interface SeaDefinition {
+  id: 'g1';
+  name: string;
   grade: 1;
+  challenge: StoryPage[];
   islands: IslandDefinition[];
 }

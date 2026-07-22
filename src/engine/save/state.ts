@@ -9,10 +9,11 @@ export interface StageProgress {
 export interface SaveState {
   v: 1;
   stages: Record<string, StageProgress>;
+  seen: Record<string, boolean>;
 }
 
 export function createDefaultState(): SaveState {
-  return { v: 1, stages: {} };
+  return { v: 1, stages: {}, seen: {} };
 }
 
 export function loadState(storage: Pick<Storage, 'getItem'> = localStorage): SaveState {
@@ -23,10 +24,27 @@ export function loadState(storage: Pick<Storage, 'getItem'> = localStorage): Sav
     if (parsed.v !== 1 || typeof parsed.stages !== 'object' || parsed.stages === null) {
       return createDefaultState();
     }
-    return { v: 1, stages: parsed.stages as Record<string, StageProgress> };
+    return {
+      v: 1,
+      stages: parsed.stages as Record<string, StageProgress>,
+      seen:
+        typeof parsed.seen === 'object' && parsed.seen !== null
+          ? (parsed.seen as Record<string, boolean>)
+          : {},
+    };
   } catch {
     return createDefaultState();
   }
+}
+
+export function markSeen(
+  key: string,
+  storage: Pick<Storage, 'getItem' | 'setItem'> = localStorage,
+): SaveState {
+  const state = loadState(storage);
+  state.seen[key] = true;
+  storage.setItem(SAVE_KEY, JSON.stringify(state));
+  return state;
 }
 
 export function recordStageResult(

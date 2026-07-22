@@ -6,30 +6,29 @@ export function makeHiraSeionQuiz(
   count: number,
   seed: number,
 ): ChoiceQuestion[] {
-  const uniqueInitials = new Set(items.map((item) => [...item.w][0]));
-  if (uniqueInitials.size < 4) throw new Error('4つ以上の異なる先頭文字が必要です。');
+  const uniqueWords = new Set(items.map((item) => item.w));
+  if (uniqueWords.size < 4) throw new Error('4つ以上の異なる言葉が必要です。');
   if (count > items.length) throw new Error('問題数より多い単語が必要です。');
 
   const rng = createSeededRng(seed);
   const selected = shuffled(items, rng).slice(0, count);
-  const initials = [...uniqueInitials].filter((value): value is string => value !== undefined);
+  const words = [...uniqueWords];
 
   return selected.map((item, index) => {
-    const correct = [...item.w][0];
-    if (!correct) throw new Error('空の単語は問題にできません。');
     const distractors = shuffled(
-      initials.filter((initial) => initial !== correct),
+      words.filter((word) => word !== item.w),
       rng,
     ).slice(0, 3);
-    const choices = shuffled([correct, ...distractors], rng);
+    const choices = shuffled([item.w, ...distractors], rng);
     return {
-      key: `hira-seion-${seed}-${index}-${item.w}`,
+      key: `hira-picture-${seed}-${index}-${item.w}`,
       type: 'choice',
-      prompt: 'この ことばの\nはじめの もじは?',
-      emphasis: item.w,
+      prompt: index % 2 === 0 ? 'えに あう ことばは\nどれ?' : 'えの なまえを\nみつけよう!',
+      emphasis: null,
+      visual: item.visual,
       choices,
-      answer: choices.indexOf(correct),
-      explanation: `${item.w}は「${correct}」から はじまるよ`,
+      answer: choices.indexOf(item.w),
+      explanation: `「${item.w}」だよ`,
     };
   });
 }

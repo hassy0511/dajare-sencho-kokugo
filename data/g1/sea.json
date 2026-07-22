@@ -1,19 +1,554 @@
 {
+  "id": "g1",
+  "name": "1ねんの うみ",
   "grade": 1,
+  "challenge": [
+    {
+      "speaker": "キャプテン・ダジャーレ",
+      "role": "captain",
+      "text": "この うみの たからは ぜーんぶ いただいた! かえして ほしけりゃ もんだいを といて みな!"
+    },
+    {
+      "speaker": "スミゾー",
+      "role": "sumizo",
+      "text": "もじは ぜんぶ すみで ぬりつぶして やったぜ! よめるもんなら よんで みな! すみずみまで な!"
+    },
+    {
+      "speaker": "コンパス",
+      "role": "buddy",
+      "text": "さむ〜い! うみが こおっちゃうよ! いっしょに たからを とりかえしに いこう!"
+    }
+  ],
   "islands": [
     {
       "id": "g1-moji",
       "name": "もじの しま",
+      "subtitle": "ひらがな・カタカナ",
+      "symbol": "あ",
       "stages": [
         {
           "id": "g1-moji-seion",
           "name": "ひらがなの すなはま",
           "scene": "beach",
           "skill": "せいおんの よみ",
-          "skillRef": "G1-1",
-          "intro": "ことばの はじめの もじを みつけよう!",
+          "skillRef": "1-2知技(1)ウ",
+          "intro": "えに あう ひらがなを みつけよう!",
+          "n": 8,
+          "gen": "hiraPicture",
+          "status": "playable",
+          "treasure": "ひかりの ひらがなたま"
+        },
+        {
+          "id": "g1-moji-dakuon",
+          "name": "だくてんの いわば",
+          "scene": "rocks",
+          "skill": "だくおん・はんだくおん",
+          "skillRef": "1-2知技(1)ウ",
+          "intro": "てんてんの つく もじを よもう",
+          "n": 8,
+          "gen": null,
+          "status": "planned",
+          "treasure": "だくてんの かいがら"
+        },
+        {
+          "id": "g1-moji-sokuon",
+          "name": "ちいさい「っ」の どうくつ",
+          "scene": "cave",
+          "skill": "そくおん",
+          "skillRef": "1-2知技(1)ウ",
+          "intro": "ちいさい「っ」を みつけよう",
+          "n": 8,
+          "gen": null,
+          "status": "planned",
+          "treasure": "ちいさな ほうせき"
+        },
+        {
+          "id": "g1-moji-chouon",
+          "name": "のばしおんの みさき",
+          "scene": "cape",
+          "skill": "ちょうおん・はつおん",
+          "skillRef": "1-2知技(1)ウ",
+          "intro": "のばす おとを みつけよう",
+          "n": 8,
+          "gen": null,
+          "status": "planned",
+          "treasure": "ひびく ほらがい"
+        },
+        {
+          "id": "g1-moji-test1",
+          "name": "スミゾーの すみみはり",
+          "scene": "watch",
+          "skill": "かくにん その1",
+          "skillRef": "1-2知技(1)ウ",
+          "intro": "ここまでの もじを たしかめよう",
           "n": 10,
-          "gen": "hiraSeion"
+          "gen": null,
+          "status": "planned",
+          "treasure": "みはりの ぼうえんきょう"
+        },
+        {
+          "id": "g1-moji-youon",
+          "name": "ちいさい「ゃゅょ」の はし",
+          "scene": "bridge",
+          "skill": "ようおん",
+          "skillRef": "1-2知技(1)ウ",
+          "intro": "ちいさい「ゃゅょ」を よもう",
+          "n": 8,
+          "gen": null,
+          "status": "planned",
+          "treasure": "ちいさな もじの かぎ"
+        },
+        {
+          "id": "g1-moji-katakana",
+          "name": "カタカナの さんばし",
+          "scene": "pier",
+          "skill": "カタカナ",
+          "skillRef": "1-2知技(1)ウ",
+          "intro": "カタカナの ことばを よもう",
+          "n": 10,
+          "gen": null,
+          "status": "planned",
+          "treasure": "カタカナの ふなふだ"
+        },
+        {
+          "id": "g1-moji-boss",
+          "name": "すみの とりで",
+          "scene": "fort",
+          "skill": "もじの まとめ",
+          "skillRef": "1-2知技(1)ウ",
+          "intro": "もじの しまの たからを とりもどそう",
+          "n": 12,
+          "gen": null,
+          "status": "planned",
+          "treasure": "でんせつの ふで"
+        }
+      ]
+    },
+    {
+      "id": "g1-kanji",
+      "name": "かんじの しま",
+      "subtitle": "1ねんせいの かんじ",
+      "symbol": "山",
+      "stages": [
+        {
+          "id": "g1-kanji-shizen",
+          "name": "しぜんの いせき",
+          "scene": "ruins",
+          "skill": "しぜんの かんじ",
+          "skillRef": "1-2知技(1)エ",
+          "intro": "山や 川の かんじを よもう",
+          "n": 10,
+          "gen": null,
+          "status": "planned",
+          "treasure": "やまかわの いしばん"
+        },
+        {
+          "id": "g1-kanji-karada",
+          "name": "からだの しんでん",
+          "scene": "temple",
+          "skill": "からだの かんじ",
+          "skillRef": "1-2知技(1)エ",
+          "intro": "目や 耳の かんじを よもう",
+          "n": 10,
+          "gen": null,
+          "status": "planned",
+          "treasure": "からだの もんしょう"
+        },
+        {
+          "id": "g1-kanji-kazu",
+          "name": "かずの いしばし",
+          "scene": "bridge",
+          "skill": "かずの かんじ",
+          "skillRef": "1-2知技(1)エ",
+          "intro": "一から 十まで よもう",
+          "n": 10,
+          "gen": null,
+          "status": "planned",
+          "treasure": "かずの いし"
+        },
+        {
+          "id": "g1-kanji-musubi",
+          "name": "かんじむすびの ま",
+          "scene": "hall",
+          "skill": "かんじと よみ",
+          "skillRef": "1-2知技(1)エ",
+          "intro": "かんじと よみを むすぼう",
+          "n": 9,
+          "gen": null,
+          "status": "planned",
+          "treasure": "むすびの ひも"
+        },
+        {
+          "id": "g1-kanji-test1",
+          "name": "スミゾーの みはりいわ",
+          "scene": "watch",
+          "skill": "かくにん その1",
+          "skillRef": "1-2知技(1)エ",
+          "intro": "ここまでの かんじを たしかめよう",
+          "n": 10,
+          "gen": null,
+          "status": "planned",
+          "treasure": "みはりの いし"
+        },
+        {
+          "id": "g1-kanji-gakko",
+          "name": "がっこうの もん",
+          "scene": "gate",
+          "skill": "がっこうの かんじ",
+          "skillRef": "1-2知技(1)エ",
+          "intro": "学校で つかう かんじを よもう",
+          "n": 10,
+          "gen": null,
+          "status": "planned",
+          "treasure": "がっこうの かぎ"
+        },
+        {
+          "id": "g1-kanji-muki",
+          "name": "むきの とりで",
+          "scene": "fort",
+          "skill": "むき・うごきの かんじ",
+          "skillRef": "1-2知技(1)エ",
+          "intro": "上や 下の かんじを よもう",
+          "n": 10,
+          "gen": null,
+          "status": "planned",
+          "treasure": "むきの コンパス"
+        },
+        {
+          "id": "g1-kanji-kakusu",
+          "name": "かくすうの やぐら",
+          "scene": "tower",
+          "skill": "かくすう・ひつじゅん",
+          "skillRef": "1-2知技(3)ウ",
+          "intro": "かく じゅんばんを たしかめよう",
+          "n": 8,
+          "gen": null,
+          "status": "planned",
+          "treasure": "かくすうの ものさし"
+        },
+        {
+          "id": "g1-kanji-hori",
+          "name": "もじの ほりば",
+          "scene": "dig",
+          "skill": "よみさがし",
+          "skillRef": "1-2知技(1)エ",
+          "intro": "すなから かんじを ほりだそう",
+          "n": 9,
+          "gen": null,
+          "status": "planned",
+          "treasure": "もじの スコップ"
+        },
+        {
+          "id": "g1-kanji-boss",
+          "name": "スミゾーの もじしんでん",
+          "scene": "temple",
+          "skill": "かんじの まとめ",
+          "skillRef": "1-2知技(1)エ",
+          "intro": "かんじの しまの たからを とりもどそう",
+          "n": 12,
+          "gen": null,
+          "status": "planned",
+          "treasure": "きんの すずり"
+        }
+      ]
+    },
+    {
+      "id": "g1-kotoba",
+      "name": "ことばの しま",
+      "subtitle": "ことばの なかま・つかいかた",
+      "symbol": "ことば",
+      "stages": [
+        {
+          "id": "g1-kotoba-nakama",
+          "name": "なかまことばの もり",
+          "scene": "forest",
+          "skill": "なかまの ことば",
+          "skillRef": "1-2知技(1)オ",
+          "intro": "ことばの なかまを みつけよう",
+          "n": 8,
+          "gen": null,
+          "status": "planned",
+          "treasure": "なかまの きのみ"
+        },
+        {
+          "id": "g1-kotoba-kazoe",
+          "name": "かぞえかたの はら",
+          "scene": "field",
+          "skill": "かぞえかた",
+          "skillRef": "1-2知技(1)オ",
+          "intro": "ものの かぞえかたを えらぼう",
+          "n": 10,
+          "gen": null,
+          "status": "planned",
+          "treasure": "かぞえの そろばん"
+        },
+        {
+          "id": "g1-kotoba-teinei",
+          "name": "ていねいことばの いずみ",
+          "scene": "spring",
+          "skill": "ていねいな ことば",
+          "skillRef": "1-2知技(1)キ",
+          "intro": "ていねいな いいかたを みつけよう",
+          "n": 8,
+          "gen": null,
+          "status": "planned",
+          "treasure": "ていねいの しずく"
+        },
+        {
+          "id": "g1-kotoba-daredou",
+          "name": "だれがどうしたの はし",
+          "scene": "bridge",
+          "skill": "だれが・どうした",
+          "skillRef": "1-2知技(1)カ",
+          "intro": "だれが どうしたか みつけよう",
+          "n": 8,
+          "gen": null,
+          "status": "planned",
+          "treasure": "ぶんの はしら"
+        },
+        {
+          "id": "g1-kotoba-test1",
+          "name": "スミゾーの ことばみはり",
+          "scene": "watch",
+          "skill": "ことばの かくにん",
+          "skillRef": "1-2知技(1)オ",
+          "intro": "ここまでの ことばを たしかめよう",
+          "n": 10,
+          "gen": null,
+          "status": "planned",
+          "treasure": "ことばの みはりふだ"
+        },
+        {
+          "id": "g1-kotoba-yousu",
+          "name": "ようすことばの おか",
+          "scene": "hill",
+          "skill": "ようすを あらわす ことば",
+          "skillRef": "1-2知技(1)オ",
+          "intro": "ようすに あう ことばを えらぼう",
+          "n": 8,
+          "gen": null,
+          "status": "planned",
+          "treasure": "ようすの はね"
+        },
+        {
+          "id": "g1-kotoba-shiritori",
+          "name": "しりとりの どうくつ",
+          "scene": "cave",
+          "skill": "ことばあそび",
+          "skillRef": "1-2知技(3)イ",
+          "intro": "しりとりで みちを つなごう",
+          "n": 8,
+          "gen": null,
+          "status": "planned",
+          "treasure": "しりとりの くさり"
+        },
+        {
+          "id": "g1-kotoba-boss",
+          "name": "ことばの おおとりで",
+          "scene": "fort",
+          "skill": "ことばの まとめ",
+          "skillRef": "1-2知技(1)オ",
+          "intro": "ことばの しまの たからを とりもどそう",
+          "n": 12,
+          "gen": null,
+          "status": "planned",
+          "treasure": "ことばの おうかん"
+        }
+      ]
+    },
+    {
+      "id": "g1-yomitoki",
+      "name": "よみときの しま",
+      "subtitle": "おはなしを よみとく",
+      "symbol": "ほん",
+      "stages": [
+        {
+          "id": "g1-yomi-dare",
+          "name": "だれが? の はまべ",
+          "scene": "beach",
+          "skill": "とうじょうじんぶつ",
+          "skillRef": "1-2C読(1)イ",
+          "intro": "おはなしに でてくる ひとを みつけよう",
+          "n": 8,
+          "gen": null,
+          "status": "planned",
+          "treasure": "だれかなの ぼうし"
+        },
+        {
+          "id": "g1-yomi-nani",
+          "name": "なにを? の みさき",
+          "scene": "cape",
+          "skill": "もの・ばしょ",
+          "skillRef": "1-2C読(1)イ",
+          "intro": "なにを したか みつけよう",
+          "n": 8,
+          "gen": null,
+          "status": "planned",
+          "treasure": "なにかなの かぎ"
+        },
+        {
+          "id": "g1-yomi-junban",
+          "name": "じゅんばんの かわ",
+          "scene": "river",
+          "skill": "できごとの じゅんばん",
+          "skillRef": "1-2C読(1)ア",
+          "intro": "おはなしを じゅんばんに ならべよう",
+          "n": 6,
+          "gen": null,
+          "status": "planned",
+          "treasure": "じゅんばんの ふだ"
+        },
+        {
+          "id": "g1-yomi-kotoba",
+          "name": "だいじことばの もり",
+          "scene": "forest",
+          "skill": "だいじな ことば",
+          "skillRef": "1-2C読(1)ウ",
+          "intro": "だいじな ことばを みつけよう",
+          "n": 8,
+          "gen": null,
+          "status": "planned",
+          "treasure": "だいじな きのみ"
+        },
+        {
+          "id": "g1-yomi-test1",
+          "name": "スミゾーの よみみはり",
+          "scene": "watch",
+          "skill": "よみときの かくにん",
+          "skillRef": "1-2C読(1)イ",
+          "intro": "ここまでの よみときを たしかめよう",
+          "n": 10,
+          "gen": null,
+          "status": "planned",
+          "treasure": "よみときの みはりめがね"
+        },
+        {
+          "id": "g1-yomi-mukashi",
+          "name": "むかしばなしの しま",
+          "scene": "story",
+          "skill": "むかしばなし",
+          "skillRef": "1-2知技(3)ア",
+          "intro": "むかしばなしを たのしもう",
+          "n": 8,
+          "gen": null,
+          "status": "planned",
+          "treasure": "むかしの えまき"
+        },
+        {
+          "id": "g1-yomi-nagabun",
+          "name": "ながいぶんの たに",
+          "scene": "valley",
+          "skill": "ながい おはなし",
+          "skillRef": "1-2C読(1)イ",
+          "intro": "すこし ながい おはなしを よもう",
+          "n": 8,
+          "gen": null,
+          "status": "planned",
+          "treasure": "ながい まきもの"
+        },
+        {
+          "id": "g1-yomi-boss",
+          "name": "よみときの おおいわ",
+          "scene": "rock",
+          "skill": "よみときの まとめ",
+          "skillRef": "1-2C読(1)イ",
+          "intro": "よみときの しまの たからを とりもどそう",
+          "n": 12,
+          "gen": null,
+          "status": "planned",
+          "treasure": "ものがたりの ほん"
+        }
+      ]
+    },
+    {
+      "id": "g1-kakikata",
+      "name": "かきかたの しま",
+      "subtitle": "ぶんを つくる・なおす",
+      "symbol": "ぶん",
+      "stages": [
+        {
+          "id": "g1-kaki-kumitate",
+          "name": "ぶんくみたての すなば",
+          "scene": "sand",
+          "skill": "ことばの じゅんばん",
+          "skillRef": "1-2B書(1)ウ",
+          "intro": "ことばを ならべて ぶんを つくろう",
+          "n": 8,
+          "gen": null,
+          "status": "planned",
+          "treasure": "ぶんの つみき"
+        },
+        {
+          "id": "g1-kaki-teniwoha",
+          "name": "てにをはの いけ",
+          "scene": "pond",
+          "skill": "は・へ・を",
+          "skillRef": "1-2知技(1)ウ",
+          "intro": "ぶんに あう ことばを いれよう",
+          "n": 10,
+          "gen": null,
+          "status": "planned",
+          "treasure": "てにをはの みずたま"
+        },
+        {
+          "id": "g1-kaki-kutouten",
+          "name": "まるてんの はし",
+          "scene": "bridge",
+          "skill": "くとうてん",
+          "skillRef": "1-2知技(1)ウ",
+          "intro": "まるや てんを いれよう",
+          "n": 8,
+          "gen": null,
+          "status": "planned",
+          "treasure": "まるてんの はんこ"
+        },
+        {
+          "id": "g1-kaki-test1",
+          "name": "スミゾーの かきみはり",
+          "scene": "watch",
+          "skill": "かきかたの かくにん",
+          "skillRef": "1-2B書(1)ウ",
+          "intro": "ここまでの かきかたを たしかめよう",
+          "n": 10,
+          "gen": null,
+          "status": "planned",
+          "treasure": "かきかたの みはりふで"
+        },
+        {
+          "id": "g1-kaki-junsaku",
+          "name": "じゅんばんさくぶんの おか",
+          "scene": "hill",
+          "skill": "けいけんの じゅんばん",
+          "skillRef": "1-2B書(1)イ",
+          "intro": "できごとを じゅんばんに ならべよう",
+          "n": 6,
+          "gen": null,
+          "status": "planned",
+          "treasure": "さくぶんの はね"
+        },
+        {
+          "id": "g1-kaki-naoshi",
+          "name": "まちがいなおしの どうくつ",
+          "scene": "cave",
+          "skill": "よみかえし",
+          "skillRef": "1-2B書(1)エ",
+          "intro": "ぶんを よみかえして なおそう",
+          "n": 8,
+          "gen": null,
+          "status": "planned",
+          "treasure": "なおしの けしごむ"
+        },
+        {
+          "id": "g1-kaki-boss",
+          "name": "かきかたの おおすなば",
+          "scene": "sand",
+          "skill": "かきかたの まとめ",
+          "skillRef": "1-2B書(1)ウ",
+          "intro": "かきかたの しまの たからを とりもどそう",
+          "n": 12,
+          "gen": null,
+          "status": "planned",
+          "treasure": "まほうの げんこうようし"
         }
       ]
     }

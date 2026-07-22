@@ -3,6 +3,7 @@ import type Phaser from 'phaser';
 import type { ChoiceQuestion } from '../../types/content';
 import { COLORS, GAME_FONT } from '../constants';
 import { addGameTapListener } from '../input/logical-input';
+import { drawWordPicture } from '../ui/word-pictures';
 import type { QType, QTypeApi } from './types';
 
 export const CHOICE_CENTERS = [
@@ -37,15 +38,20 @@ export class ChoiceQType implements QType {
         lineSpacing: 7,
       })
       .setOrigin(0.5);
-    const word = scene.add
-      .text(405, 470, question.emphasis, {
-        fontFamily: GAME_FONT,
-        color: '#176b72',
-        fontSize: '72px',
-        fontStyle: 'bold',
-      })
-      .setOrigin(0.5);
-    layer.add([prompt, word]);
+    layer.add(prompt);
+    if (question.visual) {
+      drawWordPicture(scene, layer, question.visual, 405, 455);
+    } else if (question.emphasis) {
+      const word = scene.add
+        .text(405, 470, question.emphasis, {
+          fontFamily: GAME_FONT,
+          color: '#176b72',
+          fontSize: '72px',
+          fontStyle: 'bold',
+        })
+        .setOrigin(0.5);
+      layer.add(word);
+    }
 
     question.choices.forEach((choice, index) => {
       const center = CHOICE_CENTERS[index];
@@ -56,7 +62,7 @@ export class ChoiceQType implements QType {
         .text(center.x, center.y - 4, choice, {
           fontFamily: GAME_FONT,
           color: '#3d3323',
-          fontSize: '64px',
+          fontSize: choice.length >= 5 ? '40px' : '50px',
           fontStyle: 'bold',
         })
         .setOrigin(0.5);
