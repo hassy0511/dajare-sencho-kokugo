@@ -203,15 +203,13 @@ export class WelcomeScene extends Phaser.Scene {
     button.on(Phaser.Input.Events.GAMEOBJECT_POINTER_OUT, () => {
       button.setScale(1).setY(882);
     });
-    button.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => {
-      button.setY(882);
-      this.showFoundationReady(button, label);
-    });
-
+    const canvas = this.game.canvas;
     const advance = (): void => this.showFoundationReady(button, label);
-    this.input.on(Phaser.Input.Events.POINTER_UP, advance);
+    canvas.addEventListener('pointerup', advance);
+    canvas.addEventListener('touchend', advance, { passive: true });
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
-      this.input.off(Phaser.Input.Events.POINTER_UP, advance);
+      canvas.removeEventListener('pointerup', advance);
+      canvas.removeEventListener('touchend', advance);
     });
   }
 

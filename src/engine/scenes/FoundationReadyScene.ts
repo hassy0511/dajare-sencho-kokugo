@@ -93,6 +93,7 @@ export class FoundationReadyScene extends Phaser.Scene {
       Phaser.Geom.Rectangle.Contains,
     );
     button.input!.cursor = 'pointer';
+    const canvas = this.game.canvas;
     let pressedAfterReady = false;
     const armBack = (): void => {
       pressedAfterReady = true;
@@ -103,14 +104,18 @@ export class FoundationReadyScene extends Phaser.Scene {
       this.scene.start('Welcome');
     };
     this.time.delayedCall(500, () => {
-      this.input.on(Phaser.Input.Events.POINTER_DOWN, armBack);
-      this.input.on(Phaser.Input.Events.POINTER_UP, goBack);
+      canvas.addEventListener('pointerdown', armBack);
+      canvas.addEventListener('touchstart', armBack, { passive: true });
+      canvas.addEventListener('pointerup', goBack);
+      canvas.addEventListener('touchend', goBack, { passive: true });
       const shell = document.querySelector<HTMLElement>('#game-shell');
       if (shell) shell.dataset.inputReady = 'true';
     });
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
-      this.input.off(Phaser.Input.Events.POINTER_DOWN, armBack);
-      this.input.off(Phaser.Input.Events.POINTER_UP, goBack);
+      canvas.removeEventListener('pointerdown', armBack);
+      canvas.removeEventListener('touchstart', armBack);
+      canvas.removeEventListener('pointerup', goBack);
+      canvas.removeEventListener('touchend', goBack);
     });
   }
 
