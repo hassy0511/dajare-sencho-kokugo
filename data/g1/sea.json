@@ -1,0 +1,21 @@
+{
+  "grade": 1,
+  "islands": [
+    {
+      "id": "g1-moji",
+      "name": "もじの しま",
+      "stages": [
+        {
+          "id": "g1-moji-seion",
+          "name": "ひらがなの すなはま",
+          "scene": "beach",
+          "skill": "せいおんの よみ",
+          "skillRef": "G1-1",
+          "intro": "ことばの はじめの もじを みつけよう!",
+          "n": 10,
+          "gen": "hiraSeion"
+        }
+      ]
+    }
+  ]
+}

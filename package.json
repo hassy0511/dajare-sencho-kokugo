@@ -25,7 +25,8 @@
     "e2e:ui": "node scripts/generate-icons.mjs && node scripts/build-font.mjs && tsc --noEmit && tsc -p tsconfig.node.json --noEmit && vite build && playwright test --ui"
   },
   "dependencies": {
-    "phaser": "3.90.0"
+    "phaser": "3.90.0",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",
