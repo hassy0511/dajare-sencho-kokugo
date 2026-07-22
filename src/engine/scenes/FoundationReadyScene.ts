@@ -9,14 +9,11 @@ const TEXT_STYLE: Phaser.Types.GameObjects.Text.TextStyle = {
 };
 
 export class FoundationReadyScene extends Phaser.Scene {
-  private canReturn = false;
-
   constructor() {
     super('FoundationReady');
   }
 
   create(): void {
-    this.canReturn = false;
     this.cameras.main.setBackgroundColor(COLORS.skyLight);
     this.drawBackground();
 
@@ -96,18 +93,24 @@ export class FoundationReadyScene extends Phaser.Scene {
       Phaser.Geom.Rectangle.Contains,
     );
     button.input!.cursor = 'pointer';
+    let pressedAfterReady = false;
+    const armBack = (): void => {
+      pressedAfterReady = true;
+    };
     const goBack = (): void => {
-      if (!this.canReturn) return;
+      if (!pressedAfterReady) return;
+      pressedAfterReady = false;
       this.scene.start('Welcome');
     };
     this.time.delayedCall(500, () => {
-      this.canReturn = true;
-      button.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, goBack);
+      this.input.on(Phaser.Input.Events.POINTER_DOWN, armBack);
+      this.input.on(Phaser.Input.Events.POINTER_UP, goBack);
       const shell = document.querySelector<HTMLElement>('#game-shell');
       if (shell) shell.dataset.inputReady = 'true';
     });
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
-      button.off(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, goBack);
+      this.input.off(Phaser.Input.Events.POINTER_DOWN, armBack);
+      this.input.off(Phaser.Input.Events.POINTER_UP, goBack);
     });
   }
 
