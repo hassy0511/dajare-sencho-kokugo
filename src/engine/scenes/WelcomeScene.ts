@@ -182,7 +182,7 @@ export class WelcomeScene extends Phaser.Scene {
     face.strokeRoundedRect(-250, -72, 500, 132, 32);
 
     const label = this.add
-      .text(0, -8, 'ぼうけんを はじめる', {
+      .text(0, -8, 'いまの ばんを みる', {
         ...TEXT_STYLE,
         color: '#fff7d0',
         fontSize: '34px',
@@ -191,7 +191,11 @@ export class WelcomeScene extends Phaser.Scene {
       .setOrigin(0.5);
 
     button.add([shadow, face, label]);
-    button.setSize(500, 142).setInteractive({ useHandCursor: true });
+    button.setInteractive(
+      new Phaser.Geom.Rectangle(-250, -72, 500, 142),
+      Phaser.Geom.Rectangle.Contains,
+    );
+    button.input!.cursor = 'pointer';
 
     button.on(Phaser.Input.Events.GAMEOBJECT_POINTER_DOWN, () => {
       button.setScale(0.96).setY(888);
@@ -201,11 +205,17 @@ export class WelcomeScene extends Phaser.Scene {
     });
     button.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => {
       button.setY(882);
-      this.activateAdventure(button, label);
+      this.showFoundationReady(button, label);
+    });
+
+    const advance = (): void => this.showFoundationReady(button, label);
+    this.input.on(Phaser.Input.Events.POINTER_UP, advance);
+    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
+      this.input.off(Phaser.Input.Events.POINTER_UP, advance);
     });
   }
 
-  private activateAdventure(
+  private showFoundationReady(
     button: Phaser.GameObjects.Container,
     label: Phaser.GameObjects.Text,
   ): void {
@@ -223,10 +233,13 @@ export class WelcomeScene extends Phaser.Scene {
     this.releaseStars(GAME_WIDTH / 2, 812);
 
     const status = document.querySelector<HTMLElement>('#game-status');
-    const shell = document.querySelector<HTMLElement>('#game-shell');
-    if (status) status.textContent = 'ぼうけんの じゅんびが できました';
-    if (shell) shell.dataset.adventureStarted = 'true';
-    if (window.__DSK_APP__) window.__DSK_APP__.adventureStarted = true;
+    if (status) status.textContent = 'つぎの がめんへ すすみます';
+
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    this.time.delayedCall(reducedMotion ? 0 : 420, () => {
+      this.cameras.main.fadeOut(reducedMotion ? 0 : 220, 234, 246, 239);
+      this.time.delayedCall(reducedMotion ? 0 : 220, () => this.scene.start('FoundationReady'));
+    });
   }
 
   private releaseStars(x: number, y: number): void {
@@ -255,8 +268,12 @@ export class WelcomeScene extends Phaser.Scene {
   private markReady(): void {
     const status = document.querySelector<HTMLElement>('#game-status');
     const shell = document.querySelector<HTMLElement>('#game-shell');
-    if (status) status.textContent = 'ぼうけんを はじめる ボタンが あります';
-    if (shell) shell.dataset.ready = 'true';
+    if (status) status.textContent = 'いまの ばんを みる ボタンが あります';
+    if (shell) {
+      shell.dataset.ready = 'true';
+      shell.dataset.scene = 'welcome';
+      delete shell.dataset.inputReady;
+    }
     if (window.__DSK_APP__) {
       window.__DSK_APP__.ready = true;
       window.__DSK_APP__.scene = 'welcome';
