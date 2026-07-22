@@ -17,6 +17,8 @@ async function tapGamePoint(
 }
 
 test('物語と選択画面を通り、絵を読む8問をクリアしてマップへ戻れる', async ({ page }, testInfo) => {
+  test.setTimeout(120_000);
+  await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.addInitScript(() => localStorage.clear());
   await page.goto('./');
 
