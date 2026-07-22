@@ -6,6 +6,27 @@ export const hiraWordPoolSchema = z.object({
   items: z.array(z.object({ w: z.string().min(2), visual: z.string().min(1) })).min(8),
 });
 
+export const wordImageLibrarySchema = z.object({
+  version: z.literal(1),
+  generator: z.object({
+    provider: z.string().min(1),
+    model: z.string().min(1),
+    mode: z.string().min(1),
+    stylePrompt: z.string().min(1),
+  }),
+  items: z
+    .array(
+      z.object({
+        key: z.string().min(1),
+        word: z.string().min(1),
+        src: z.string().regex(/^assets\/images\/words\/[a-z-]+\.png$/),
+        alt: z.string().min(1),
+        subjectPrompt: z.string().min(1),
+      }),
+    )
+    .min(1),
+});
+
 export const seaSchema = z.object({
   id: z.literal('g1'),
   name: z.string().min(1),

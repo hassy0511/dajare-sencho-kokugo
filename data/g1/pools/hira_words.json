@@ -9,6 +9,14 @@
     { "w": "ふね", "visual": "ship" },
     { "w": "もも", "visual": "peach" },
     { "w": "やま", "visual": "mountain" },
-    { "w": "ほし", "visual": "star" }
+    { "w": "ほし", "visual": "star" },
+    { "w": "はな", "visual": "flower" },
+    { "w": "うし", "visual": "cow" },
+    { "w": "そら", "visual": "sky" },
+    { "w": "くま", "visual": "bear" },
+    { "w": "とり", "visual": "bird" },
+    { "w": "さる", "visual": "monkey" },
+    { "w": "むし", "visual": "bug" },
+    { "w": "いえ", "visual": "house" }
   ]
 }
