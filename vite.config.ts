@@ -8,7 +8,7 @@ export default defineConfig({
       registerType: 'prompt',
       injectRegister: null,
       manifest: {
-        name: 'ダジャレせんちょうと こくごの ぐんとう',
+        name: 'ダジャーレせんちょうと こくごの ぐんとう',
         short_name: 'こくごの ぐんとう',
         description: '小学生向けの国語学習アドベンチャー',
         lang: 'ja',

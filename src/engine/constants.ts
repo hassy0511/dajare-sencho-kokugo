@@ -2,7 +2,7 @@ export const GAME_WIDTH = 810;
 export const GAME_HEIGHT = 1080;
 export const SAFE_AREA = 40;
 
-export const GAME_TITLE = 'ダジャレせんちょうと\nこくごの ぐんとう';
+export const GAME_TITLE = 'ダジャーレせんちょうと\nこくごの ぐんとう';
 export const GAME_FONT = '"Zen Maru Gothic", "Hiragino Maru Gothic ProN", sans-serif';
 
 export const COLORS = {

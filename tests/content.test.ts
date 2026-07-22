@@ -5,6 +5,7 @@ import { describe, expect, it } from 'vitest';
 
 import { makeHiraSeionQuiz } from '../src/content/gen/hiraSeion';
 import { loadHiraWordPool, loadSea, loadWordImageLibrary } from '../src/content/loader';
+import { GAME_TITLE } from '../src/engine/constants';
 
 describe('ひらがな清音の問題生成', () => {
   it('データファイルをスキーマ検証して読み込める', () => {
@@ -51,5 +52,17 @@ describe('ひらがな清音の問題生成', () => {
         expect(question.choices[question.answer]).toBe(item?.w);
       });
     }
+  });
+});
+
+describe('canonical character name', () => {
+  it('uses ダジャーレせんちょう consistently in the title and story data', () => {
+    const sea = loadSea();
+    expect(GAME_TITLE).toContain('ダジャーレせんちょう');
+    expect(GAME_TITLE).not.toContain('ダジャレせんちょう');
+    expect(sea.challenge[0]).toMatchObject({
+      speaker: 'ダジャーレせんちょう',
+      role: 'dajare-sencho',
+    });
   });
 });

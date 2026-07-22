@@ -4,15 +4,15 @@ import { COLORS } from '../constants';
 
 export function drawStoryPortrait(
   scene: Phaser.Scene,
-  role: 'captain' | 'sumizo' | 'buddy',
+  role: 'dajare-sencho' | 'sumizo' | 'buddy',
   x: number,
   y: number,
 ): Phaser.GameObjects.Container {
   const container = scene.add.container(x, y);
-  if (role === 'captain') {
+  if (role === 'dajare-sencho') {
     const art = scene.add.graphics();
     container.add(art);
-    drawCaptain(art);
+    drawDajareSencho(art);
     return container;
   }
   if (role === 'buddy') {
@@ -27,7 +27,7 @@ export function drawStoryPortrait(
   return container;
 }
 
-function drawCaptain(g: Phaser.GameObjects.Graphics): void {
+function drawDajareSencho(g: Phaser.GameObjects.Graphics): void {
   g.fillStyle(COLORS.brownDark).lineStyle(5, COLORS.ink, 1);
   g.fillRoundedRect(-58, 79, 46, 39, 12).strokeRoundedRect(-58, 79, 46, 39, 12);
   g.fillRoundedRect(12, 79, 46, 39, 12).strokeRoundedRect(12, 79, 46, 39, 12);
