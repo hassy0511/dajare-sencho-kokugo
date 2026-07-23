@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "generator": {
+    "provider": "OpenAI",
+    "model": "Images 2.0",
+    "mode": "user-approved character concept"
+  },
+  "items": [
+    {
+      "key": "dajare-sencho",
+      "role": "dajare-sencho",
+      "expression": "normal",
+      "src": "assets/images/characters/dajare-sencho-normal.png",
+      "source": "art/source/characters/dajare-sencho-approved.png",
+      "alt": "大きな紺色の帽子と赤いコート、緑色のひげをつけたダジャーレせんちょう",
+      "approvedAt": "2026-07-23"
+    },
+    {
+      "key": "sumizo",
+      "role": "sumizo",
+      "expression": "normal",
+      "src": "assets/images/characters/sumizo-normal.png",
+      "source": "art/source/characters/sumizo-approved.png",
+      "alt": "赤いバンダナを巻き、大きな筆を持った丸いスミイカのスミゾー",
+      "approvedAt": "2026-07-23"
+    }
+  ]
+}

@@ -41,6 +41,29 @@ export interface WordImageLibrary {
   items: WordImageAsset[];
 }
 
+export type CharacterImageRole = 'dajare-sencho' | 'sumizo';
+export type CharacterImageExpression = 'normal' | 'angry' | 'oops';
+
+export interface CharacterImageAsset {
+  key: string;
+  role: CharacterImageRole;
+  expression: CharacterImageExpression;
+  src: string;
+  source: string;
+  alt: string;
+  approvedAt: string;
+}
+
+export interface CharacterImageLibrary {
+  version: 1;
+  generator: {
+    provider: string;
+    model: string;
+    mode: string;
+  };
+  items: CharacterImageAsset[];
+}
+
 export interface StageDefinition {
   id: string;
   name: string;
