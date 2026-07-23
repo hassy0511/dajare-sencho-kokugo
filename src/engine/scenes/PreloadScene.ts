@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 
+import { preloadCharacterImages } from '../assets/character-image-library';
 import { preloadWordImages } from '../assets/word-image-library';
 import { COLORS, GAME_FONT, GAME_HEIGHT, GAME_WIDTH } from '../constants';
 
@@ -9,6 +10,7 @@ export class PreloadScene extends Phaser.Scene {
   }
 
   preload(): void {
+    preloadCharacterImages(this);
     preloadWordImages(this);
   }
 

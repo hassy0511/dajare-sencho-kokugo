@@ -42,8 +42,13 @@ test('物語と選択画面を通り、画像を読む10問をクリアしてマ
   await page.screenshot({ path: testInfo.outputPath('challenge-story.png'), fullPage: true });
   await tapGamePoint(page, canvas, 405, 910);
   await expect.poll(() => page.evaluate(() => window.__DSK_APP__?.storyPage)).toBe(1);
+  await page.screenshot({
+    path: testInfo.outputPath('challenge-story-sumizo.png'),
+    fullPage: true,
+  });
   await tapGamePoint(page, canvas, 405, 910);
   await expect.poll(() => page.evaluate(() => window.__DSK_APP__?.storyPage)).toBe(2);
+  await page.screenshot({ path: testInfo.outputPath('challenge-story-buddy.png'), fullPage: true });
   await tapGamePoint(page, canvas, 405, 910);
   await expect(shell).toHaveAttribute('data-scene', 'island-select');
   await page.screenshot({ path: testInfo.outputPath('island-select.png'), fullPage: true });

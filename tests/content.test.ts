@@ -4,7 +4,12 @@ import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 import { makeHiraSeionQuiz } from '../src/content/gen/hiraSeion';
-import { loadHiraWordPool, loadSea, loadWordImageLibrary } from '../src/content/loader';
+import {
+  loadCharacterImageLibrary,
+  loadHiraWordPool,
+  loadSea,
+  loadWordImageLibrary,
+} from '../src/content/loader';
 import { GAME_TITLE } from '../src/engine/constants';
 
 describe('ひらがな清音の問題生成', () => {
@@ -14,6 +19,25 @@ describe('ひらがな清音の問題生成', () => {
     expect(sea.islands).toHaveLength(5);
     expect(sea.islands.flatMap((island) => island.stages)).toHaveLength(41);
     expect(loadHiraWordPool().items).toHaveLength(16);
+  });
+
+  it('承認済みキャラクター画像が台帳と対応し、配信用と原本が存在する', () => {
+    const library = loadCharacterImageLibrary();
+    expect(library.generator.model).toBe('Images 2.0');
+    expect(library.items).toHaveLength(2);
+    expect(new Set(library.items.map((item) => item.role))).toEqual(
+      new Set(['dajare-sencho', 'sumizo']),
+    );
+
+    for (const asset of library.items) {
+      const assetPath = resolve('public', asset.src);
+      expect(existsSync(assetPath)).toBe(true);
+      expect(existsSync(resolve(asset.source))).toBe(true);
+      const png = readFileSync(assetPath);
+      expect(png.readUInt32BE(16)).toBe(512);
+      expect(png.readUInt32BE(20)).toBe(512);
+      expect(png.byteLength).toBeLessThan(500 * 1024);
+    }
   });
 
   it('画像ライブラリの16語が問題プールと1対1で対応し、実ファイルが存在する', () => {

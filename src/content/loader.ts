@@ -1,8 +1,23 @@
+import characterImagesJson from '../../data/assets/character_images.json';
 import hiraWordsJson from '../../data/g1/pools/hira_words.json';
 import seaJson from '../../data/g1/sea.json';
 import wordImagesJson from '../../data/g1/assets/word_images.json';
-import type { HiraWordPool, SeaDefinition, WordImageLibrary } from '../types/content';
-import { hiraWordPoolSchema, seaSchema, wordImageLibrarySchema } from './schema';
+import type {
+  CharacterImageLibrary,
+  HiraWordPool,
+  SeaDefinition,
+  WordImageLibrary,
+} from '../types/content';
+import {
+  characterImageLibrarySchema,
+  hiraWordPoolSchema,
+  seaSchema,
+  wordImageLibrarySchema,
+} from './schema';
+
+export function loadCharacterImageLibrary(): CharacterImageLibrary {
+  return characterImageLibrarySchema.parse(characterImagesJson);
+}
 
 export function loadHiraWordPool(): HiraWordPool {
   return hiraWordPoolSchema.parse(hiraWordsJson);
