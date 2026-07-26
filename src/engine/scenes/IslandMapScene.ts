@@ -4,6 +4,7 @@ import { loadSea } from '../../content/loader';
 import type { IslandDefinition, StageDefinition } from '../../types/content';
 import { COLORS, GAME_FONT, GAME_HEIGHT, GAME_WIDTH } from '../constants';
 import { addGameTapListener } from '../input/logical-input';
+import { getStageAccess } from '../progression/stage-access';
 import { loadState } from '../save/state';
 
 interface IslandMapData {
@@ -75,9 +76,10 @@ export class IslandMapScene extends Phaser.Scene {
     island.stages.forEach((stage, index) => {
       const position = nodePosition(index);
       const cleared = Boolean(state.stages[stage.id]?.cleared);
-      const playable = stage.status === 'playable';
-      const face = cleared ? COLORS.green : playable ? COLORS.coral : 0xaab5ad;
-      const shadow = cleared ? COLORS.greenDark : playable ? COLORS.coralDark : 0x718078;
+      const access = getStageAccess(island.stages, index, state);
+      const available = access === 'available';
+      const face = cleared ? COLORS.green : available ? COLORS.coral : 0xaab5ad;
+      const shadow = cleared ? COLORS.greenDark : available ? COLORS.coralDark : 0x718078;
       const card = this.add.graphics();
       card.fillStyle(shadow).lineStyle(4, COLORS.ink, 1);
       card
@@ -102,7 +104,7 @@ export class IslandMapScene extends Phaser.Scene {
       this.add
         .text(position.x + 28, position.y - 20, stage.name, {
           fontFamily: GAME_FONT,
-          color: playable || cleared ? '#fff7d0' : '#f0f3ed',
+          color: available || cleared ? '#fff7d0' : '#f0f3ed',
           fontSize: stage.name.length > 13 ? '18px' : '21px',
           fontStyle: 'bold',
           align: 'center',
@@ -113,7 +115,13 @@ export class IslandMapScene extends Phaser.Scene {
         .text(
           position.x + 28,
           position.y + 25,
-          playable ? (cleared ? 'クリアずみ' : 'あそべるよ!') : 'じゅんびちゅう',
+          cleared
+            ? 'クリアずみ'
+            : available
+              ? 'あそべるよ!'
+              : access === 'locked'
+                ? 'まえを クリアで ひらく'
+                : 'じゅんびちゅう',
           {
             fontFamily: GAME_FONT,
             color: '#fff7d0',
@@ -139,6 +147,7 @@ export class IslandMapScene extends Phaser.Scene {
   }
 
   private bindInput(island: IslandDefinition): void {
+    const state = loadState();
     this.cleanupInput = addGameTapListener(this.game.canvas, ({ x, y }) => {
       if (this.leaving) return;
       if (x <= 165 && y <= 115) {
@@ -153,8 +162,12 @@ export class IslandMapScene extends Phaser.Scene {
       });
       const stage = island.stages[index];
       if (!stage) return;
-      if (stage.status !== 'playable') {
-        const message = `${stage.name}は じゅんびちゅう!`;
+      const access = getStageAccess(island.stages, index, state);
+      if (access !== 'available') {
+        const message =
+          access === 'locked'
+            ? 'ひとつ まえの ステージを クリアすると ひらくよ!'
+            : `${stage.name}は じゅんびちゅう!`;
         this.notice?.setText(message).setColor('#9b3f41');
         const status = document.querySelector<HTMLElement>('#game-status');
         if (status) status.textContent = message;

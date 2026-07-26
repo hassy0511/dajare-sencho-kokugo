@@ -33,6 +33,7 @@
           "skill": "せいおんの よみ",
           "skillRef": "1-2知技(1)ウ",
           "intro": "えに あう ひらがなを みつけよう!",
+          "marker": "あ",
           "n": 10,
           "gen": "hiraPicture",
           "status": "playable",
@@ -45,9 +46,10 @@
           "skill": "だくおん・はんだくおん",
           "skillRef": "1-2知技(1)ウ",
           "intro": "てんてんの つく もじを よもう",
+          "marker": "が",
           "n": 8,
-          "gen": null,
-          "status": "planned",
+          "gen": "hiraDakuon",
+          "status": "playable",
           "treasure": "だくてんの かいがら"
         },
         {
@@ -57,9 +59,10 @@
           "skill": "そくおん",
           "skillRef": "1-2知技(1)ウ",
           "intro": "ちいさい「っ」を みつけよう",
+          "marker": "っ",
           "n": 8,
-          "gen": null,
-          "status": "planned",
+          "gen": "hiraSokuon",
+          "status": "playable",
           "treasure": "ちいさな ほうせき"
         },
         {
@@ -69,9 +72,10 @@
           "skill": "ちょうおん・はつおん",
           "skillRef": "1-2知技(1)ウ",
           "intro": "のばす おとを みつけよう",
+          "marker": "ああ",
           "n": 8,
-          "gen": null,
-          "status": "planned",
+          "gen": "hiraChouon",
+          "status": "playable",
           "treasure": "ひびく ほらがい"
         },
         {

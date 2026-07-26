@@ -4,6 +4,42 @@ export const hiraWordPoolSchema = z.object({
   id: z.string().min(1),
   kind: z.literal('hira-seion'),
   items: z.array(z.object({ w: z.string().min(2), visual: z.string().min(1) })).min(8),
+  dakuon: z
+    .array(
+      z.object({
+        key: z.string().min(1),
+        prompt: z.string().min(1),
+        emphasis: z.string().min(1).nullable(),
+        choices: z.array(z.string().min(1)).length(4),
+        answer: z.string().min(1),
+        explanation: z.string().min(1),
+      }),
+    )
+    .min(8),
+  sokuon: z
+    .array(
+      z.object({
+        key: z.string().min(1),
+        prompt: z.string().min(1),
+        emphasis: z.string().min(1).nullable(),
+        choices: z.array(z.string().min(1)).length(4),
+        answer: z.string().min(1),
+        explanation: z.string().min(1),
+      }),
+    )
+    .min(8),
+  chouon: z
+    .array(
+      z.object({
+        key: z.string().min(1),
+        prompt: z.string().min(1),
+        emphasis: z.string().min(1).nullable(),
+        choices: z.array(z.string().min(1)).length(4),
+        answer: z.string().min(1),
+        explanation: z.string().min(1),
+      }),
+    )
+    .min(8),
 });
 
 export const wordImageLibrarySchema = z.object({
@@ -79,8 +115,9 @@ export const seaSchema = z.object({
               skill: z.string().min(1),
               skillRef: z.string().min(1),
               intro: z.string().min(1),
+              marker: z.string().min(1).optional(),
               n: z.number().int().min(1).max(20),
-              gen: z.literal('hiraPicture').nullable(),
+              gen: z.enum(['hiraPicture', 'hiraDakuon', 'hiraSokuon', 'hiraChouon']).nullable(),
               status: z.enum(['playable', 'planned']),
               treasure: z.string().min(1),
             }),

@@ -16,10 +16,22 @@ export interface HiraWordItem {
   visual: string;
 }
 
+export interface MojiChoiceItem {
+  key: string;
+  prompt: string;
+  emphasis: string | null;
+  choices: string[];
+  answer: string;
+  explanation: string;
+}
+
 export interface HiraWordPool {
   id: string;
   kind: 'hira-seion';
   items: HiraWordItem[];
+  dakuon: MojiChoiceItem[];
+  sokuon: MojiChoiceItem[];
+  chouon: MojiChoiceItem[];
 }
 
 export interface WordImageAsset {
@@ -72,8 +84,9 @@ export interface StageDefinition {
   skill: string;
   skillRef: string;
   intro: string;
+  marker?: string | undefined;
   n: number;
-  gen: 'hiraPicture' | null;
+  gen: 'hiraPicture' | 'hiraDakuon' | 'hiraSokuon' | 'hiraChouon' | null;
   status: 'playable' | 'planned';
   treasure: string;
 }
