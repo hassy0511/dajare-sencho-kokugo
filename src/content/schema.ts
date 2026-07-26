@@ -33,6 +33,7 @@ export const characterImageLibrarySchema = z.object({
     provider: z.string().min(1),
     model: z.string().min(1),
     mode: z.string().min(1),
+    styleGuide: z.literal('art/prompts/character-mascot-style.md'),
   }),
   items: z
     .array(
