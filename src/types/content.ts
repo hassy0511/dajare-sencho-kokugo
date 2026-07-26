@@ -60,6 +60,7 @@ export interface CharacterImageLibrary {
     provider: string;
     model: string;
     mode: string;
+    styleGuide: string;
   };
   items: CharacterImageAsset[];
 }

@@ -3,7 +3,8 @@
   "generator": {
     "provider": "OpenAI",
     "model": "Images 2.0",
-    "mode": "user-approved character concept"
+    "mode": "user-approved character concept",
+    "styleGuide": "art/prompts/character-mascot-style.md"
   },
   "items": [
     {

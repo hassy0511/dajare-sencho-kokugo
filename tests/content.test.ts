@@ -24,6 +24,8 @@ describe('ひらがな清音の問題生成', () => {
   it('承認済みキャラクター画像が台帳と対応し、配信用と原本が存在する', () => {
     const library = loadCharacterImageLibrary();
     expect(library.generator.model).toBe('Images 2.0');
+    expect(library.generator.styleGuide).toBe('art/prompts/character-mascot-style.md');
+    expect(existsSync(resolve(library.generator.styleGuide))).toBe(true);
     expect(library.items).toHaveLength(2);
     expect(new Set(library.items.map((item) => item.role))).toEqual(
       new Set(['dajare-sencho', 'sumizo']),
