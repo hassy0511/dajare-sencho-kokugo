@@ -18,5 +18,203 @@
     { "w": "さる", "visual": "monkey" },
     { "w": "むし", "visual": "bug" },
     { "w": "いえ", "visual": "house" }
+  ],
+  "dakuon": [
+    {
+      "key": "ka-to-ga",
+      "prompt": "「か」に てんてん。\nどの もじに なる?",
+      "emphasis": "か ＋ ゛",
+      "choices": ["が", "か", "ぱ", "ざ"],
+      "answer": "が",
+      "explanation": "「か」に てんてんで「が」だよ"
+    },
+    {
+      "key": "sa-to-za",
+      "prompt": "「さ」に てんてん。\nどの もじに なる?",
+      "emphasis": "さ ＋ ゛",
+      "choices": ["ざ", "さ", "だ", "ば"],
+      "answer": "ざ",
+      "explanation": "「さ」に てんてんで「ざ」だよ"
+    },
+    {
+      "key": "ha-to-ba",
+      "prompt": "「は」に てんてん。\nどの もじに なる?",
+      "emphasis": "は ＋ ゛",
+      "choices": ["ば", "は", "ぱ", "だ"],
+      "answer": "ば",
+      "explanation": "「は」に てんてんで「ば」だよ"
+    },
+    {
+      "key": "ha-to-pa",
+      "prompt": "「は」に まる。\nどの もじに なる?",
+      "emphasis": "は ＋ ゜",
+      "choices": ["ぱ", "は", "ば", "ぽ"],
+      "answer": "ぱ",
+      "explanation": "「は」に まるで「ぱ」だよ"
+    },
+    {
+      "key": "find-dakuten",
+      "prompt": "てんてんが つく\nもじは どれ?",
+      "emphasis": "か　が　ぱ",
+      "choices": ["が", "か", "ぱ", "は"],
+      "answer": "が",
+      "explanation": "「が」には てんてんが ついているよ"
+    },
+    {
+      "key": "find-handakuten",
+      "prompt": "まるが つく\nもじは どれ?",
+      "emphasis": "は　ば　ぱ",
+      "choices": ["ぱ", "は", "ば", "だ"],
+      "answer": "ぱ",
+      "explanation": "「ぱ」には まるが ついているよ"
+    },
+    {
+      "key": "zou-dakuten",
+      "prompt": "「ぞう」の なかの\nてんてんの もじは?",
+      "emphasis": "ぞう",
+      "choices": ["ぞ", "そ", "ぽ", "ど"],
+      "answer": "ぞ",
+      "explanation": "「ぞ」に てんてんが ついているよ"
+    },
+    {
+      "key": "piano-handakuten",
+      "prompt": "「ぴあの」の なかの\nまるの もじは?",
+      "emphasis": "ぴあの",
+      "choices": ["ぴ", "ひ", "び", "ぷ"],
+      "answer": "ぴ",
+      "explanation": "「ぴ」に まるが ついているよ"
+    }
+  ],
+  "sokuon": [
+    {
+      "key": "kitte",
+      "prompt": "おとを つなげると\nどの ことば?",
+      "emphasis": "き・っ・て",
+      "choices": ["きって", "きて", "きつて", "ぎって"],
+      "answer": "きって",
+      "explanation": "ちいさい「っ」を いれて「きって」だよ"
+    },
+    {
+      "key": "gakkou",
+      "prompt": "ちいさい「っ」も いれて\nつなげよう",
+      "emphasis": "が・っ・こ・う",
+      "choices": ["がっこう", "がつこう", "がこう", "かっこう"],
+      "answer": "がっこう",
+      "explanation": "「がっこう」と よむよ"
+    },
+    {
+      "key": "kippu",
+      "prompt": "おとを つなげると\nどの ことば?",
+      "emphasis": "き・っ・ぷ",
+      "choices": ["きっぷ", "きつぷ", "きぷ", "ぎっぷ"],
+      "answer": "きっぷ",
+      "explanation": "ちいさい「っ」を いれて「きっぷ」だよ"
+    },
+    {
+      "key": "rappa",
+      "prompt": "ちいさい「っ」を\nわすれずに つなげよう",
+      "emphasis": "ら・っ・ぱ",
+      "choices": ["らっぱ", "らつぱ", "らぱ", "らっば"],
+      "answer": "らっぱ",
+      "explanation": "「らっぱ」と よむよ"
+    },
+    {
+      "key": "sekken",
+      "prompt": "おとを つなげると\nどの ことば?",
+      "emphasis": "せ・っ・け・ん",
+      "choices": ["せっけん", "せつけん", "せけん", "ぜっけん"],
+      "answer": "せっけん",
+      "explanation": "ちいさい「っ」を いれて「せっけん」だよ"
+    },
+    {
+      "key": "koppu",
+      "prompt": "ちいさい「っ」が ある\nことばは どれ?",
+      "emphasis": "っ を さがそう",
+      "choices": ["こっぷ", "こつぷ", "こぷ", "ごっぷ"],
+      "answer": "こっぷ",
+      "explanation": "「こっぷ」には ちいさい「っ」が あるよ"
+    },
+    {
+      "key": "zasshi",
+      "prompt": "ちいさい「っ」が ある\nことばは どれ?",
+      "emphasis": "っ を さがそう",
+      "choices": ["ざっし", "ざつし", "ざし", "さっし"],
+      "answer": "ざっし",
+      "explanation": "「ざっし」には ちいさい「っ」が あるよ"
+    },
+    {
+      "key": "happa",
+      "prompt": "おとを つなげると\nどの ことば?",
+      "emphasis": "は・っ・ぱ",
+      "choices": ["はっぱ", "はつぱ", "はぱ", "はっば"],
+      "answer": "はっぱ",
+      "explanation": "ちいさい「っ」を いれて「はっぱ」だよ"
+    }
+  ],
+  "chouon": [
+    {
+      "key": "okaasan",
+      "prompt": "のばす おとも いれて\nことばに しよう",
+      "emphasis": "お・か・あ・さ・ん",
+      "choices": ["おかあさん", "おかさん", "おかーさん", "おがあさん"],
+      "answer": "おかあさん",
+      "explanation": "「あ」を のばして「おかあさん」だよ"
+    },
+    {
+      "key": "oniisan",
+      "prompt": "おとを つなげると\nどの ことば?",
+      "emphasis": "お・に・い・さ・ん",
+      "choices": ["おにいさん", "おにさん", "おにーさん", "おりいさん"],
+      "answer": "おにいさん",
+      "explanation": "「い」を のばして「おにいさん」だよ"
+    },
+    {
+      "key": "oneesan",
+      "prompt": "のばす おとも いれて\nことばに しよう",
+      "emphasis": "お・ね・え・さ・ん",
+      "choices": ["おねえさん", "おねさん", "おねーさん", "おれえさん"],
+      "answer": "おねえさん",
+      "explanation": "「え」を のばして「おねえさん」だよ"
+    },
+    {
+      "key": "fuusen",
+      "prompt": "おとを つなげると\nどの ことば?",
+      "emphasis": "ふ・う・せ・ん",
+      "choices": ["ふうせん", "ふせん", "ふーせん", "ぶうせん"],
+      "answer": "ふうせん",
+      "explanation": "「う」を のばして「ふうせん」だよ"
+    },
+    {
+      "key": "koori",
+      "prompt": "のばす おとも いれて\nことばに しよう",
+      "emphasis": "こ・お・り",
+      "choices": ["こおり", "こり", "こーり", "ごおり"],
+      "answer": "こおり",
+      "explanation": "「お」を のばして「こおり」だよ"
+    },
+    {
+      "key": "boushi",
+      "prompt": "おとを つなげると\nどの ことば?",
+      "emphasis": "ぼ・う・し",
+      "choices": ["ぼうし", "ぼし", "ぼーし", "ほうし"],
+      "answer": "ぼうし",
+      "explanation": "「う」を のばして「ぼうし」だよ"
+    },
+    {
+      "key": "denwa",
+      "prompt": "「ん」も わすれずに\nつなげよう",
+      "emphasis": "で・ん・わ",
+      "choices": ["でんわ", "でわ", "てんわ", "でんな"],
+      "answer": "でんわ",
+      "explanation": "「ん」を いれて「でんわ」だよ"
+    },
+    {
+      "key": "hon",
+      "prompt": "おとを つなげると\nどの ことば?",
+      "emphasis": "ほ・ん",
+      "choices": ["ほん", "ほ", "ぼん", "ぽん"],
+      "answer": "ほん",
+      "explanation": "「ん」を いれて「ほん」だよ"
+    }
   ]
 }

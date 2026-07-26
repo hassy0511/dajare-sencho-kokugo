@@ -42,12 +42,15 @@ export class ChoiceQType implements QType {
     if (question.visual) {
       drawWordPicture(scene, layer, question.visual, 405, 455);
     } else if (question.emphasis) {
+      const emphasisLength = [...question.emphasis.replaceAll('\n', '')].length;
       const word = scene.add
         .text(405, 470, question.emphasis, {
           fontFamily: GAME_FONT,
           color: '#176b72',
-          fontSize: '72px',
+          fontSize: emphasisLength >= 10 ? '48px' : emphasisLength >= 7 ? '58px' : '72px',
           fontStyle: 'bold',
+          align: 'center',
+          wordWrap: { width: 650 },
         })
         .setOrigin(0.5);
       layer.add(word);

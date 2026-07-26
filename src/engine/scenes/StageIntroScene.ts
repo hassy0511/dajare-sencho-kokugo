@@ -92,7 +92,7 @@ export class StageIntroScene extends Phaser.Scene {
     treasure.fillStyle(COLORS.cream).lineStyle(5, COLORS.ink, 1);
     treasure.fillRoundedRect(358, 340, 94, 100, 22).strokeRoundedRect(358, 340, 94, 100, 22);
     this.add
-      .text(405, 386, 'あ', {
+      .text(405, 386, stage.marker ?? 'あ', {
         fontFamily: GAME_FONT,
         color: '#9b3f41',
         fontSize: '58px',

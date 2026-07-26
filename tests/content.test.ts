@@ -4,6 +4,7 @@ import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 import { makeHiraSeionQuiz } from '../src/content/gen/hiraSeion';
+import { makeMojiChoiceQuiz } from '../src/content/gen/mojiChoice';
 import {
   loadCharacterImageLibrary,
   loadHiraWordPool,
@@ -18,7 +19,12 @@ describe('ひらがな清音の問題生成', () => {
     expect(sea.islands[0]?.stages[0]?.id).toBe('g1-moji-seion');
     expect(sea.islands).toHaveLength(5);
     expect(sea.islands.flatMap((island) => island.stages)).toHaveLength(41);
-    expect(loadHiraWordPool().items).toHaveLength(16);
+    expect(sea.islands[0]?.stages.filter((stage) => stage.status === 'playable')).toHaveLength(4);
+    const pool = loadHiraWordPool();
+    expect(pool.items).toHaveLength(16);
+    expect(pool.dakuon).toHaveLength(8);
+    expect(pool.sokuon).toHaveLength(8);
+    expect(pool.chouon).toHaveLength(8);
   });
 
   it('承認済みキャラクター画像が台帳と対応し、配信用と原本が存在する', () => {
@@ -77,6 +83,32 @@ describe('ひらがな清音の問題生成', () => {
         const item = pool.items.find((candidate) => candidate.visual === question.visual);
         expect(question.choices[question.answer]).toBe(item?.w);
       });
+    }
+  });
+
+  it('追加3ステージがseedにかかわらず重複なし8問・4択を生成する', () => {
+    const pool = loadHiraWordPool();
+    const categories = [
+      ['hira-dakuon', pool.dakuon],
+      ['hira-sokuon', pool.sokuon],
+      ['hira-chouon', pool.chouon],
+    ] as const;
+
+    for (const [category, items] of categories) {
+      for (let seed = 0; seed < 1000; seed += 1) {
+        const questions = makeMojiChoiceQuiz(category, items, 8, seed);
+        expect(questions).toHaveLength(8);
+        expect(new Set(questions.map((question) => question.key)).size).toBe(8);
+        questions.forEach((question) => {
+          expect(question.visual).toBeNull();
+          expect(question.choices).toHaveLength(4);
+          expect(new Set(question.choices).size).toBe(4);
+          expect(question.answer).toBeGreaterThanOrEqual(0);
+          expect(question.answer).toBeLessThan(4);
+          const source = items.find((item) => question.key.endsWith(item.key));
+          expect(question.choices[question.answer]).toBe(source?.answer);
+        });
+      }
     }
   });
 });

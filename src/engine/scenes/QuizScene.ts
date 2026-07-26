@@ -36,7 +36,7 @@ export class QuizScene extends Phaser.Scene {
       ?.stages.find((candidate) => candidate.id === this.stageId);
     if (!stage) throw new Error(`ステージが見つかりません: ${this.stageId}`);
     if (!stage.gen) throw new Error('このステージの問題はまだ準備中です。');
-    this.questions = questionGenerators[stage.gen](pool.items, stage.n, Date.now());
+    this.questions = questionGenerators[stage.gen](pool, stage.n, Date.now());
     this.questionIndex = 0;
     this.score = 0;
     this.combo = 0;
@@ -190,8 +190,11 @@ export class QuizScene extends Phaser.Scene {
       shell.dataset.question = String(this.questionIndex);
       shell.dataset.inputReady = 'true';
     }
-    if (status)
-      status.textContent = `${this.questionIndex + 1}もんめ。えに あう ことばを えらびます`;
+    if (status) {
+      status.textContent = question.visual
+        ? `${this.questionIndex + 1}もんめ。えに あう ことばを えらびます`
+        : `${this.questionIndex + 1}もんめ。もじを よく みて えらびます`;
+    }
     if (window.__DSK_APP__) {
       window.__DSK_APP__.ready = true;
       window.__DSK_APP__.scene = 'quiz';

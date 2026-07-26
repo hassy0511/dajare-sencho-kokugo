@@ -34,9 +34,9 @@
 | # | id | なまえ | skill / skillRef | 出題 | n |
 |---|---|---|---|---|---|
 | 1 | `g1-moji-seion` | ひらがなの すなはま | 清音のよみ / 1-2知技(1)ウ | choice: Images 2.0の絵→正しいひらがな表記を4択(pool: `hiraWords` 16語) | 10 |
-| 2 | `g1-moji-dakuon` | だくてんの いわば | 濁音・半濁音 / 同上 | choice: 「か゛」系の正誤・絵に合う表記選び(pool: `hiraWords.dakuon`) | 8 |
-| 3 | `g1-moji-sokuon` | ちいさい「っ」の どうくつ | 促音 / 同上 | choice: 「きて/きって」絵に合う方を選ぶ(pool: `hiraWords.sokuon`) | 8 |
-| 4 | `g1-moji-chouon` | のばしおんの みさき | 長音・撥音 / 同上 | choice: 「おかあさん/おかーさん/おかさん」正表記(pool: `hiraWords.chouon`) | 8 |
+| 2 | `g1-moji-dakuon` | だくてんの いわば | 濁音・半濁音 / 同上 | choice: 元の文字へ濁点・半濁点を付ける、言葉の中から記号付き文字を探す(pool: `hiraWords.dakuon`) | 8 |
+| 3 | `g1-moji-sokuon` | ちいさい「っ」の どうくつ | 促音 / 同上 | choice: 分けて示した音をつなぎ、小さい「っ」を含む正表記を選ぶ(pool: `hiraWords.sokuon`) | 8 |
+| 4 | `g1-moji-chouon` | のばしおんの みさき | 長音・撥音 / 同上 | choice: 分けて示した音をつなぎ、長音・撥音を含む正表記を選ぶ(pool: `hiraWords.chouon`) | 8 |
 | 5 | `g1-moji-test1` | ★スミゾーの すみみはり | かくにん① | mix: 1〜4の全タイプ | 10 |
 | 6 | `g1-moji-youon` | ちいさい「ゃゅょ」の はし | 拗音 / 同上 | choice: 「しゃ/しや」絵に合う表記(pool: `hiraWords.youon`) | 8 |
 | 7 | `g1-moji-katakana` | カタカナの さんばし | 片仮名・片仮名で書く語 / 1-2知技(1)ウ | choice: ひらがな→カタカナ変換4択(pool: `katakana` 60語) | 10 |
