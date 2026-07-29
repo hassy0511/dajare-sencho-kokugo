@@ -1,4 +1,4 @@
-import type { IslandDefinition, StageDefinition } from '../../types/content';
+import type { IslandDefinition, SeaDefinition, StageDefinition } from '../../types/content';
 import type { SaveState } from '../save/state';
 
 export type StageAccess = 'available' | 'locked' | 'planned';
@@ -23,4 +23,11 @@ export function getNextPlayableStage(
   if (index < 0) return undefined;
   const next = island.stages[index + 1];
   return next?.status === 'playable' ? next : undefined;
+}
+
+export function isSeaComplete(sea: SeaDefinition, state: Pick<SaveState, 'stages'>): boolean {
+  return sea.islands
+    .flatMap((island) => island.stages)
+    .filter((stage) => stage.status === 'playable')
+    .every((stage) => state.stages[stage.id]?.cleared === true);
 }

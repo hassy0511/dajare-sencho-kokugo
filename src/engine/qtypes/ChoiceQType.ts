@@ -47,7 +47,18 @@ export class ChoiceQType implements QType {
         .text(405, 470, question.emphasis, {
           fontFamily: GAME_FONT,
           color: '#176b72',
-          fontSize: emphasisLength >= 10 ? '48px' : emphasisLength >= 7 ? '58px' : '72px',
+          fontSize:
+            emphasisLength >= 60
+              ? '21px'
+              : emphasisLength >= 40
+                ? '25px'
+                : emphasisLength >= 24
+                  ? '32px'
+                  : emphasisLength >= 10
+                    ? '48px'
+                    : emphasisLength >= 7
+                      ? '58px'
+                      : '72px',
           fontStyle: 'bold',
           align: 'center',
           wordWrap: { width: 650 },
@@ -59,14 +70,26 @@ export class ChoiceQType implements QType {
     question.choices.forEach((choice, index) => {
       const center = CHOICE_CENTERS[index];
       if (!center) return;
+      const choiceLength = [...choice].length;
       const face = scene.add.graphics();
       this.drawButton(face, center.x, center.y, COLORS.cream, COLORS.sandDark);
       const label = scene.add
         .text(center.x, center.y - 4, choice, {
           fontFamily: GAME_FONT,
           color: '#3d3323',
-          fontSize: choice.length >= 5 ? '40px' : '50px',
+          fontSize:
+            choiceLength >= 22
+              ? '19px'
+              : choiceLength >= 15
+                ? '23px'
+                : choiceLength >= 10
+                  ? '29px'
+                  : choiceLength >= 5
+                    ? '40px'
+                    : '50px',
           fontStyle: 'bold',
+          align: 'center',
+          wordWrap: { width: 270 },
         })
         .setOrigin(0.5);
       layer.add([face, label]);

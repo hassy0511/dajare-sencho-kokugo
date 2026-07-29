@@ -4,7 +4,7 @@ import { loadSea } from '../../content/loader';
 import type { StageDefinition } from '../../types/content';
 import { COLORS, GAME_FONT, GAME_HEIGHT, GAME_WIDTH } from '../constants';
 import { addGameTapListener } from '../input/logical-input';
-import { getNextPlayableStage } from '../progression/stage-access';
+import { getNextPlayableStage, isSeaComplete } from '../progression/stage-access';
 import { recordStageResult } from '../save/state';
 
 interface ResultData {
@@ -47,16 +47,18 @@ export class ResultScene extends Phaser.Scene {
 
   create(): void {
     const stars = starsForResult(this.score, this.total);
-    recordStageResult(this.stageId, this.score, this.total, stars);
-    const island = loadSea().islands.find((candidate) => candidate.id === this.islandId);
+    const state = recordStageResult(this.stageId, this.score, this.total, stars);
+    const sea = loadSea();
+    const island = sea.islands.find((candidate) => candidate.id === this.islandId);
     const nextStage = stars > 0 && island ? getNextPlayableStage(island, this.stageId) : undefined;
-    this.drawResult(stars, nextStage);
-    this.bindButtons(nextStage);
-    this.markReady(stars, nextStage);
+    const seaComplete = stars > 0 && isSeaComplete(sea, state);
+    this.drawResult(stars, nextStage, seaComplete);
+    this.bindButtons(nextStage, seaComplete);
+    this.markReady(stars, nextStage, seaComplete);
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => this.cleanupInput?.());
   }
 
-  private drawResult(stars: number, nextStage?: StageDefinition): void {
+  private drawResult(stars: number, nextStage?: StageDefinition, seaComplete = false): void {
     const background = this.add.graphics();
     background.fillStyle(COLORS.sky).fillRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
     background.fillStyle(COLORS.sea).fillRect(0, 420, GAME_WIDTH, GAME_HEIGHT - 420);
@@ -112,7 +114,7 @@ export class ResultScene extends Phaser.Scene {
     this.drawButton(
       580,
       790,
-      nextStage ? 'つぎの ステージ' : 'マップへ',
+      seaComplete ? 'おたからを ひらく!' : nextStage ? 'つぎの ステージ' : 'マップへ',
       COLORS.green,
       COLORS.greenDark,
     );
@@ -138,25 +140,29 @@ export class ResultScene extends Phaser.Scene {
       .setOrigin(0.5);
   }
 
-  private bindButtons(nextStage?: StageDefinition): void {
+  private bindButtons(nextStage?: StageDefinition, seaComplete = false): void {
     const surface = this.game.canvas;
     this.cleanupInput = addGameTapListener(surface, ({ x, y }) => {
       if (this.leaving || Math.abs(y - 790) > 75) return;
       if (Math.abs(x - 230) <= 165) this.leaveFor('Quiz');
       else if (Math.abs(x - 580) <= 165) {
-        if (nextStage) this.leaveFor('StageIntro', nextStage.id);
+        if (seaComplete) this.leaveFor('GradeComplete');
+        else if (nextStage) this.leaveFor('StageIntro', nextStage.id);
         else this.leaveFor('IslandMap');
       }
     });
   }
 
-  private leaveFor(scene: 'Quiz' | 'IslandMap' | 'StageIntro', stageId = this.stageId): void {
+  private leaveFor(
+    scene: 'Quiz' | 'IslandMap' | 'StageIntro' | 'GradeComplete',
+    stageId = this.stageId,
+  ): void {
     this.leaving = true;
     this.cleanupInput?.();
     this.scene.start(scene, { islandId: this.islandId, stageId });
   }
 
-  private markReady(stars: number, nextStage?: StageDefinition): void {
+  private markReady(stars: number, nextStage?: StageDefinition, seaComplete = false): void {
     const shell = document.querySelector<HTMLElement>('#game-shell');
     const status = document.querySelector<HTMLElement>('#game-status');
     if (shell) {
@@ -164,6 +170,7 @@ export class ResultScene extends Phaser.Scene {
       shell.dataset.scene = 'result';
       shell.dataset.inputReady = 'true';
       shell.dataset.stars = String(stars);
+      shell.dataset.seaComplete = String(seaComplete);
       if (nextStage) shell.dataset.nextStage = nextStage.id;
       else delete shell.dataset.nextStage;
     }

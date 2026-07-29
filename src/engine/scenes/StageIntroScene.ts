@@ -27,21 +27,21 @@ export class StageIntroScene extends Phaser.Scene {
   }
 
   create(): void {
-    const stage = this.findStage();
-    this.drawBeach(stage);
+    const { stage, islandSymbol } = this.findStage();
+    this.drawBeach(stage, islandSymbol);
     this.bindInput();
     this.markReady(stage);
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => this.cleanupInput?.());
   }
 
-  private findStage(): StageDefinition {
+  private findStage(): { stage: StageDefinition; islandSymbol: string } {
     const island = loadSea().islands.find((candidate) => candidate.id === this.islandId);
     const stage = island?.stages.find((candidate) => candidate.id === this.stageId);
     if (!stage) throw new Error(`ステージが見つかりません: ${this.stageId}`);
-    return stage;
+    return { stage, islandSymbol: island?.symbol ?? 'あ' };
   }
 
-  private drawBeach(stage: StageDefinition): void {
+  private drawBeach(stage: StageDefinition, islandSymbol: string): void {
     const background = this.add.graphics();
     background.fillStyle(COLORS.sky).fillRect(0, 0, GAME_WIDTH, 420);
     background.fillStyle(COLORS.sea).fillRect(0, 420, GAME_WIDTH, 300);
@@ -92,7 +92,7 @@ export class StageIntroScene extends Phaser.Scene {
     treasure.fillStyle(COLORS.cream).lineStyle(5, COLORS.ink, 1);
     treasure.fillRoundedRect(358, 340, 94, 100, 22).strokeRoundedRect(358, 340, 94, 100, 22);
     this.add
-      .text(405, 386, stage.marker ?? 'あ', {
+      .text(405, 386, stage.marker ?? [...islandSymbol][0] ?? 'あ', {
         fontFamily: GAME_FONT,
         color: '#9b3f41',
         fontSize: '58px',
