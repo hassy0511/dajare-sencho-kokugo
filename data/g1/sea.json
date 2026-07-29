@@ -86,8 +86,8 @@
           "skillRef": "1-2知技(1)ウ",
           "intro": "ここまでの もじを たしかめよう",
           "n": 10,
-          "gen": null,
-          "status": "planned",
+          "gen": "grade1",
+          "status": "playable",
           "treasure": "みはりの ぼうえんきょう"
         },
         {
@@ -98,8 +98,8 @@
           "skillRef": "1-2知技(1)ウ",
           "intro": "ちいさい「ゃゅょ」を よもう",
           "n": 8,
-          "gen": null,
-          "status": "planned",
+          "gen": "grade1",
+          "status": "playable",
           "treasure": "ちいさな もじの かぎ"
         },
         {
@@ -110,8 +110,8 @@
           "skillRef": "1-2知技(1)ウ",
           "intro": "カタカナの ことばを よもう",
           "n": 10,
-          "gen": null,
-          "status": "planned",
+          "gen": "grade1",
+          "status": "playable",
           "treasure": "カタカナの ふなふだ"
         },
         {
@@ -122,8 +122,8 @@
           "skillRef": "1-2知技(1)ウ",
           "intro": "もじの しまの たからを とりもどそう",
           "n": 12,
-          "gen": null,
-          "status": "planned",
+          "gen": "grade1",
+          "status": "playable",
           "treasure": "でんせつの ふで"
         }
       ]
@@ -142,8 +142,8 @@
           "skillRef": "1-2知技(1)エ",
           "intro": "山や 川の かんじを よもう",
           "n": 10,
-          "gen": null,
-          "status": "planned",
+          "gen": "grade1",
+          "status": "playable",
           "treasure": "やまかわの いしばん"
         },
         {
@@ -154,8 +154,8 @@
           "skillRef": "1-2知技(1)エ",
           "intro": "目や 耳の かんじを よもう",
           "n": 10,
-          "gen": null,
-          "status": "planned",
+          "gen": "grade1",
+          "status": "playable",
           "treasure": "からだの もんしょう"
         },
         {
@@ -166,8 +166,8 @@
           "skillRef": "1-2知技(1)エ",
           "intro": "一から 十まで よもう",
           "n": 10,
-          "gen": null,
-          "status": "planned",
+          "gen": "grade1",
+          "status": "playable",
           "treasure": "かずの いし"
         },
         {
@@ -178,8 +178,8 @@
           "skillRef": "1-2知技(1)エ",
           "intro": "かんじと よみを むすぼう",
           "n": 9,
-          "gen": null,
-          "status": "planned",
+          "gen": "grade1",
+          "status": "playable",
           "treasure": "むすびの ひも"
         },
         {
@@ -190,8 +190,8 @@
           "skillRef": "1-2知技(1)エ",
           "intro": "ここまでの かんじを たしかめよう",
           "n": 10,
-          "gen": null,
-          "status": "planned",
+          "gen": "grade1",
+          "status": "playable",
           "treasure": "みはりの いし"
         },
         {
@@ -202,8 +202,8 @@
           "skillRef": "1-2知技(1)エ",
           "intro": "学校で つかう かんじを よもう",
           "n": 10,
-          "gen": null,
-          "status": "planned",
+          "gen": "grade1",
+          "status": "playable",
           "treasure": "がっこうの かぎ"
         },
         {
@@ -214,8 +214,8 @@
           "skillRef": "1-2知技(1)エ",
           "intro": "上や 下の かんじを よもう",
           "n": 10,
-          "gen": null,
-          "status": "planned",
+          "gen": "grade1",
+          "status": "playable",
           "treasure": "むきの コンパス"
         },
         {
@@ -226,8 +226,8 @@
           "skillRef": "1-2知技(3)ウ",
           "intro": "かく じゅんばんを たしかめよう",
           "n": 8,
-          "gen": null,
-          "status": "planned",
+          "gen": "grade1",
+          "status": "playable",
           "treasure": "かくすうの ものさし"
         },
         {
@@ -238,8 +238,8 @@
           "skillRef": "1-2知技(1)エ",
           "intro": "すなから かんじを ほりだそう",
           "n": 9,
-          "gen": null,
-          "status": "planned",
+          "gen": "grade1",
+          "status": "playable",
           "treasure": "もじの スコップ"
         },
         {
@@ -250,8 +250,8 @@
           "skillRef": "1-2知技(1)エ",
           "intro": "かんじの しまの たからを とりもどそう",
           "n": 12,
-          "gen": null,
-          "status": "planned",
+          "gen": "grade1",
+          "status": "playable",
           "treasure": "きんの すずり"
         }
       ]
@@ -270,8 +270,8 @@
           "skillRef": "1-2知技(1)オ",
           "intro": "ことばの なかまを みつけよう",
           "n": 8,
-          "gen": null,
-          "status": "planned",
+          "gen": "grade1",
+          "status": "playable",
           "treasure": "なかまの きのみ"
         },
         {
@@ -282,8 +282,8 @@
           "skillRef": "1-2知技(1)オ",
           "intro": "ものの かぞえかたを えらぼう",
           "n": 10,
-          "gen": null,
-          "status": "planned",
+          "gen": "grade1",
+          "status": "playable",
           "treasure": "かぞえの そろばん"
         },
         {
@@ -294,8 +294,8 @@
           "skillRef": "1-2知技(1)キ",
           "intro": "ていねいな いいかたを みつけよう",
           "n": 8,
-          "gen": null,
-          "status": "planned",
+          "gen": "grade1",
+          "status": "playable",
           "treasure": "ていねいの しずく"
         },
         {
@@ -306,8 +306,8 @@
           "skillRef": "1-2知技(1)カ",
           "intro": "だれが どうしたか みつけよう",
           "n": 8,
-          "gen": null,
-          "status": "planned",
+          "gen": "grade1",
+          "status": "playable",
           "treasure": "ぶんの はしら"
         },
         {
@@ -318,8 +318,8 @@
           "skillRef": "1-2知技(1)オ",
           "intro": "ここまでの ことばを たしかめよう",
           "n": 10,
-          "gen": null,
-          "status": "planned",
+          "gen": "grade1",
+          "status": "playable",
           "treasure": "ことばの みはりふだ"
         },
         {
@@ -330,8 +330,8 @@
           "skillRef": "1-2知技(1)オ",
           "intro": "ようすに あう ことばを えらぼう",
           "n": 8,
-          "gen": null,
-          "status": "planned",
+          "gen": "grade1",
+          "status": "playable",
           "treasure": "ようすの はね"
         },
         {
@@ -342,8 +342,8 @@
           "skillRef": "1-2知技(3)イ",
           "intro": "しりとりで みちを つなごう",
           "n": 8,
-          "gen": null,
-          "status": "planned",
+          "gen": "grade1",
+          "status": "playable",
           "treasure": "しりとりの くさり"
         },
         {
@@ -354,8 +354,8 @@
           "skillRef": "1-2知技(1)オ",
           "intro": "ことばの しまの たからを とりもどそう",
           "n": 12,
-          "gen": null,
-          "status": "planned",
+          "gen": "grade1",
+          "status": "playable",
           "treasure": "ことばの おうかん"
         }
       ]
@@ -374,8 +374,8 @@
           "skillRef": "1-2C読(1)イ",
           "intro": "おはなしに でてくる ひとを みつけよう",
           "n": 8,
-          "gen": null,
-          "status": "planned",
+          "gen": "grade1",
+          "status": "playable",
           "treasure": "だれかなの ぼうし"
         },
         {
@@ -386,8 +386,8 @@
           "skillRef": "1-2C読(1)イ",
           "intro": "なにを したか みつけよう",
           "n": 8,
-          "gen": null,
-          "status": "planned",
+          "gen": "grade1",
+          "status": "playable",
           "treasure": "なにかなの かぎ"
         },
         {
@@ -398,8 +398,8 @@
           "skillRef": "1-2C読(1)ア",
           "intro": "おはなしを じゅんばんに ならべよう",
           "n": 6,
-          "gen": null,
-          "status": "planned",
+          "gen": "grade1",
+          "status": "playable",
           "treasure": "じゅんばんの ふだ"
         },
         {
@@ -410,8 +410,8 @@
           "skillRef": "1-2C読(1)ウ",
           "intro": "だいじな ことばを みつけよう",
           "n": 8,
-          "gen": null,
-          "status": "planned",
+          "gen": "grade1",
+          "status": "playable",
           "treasure": "だいじな きのみ"
         },
         {
@@ -422,8 +422,8 @@
           "skillRef": "1-2C読(1)イ",
           "intro": "ここまでの よみときを たしかめよう",
           "n": 10,
-          "gen": null,
-          "status": "planned",
+          "gen": "grade1",
+          "status": "playable",
           "treasure": "よみときの みはりめがね"
         },
         {
@@ -434,8 +434,8 @@
           "skillRef": "1-2知技(3)ア",
           "intro": "むかしばなしを たのしもう",
           "n": 8,
-          "gen": null,
-          "status": "planned",
+          "gen": "grade1",
+          "status": "playable",
           "treasure": "むかしの えまき"
         },
         {
@@ -446,8 +446,8 @@
           "skillRef": "1-2C読(1)イ",
           "intro": "すこし ながい おはなしを よもう",
           "n": 8,
-          "gen": null,
-          "status": "planned",
+          "gen": "grade1",
+          "status": "playable",
           "treasure": "ながい まきもの"
         },
         {
@@ -458,8 +458,8 @@
           "skillRef": "1-2C読(1)イ",
           "intro": "よみときの しまの たからを とりもどそう",
           "n": 12,
-          "gen": null,
-          "status": "planned",
+          "gen": "grade1",
+          "status": "playable",
           "treasure": "ものがたりの ほん"
         }
       ]
@@ -478,8 +478,8 @@
           "skillRef": "1-2B書(1)ウ",
           "intro": "ことばを ならべて ぶんを つくろう",
           "n": 8,
-          "gen": null,
-          "status": "planned",
+          "gen": "grade1",
+          "status": "playable",
           "treasure": "ぶんの つみき"
         },
         {
@@ -490,8 +490,8 @@
           "skillRef": "1-2知技(1)ウ",
           "intro": "ぶんに あう ことばを いれよう",
           "n": 10,
-          "gen": null,
-          "status": "planned",
+          "gen": "grade1",
+          "status": "playable",
           "treasure": "てにをはの みずたま"
         },
         {
@@ -502,8 +502,8 @@
           "skillRef": "1-2知技(1)ウ",
           "intro": "まるや てんを いれよう",
           "n": 8,
-          "gen": null,
-          "status": "planned",
+          "gen": "grade1",
+          "status": "playable",
           "treasure": "まるてんの はんこ"
         },
         {
@@ -514,8 +514,8 @@
           "skillRef": "1-2B書(1)ウ",
           "intro": "ここまでの かきかたを たしかめよう",
           "n": 10,
-          "gen": null,
-          "status": "planned",
+          "gen": "grade1",
+          "status": "playable",
           "treasure": "かきかたの みはりふで"
         },
         {
@@ -526,8 +526,8 @@
           "skillRef": "1-2B書(1)イ",
           "intro": "できごとを じゅんばんに ならべよう",
           "n": 6,
-          "gen": null,
-          "status": "planned",
+          "gen": "grade1",
+          "status": "playable",
           "treasure": "さくぶんの はね"
         },
         {
@@ -538,8 +538,8 @@
           "skillRef": "1-2B書(1)エ",
           "intro": "ぶんを よみかえして なおそう",
           "n": 8,
-          "gen": null,
-          "status": "planned",
+          "gen": "grade1",
+          "status": "playable",
           "treasure": "なおしの けしごむ"
         },
         {
@@ -550,8 +550,8 @@
           "skillRef": "1-2B書(1)ウ",
           "intro": "かきかたの しまの たからを とりもどそう",
           "n": 12,
-          "gen": null,
-          "status": "planned",
+          "gen": "grade1",
+          "status": "playable",
           "treasure": "まほうの げんこうようし"
         }
       ]

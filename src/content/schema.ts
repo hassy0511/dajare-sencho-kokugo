@@ -42,6 +42,120 @@ export const hiraWordPoolSchema = z.object({
     .min(8),
 });
 
+const wrongsSchema = z.array(z.string().min(1)).length(3);
+const readingQuestionSchema = z.object({
+  text: z.string().min(1),
+  question: z.string().min(1),
+  answer: z.string().min(1),
+  wrongs: wrongsSchema,
+});
+
+export const grade1BankSchema = z.object({
+  version: z.literal(1),
+  youon: z.array(z.string().min(2)).min(8),
+  katakana: z.array(z.object({ hira: z.string().min(1), kata: z.string().min(1) })).min(10),
+  kanji: z
+    .array(
+      z.object({
+        char: z.string().length(1),
+        reading: z.string().min(1),
+        group: z.enum(['nature', 'body', 'number', 'school', 'action']),
+      }),
+    )
+    .length(80),
+  strokes: z
+    .array(z.object({ char: z.string().length(1), count: z.number().int().min(1).max(20) }))
+    .min(8),
+  categories: z
+    .array(
+      z.object({
+        name: z.string().min(1),
+        members: z.array(z.string().min(1)).length(3),
+        outsider: z.string().min(1),
+      }),
+    )
+    .min(8),
+  counters: z.array(z.object({ thing: z.string().min(1), unit: z.string().min(1) })).min(10),
+  polite: z.array(z.object({ plain: z.string().min(1), polite: z.string().min(1) })).min(8),
+  sentences: z
+    .array(
+      z.object({
+        text: z.string().min(1),
+        subject: z.string().min(1),
+        predicate: z.string().min(1),
+      }),
+    )
+    .min(8),
+  yousu: z
+    .array(
+      z.object({
+        scene: z.string().min(1),
+        answer: z.string().min(1),
+        wrongs: wrongsSchema,
+      }),
+    )
+    .min(8),
+  shiritori: z
+    .array(
+      z.object({
+        from: z.string().min(1),
+        answer: z.string().min(1),
+        wrongs: wrongsSchema,
+      }),
+    )
+    .min(8),
+  readings: z
+    .array(
+      z.object({
+        text: z.string().min(1),
+        who: z.string().min(1),
+        what: z.string().min(1),
+        place: z.string().min(1),
+        keyword: z.string().min(1),
+      }),
+    )
+    .min(12),
+  sequences: z
+    .array(
+      z.object({
+        title: z.string().min(1),
+        events: z.array(z.string().min(1)).length(3),
+      }),
+    )
+    .min(6),
+  folktales: z.array(readingQuestionSchema.extend({ title: z.string().min(1) })).min(8),
+  longReadings: z.array(readingQuestionSchema).min(8),
+  sentenceTiles: z.array(z.array(z.string().min(1)).length(3)).min(8),
+  particles: z
+    .array(
+      z.object({
+        text: z.string().min(1),
+        answer: z.string().min(1),
+        wrongs: wrongsSchema,
+      }),
+    )
+    .min(10),
+  punctuation: z
+    .array(
+      z.object({
+        plain: z.string().min(1),
+        correct: z.string().min(1),
+        wrongs: wrongsSchema,
+      }),
+    )
+    .min(8),
+  diarySequences: z.array(z.array(z.string().min(1)).length(3)).min(6),
+  fixes: z
+    .array(
+      z.object({
+        wrong: z.string().min(1),
+        correct: z.string().min(1),
+        wrongs: wrongsSchema,
+      }),
+    )
+    .min(8),
+});
+
 export const wordImageLibrarySchema = z.object({
   version: z.literal(1),
   generator: z.object({
@@ -117,7 +231,9 @@ export const seaSchema = z.object({
               intro: z.string().min(1),
               marker: z.string().min(1).optional(),
               n: z.number().int().min(1).max(20),
-              gen: z.enum(['hiraPicture', 'hiraDakuon', 'hiraSokuon', 'hiraChouon']).nullable(),
+              gen: z
+                .enum(['hiraPicture', 'hiraDakuon', 'hiraSokuon', 'hiraChouon', 'grade1'])
+                .nullable(),
               status: z.enum(['playable', 'planned']),
               treasure: z.string().min(1),
             }),

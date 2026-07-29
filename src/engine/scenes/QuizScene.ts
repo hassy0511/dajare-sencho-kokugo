@@ -1,7 +1,7 @@
 import Phaser from 'phaser';
 
 import { questionGenerators } from '../../content/gen/registry';
-import { loadHiraWordPool, loadSea } from '../../content/loader';
+import { loadGrade1Bank, loadHiraWordPool, loadSea } from '../../content/loader';
 import type { ChoiceQuestion } from '../../types/content';
 import { COLORS, GAME_FONT, GAME_HEIGHT, GAME_WIDTH } from '../constants';
 import { ChoiceQType } from '../qtypes/ChoiceQType';
@@ -30,13 +30,18 @@ export class QuizScene extends Phaser.Scene {
 
   create(): void {
     const sea = loadSea();
-    const pool = loadHiraWordPool();
+    const hira = loadHiraWordPool();
+    const grade1 = loadGrade1Bank();
     const stage = sea.islands
       .find((island) => island.id === this.islandId)
       ?.stages.find((candidate) => candidate.id === this.stageId);
     if (!stage) throw new Error(`ステージが見つかりません: ${this.stageId}`);
     if (!stage.gen) throw new Error('このステージの問題はまだ準備中です。');
-    this.questions = questionGenerators[stage.gen](pool, stage.n, Date.now());
+    this.questions = questionGenerators[stage.gen](
+      { stageId: stage.id, hira, grade1 },
+      stage.n,
+      Date.now(),
+    );
     this.questionIndex = 0;
     this.score = 0;
     this.combo = 0;

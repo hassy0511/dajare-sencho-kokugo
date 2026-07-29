@@ -34,6 +34,37 @@ export interface HiraWordPool {
   chouon: MojiChoiceItem[];
 }
 
+export type KanjiGroup = 'nature' | 'body' | 'number' | 'school' | 'action';
+
+export interface Grade1Bank {
+  version: 1;
+  youon: string[];
+  katakana: { hira: string; kata: string }[];
+  kanji: { char: string; reading: string; group: KanjiGroup }[];
+  strokes: { char: string; count: number }[];
+  categories: { name: string; members: string[]; outsider: string }[];
+  counters: { thing: string; unit: string }[];
+  polite: { plain: string; polite: string }[];
+  sentences: { text: string; subject: string; predicate: string }[];
+  yousu: { scene: string; answer: string; wrongs: string[] }[];
+  shiritori: { from: string; answer: string; wrongs: string[] }[];
+  readings: { text: string; who: string; what: string; place: string; keyword: string }[];
+  sequences: { title: string; events: string[] }[];
+  folktales: {
+    title: string;
+    text: string;
+    question: string;
+    answer: string;
+    wrongs: string[];
+  }[];
+  longReadings: { text: string; question: string; answer: string; wrongs: string[] }[];
+  sentenceTiles: string[][];
+  particles: { text: string; answer: string; wrongs: string[] }[];
+  punctuation: { plain: string; correct: string; wrongs: string[] }[];
+  diarySequences: string[][];
+  fixes: { wrong: string; correct: string; wrongs: string[] }[];
+}
+
 export interface WordImageAsset {
   key: string;
   word: string;
@@ -86,7 +117,7 @@ export interface StageDefinition {
   intro: string;
   marker?: string | undefined;
   n: number;
-  gen: 'hiraPicture' | 'hiraDakuon' | 'hiraSokuon' | 'hiraChouon' | null;
+  gen: 'hiraPicture' | 'hiraDakuon' | 'hiraSokuon' | 'hiraChouon' | 'grade1' | null;
   status: 'playable' | 'planned';
   treasure: string;
 }

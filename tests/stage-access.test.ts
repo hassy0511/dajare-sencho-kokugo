@@ -1,7 +1,11 @@
 import { describe, expect, it } from 'vitest';
 
 import { loadSea } from '../src/content/loader';
-import { getNextPlayableStage, getStageAccess } from '../src/engine/progression/stage-access';
+import {
+  getNextPlayableStage,
+  getStageAccess,
+  isSeaComplete,
+} from '../src/engine/progression/stage-access';
 import type { SaveState } from '../src/engine/save/state';
 
 function stateWithClears(...stageIds: string[]): SaveState {
@@ -22,7 +26,7 @@ describe('ステージの順次アンロック', () => {
     const empty = stateWithClears();
     expect(getStageAccess(island.stages, 0, empty)).toBe('available');
     expect(getStageAccess(island.stages, 1, empty)).toBe('locked');
-    expect(getStageAccess(island.stages, 4, empty)).toBe('planned');
+    expect(getStageAccess(island.stages, 4, empty)).toBe('locked');
 
     const afterStage1 = stateWithClears('g1-moji-seion');
     expect(getStageAccess(island.stages, 1, afterStage1)).toBe('available');
@@ -36,6 +40,15 @@ describe('ステージの順次アンロック', () => {
     expect(getNextPlayableStage(island, 'g1-moji-seion')?.id).toBe('g1-moji-dakuon');
     expect(getNextPlayableStage(island, 'g1-moji-dakuon')?.id).toBe('g1-moji-sokuon');
     expect(getNextPlayableStage(island, 'g1-moji-sokuon')?.id).toBe('g1-moji-chouon');
-    expect(getNextPlayableStage(island, 'g1-moji-chouon')).toBeUndefined();
+    expect(getNextPlayableStage(island, 'g1-moji-chouon')?.id).toBe('g1-moji-test1');
+    expect(getNextPlayableStage(island, 'g1-moji-boss')).toBeUndefined();
+  });
+
+  it('全41ステージのクリアを1年生の海の完了として判定する', () => {
+    const sea = loadSea();
+    const stageIds = sea.islands.flatMap((candidate) => candidate.stages.map((stage) => stage.id));
+    expect(stageIds).toHaveLength(41);
+    expect(isSeaComplete(sea, stateWithClears(...stageIds))).toBe(true);
+    expect(isSeaComplete(sea, stateWithClears(...stageIds.slice(0, -1)))).toBe(false);
   });
 });

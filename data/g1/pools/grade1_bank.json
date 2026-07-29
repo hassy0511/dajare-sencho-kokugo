@@ -1,0 +1,569 @@
+{
+  "version": 1,
+  "youon": [
+    "しゃしん",
+    "しゅくだい",
+    "しょくじ",
+    "きゃく",
+    "きゅうり",
+    "きょう",
+    "ちゃわん",
+    "ちゅうい",
+    "ちょきん",
+    "にゃんこ",
+    "りゅう",
+    "りょこう"
+  ],
+  "katakana": [
+    { "hira": "ぱん", "kata": "パン" },
+    { "hira": "ばす", "kata": "バス" },
+    { "hira": "てれび", "kata": "テレビ" },
+    { "hira": "らじお", "kata": "ラジオ" },
+    { "hira": "のーと", "kata": "ノート" },
+    { "hira": "ぺん", "kata": "ペン" },
+    { "hira": "こっぷ", "kata": "コップ" },
+    { "hira": "べっど", "kata": "ベッド" },
+    { "hira": "かめら", "kata": "カメラ" },
+    { "hira": "ぴあの", "kata": "ピアノ" },
+    { "hira": "けーき", "kata": "ケーキ" },
+    { "hira": "すーぷ", "kata": "スープ" },
+    { "hira": "ぼーる", "kata": "ボール" },
+    { "hira": "しゃつ", "kata": "シャツ" },
+    { "hira": "とまと", "kata": "トマト" },
+    { "hira": "ばなな", "kata": "バナナ" },
+    { "hira": "めろん", "kata": "メロン" },
+    { "hira": "あいす", "kata": "アイス" },
+    { "hira": "ろぼっと", "kata": "ロボット" },
+    { "hira": "たくしー", "kata": "タクシー" }
+  ],
+  "kanji": [
+    { "char": "雨", "reading": "あめ", "group": "nature" },
+    { "char": "火", "reading": "ひ", "group": "nature" },
+    { "char": "花", "reading": "はな", "group": "nature" },
+    { "char": "貝", "reading": "かい", "group": "nature" },
+    { "char": "金", "reading": "かね", "group": "nature" },
+    { "char": "空", "reading": "そら", "group": "nature" },
+    { "char": "月", "reading": "つき", "group": "nature" },
+    { "char": "犬", "reading": "いぬ", "group": "nature" },
+    { "char": "山", "reading": "やま", "group": "nature" },
+    { "char": "糸", "reading": "いと", "group": "nature" },
+    { "char": "森", "reading": "もり", "group": "nature" },
+    { "char": "水", "reading": "みず", "group": "nature" },
+    { "char": "夕", "reading": "ゆう", "group": "nature" },
+    { "char": "石", "reading": "いし", "group": "nature" },
+    { "char": "川", "reading": "かわ", "group": "nature" },
+    { "char": "草", "reading": "くさ", "group": "nature" },
+    { "char": "竹", "reading": "たけ", "group": "nature" },
+    { "char": "虫", "reading": "むし", "group": "nature" },
+    { "char": "天", "reading": "てん", "group": "nature" },
+    { "char": "土", "reading": "つち", "group": "nature" },
+    { "char": "口", "reading": "くち", "group": "body" },
+    { "char": "耳", "reading": "みみ", "group": "body" },
+    { "char": "手", "reading": "て", "group": "body" },
+    { "char": "足", "reading": "あし", "group": "body" },
+    { "char": "目", "reading": "め", "group": "body" },
+    { "char": "人", "reading": "ひと", "group": "body" },
+    { "char": "子", "reading": "こ", "group": "body" },
+    { "char": "女", "reading": "おんな", "group": "body" },
+    { "char": "男", "reading": "おとこ", "group": "body" },
+    { "char": "力", "reading": "ちから", "group": "body" },
+    { "char": "生", "reading": "いきる", "group": "body" },
+    { "char": "玉", "reading": "たま", "group": "body" },
+    { "char": "一", "reading": "いち", "group": "number" },
+    { "char": "二", "reading": "に", "group": "number" },
+    { "char": "三", "reading": "さん", "group": "number" },
+    { "char": "四", "reading": "よん", "group": "number" },
+    { "char": "五", "reading": "ご", "group": "number" },
+    { "char": "六", "reading": "ろく", "group": "number" },
+    { "char": "七", "reading": "なな", "group": "number" },
+    { "char": "八", "reading": "はち", "group": "number" },
+    { "char": "九", "reading": "きゅう", "group": "number" },
+    { "char": "十", "reading": "じゅう", "group": "number" },
+    { "char": "百", "reading": "ひゃく", "group": "number" },
+    { "char": "千", "reading": "せん", "group": "number" },
+    { "char": "円", "reading": "えん", "group": "number" },
+    { "char": "王", "reading": "おう", "group": "school" },
+    { "char": "音", "reading": "おと", "group": "school" },
+    { "char": "学", "reading": "がく", "group": "school" },
+    { "char": "気", "reading": "き", "group": "school" },
+    { "char": "校", "reading": "こう", "group": "school" },
+    { "char": "字", "reading": "じ", "group": "school" },
+    { "char": "車", "reading": "くるま", "group": "school" },
+    { "char": "正", "reading": "ただしい", "group": "school" },
+    { "char": "青", "reading": "あお", "group": "school" },
+    { "char": "赤", "reading": "あか", "group": "school" },
+    { "char": "先", "reading": "さき", "group": "school" },
+    { "char": "早", "reading": "はやい", "group": "school" },
+    { "char": "村", "reading": "むら", "group": "school" },
+    { "char": "大", "reading": "おおきい", "group": "school" },
+    { "char": "町", "reading": "まち", "group": "school" },
+    { "char": "年", "reading": "ねん", "group": "school" },
+    { "char": "白", "reading": "しろ", "group": "school" },
+    { "char": "本", "reading": "ほん", "group": "school" },
+    { "char": "名", "reading": "な", "group": "school" },
+    { "char": "文", "reading": "ぶん", "group": "school" },
+    { "char": "右", "reading": "みぎ", "group": "action" },
+    { "char": "下", "reading": "した", "group": "action" },
+    { "char": "休", "reading": "やすむ", "group": "action" },
+    { "char": "見", "reading": "みる", "group": "action" },
+    { "char": "左", "reading": "ひだり", "group": "action" },
+    { "char": "出", "reading": "でる", "group": "action" },
+    { "char": "小", "reading": "ちいさい", "group": "action" },
+    { "char": "上", "reading": "うえ", "group": "action" },
+    { "char": "中", "reading": "なか", "group": "action" },
+    { "char": "田", "reading": "た", "group": "action" },
+    { "char": "日", "reading": "ひ", "group": "action" },
+    { "char": "入", "reading": "はいる", "group": "action" },
+    { "char": "木", "reading": "き", "group": "action" },
+    { "char": "立", "reading": "たつ", "group": "action" },
+    { "char": "林", "reading": "はやし", "group": "action" }
+  ],
+  "strokes": [
+    { "char": "山", "count": 3 },
+    { "char": "川", "count": 3 },
+    { "char": "火", "count": 4 },
+    { "char": "水", "count": 4 },
+    { "char": "木", "count": 4 },
+    { "char": "林", "count": 8 },
+    { "char": "森", "count": 12 },
+    { "char": "日", "count": 4 },
+    { "char": "月", "count": 4 },
+    { "char": "田", "count": 5 },
+    { "char": "土", "count": 3 },
+    { "char": "空", "count": 8 }
+  ],
+  "categories": [
+    { "name": "くだもの", "members": ["りんご", "みかん", "ばなな"], "outsider": "くるま" },
+    { "name": "どうぶつ", "members": ["ねこ", "いぬ", "うさぎ"], "outsider": "えんぴつ" },
+    { "name": "のりもの", "members": ["くるま", "でんしゃ", "ふね"], "outsider": "りんご" },
+    { "name": "いろ", "members": ["あか", "あお", "きいろ"], "outsider": "ねこ" },
+    { "name": "やさい", "members": ["とまと", "きゅうり", "にんじん"], "outsider": "ぼうし" },
+    {
+      "name": "がっこうの もの",
+      "members": ["えんぴつ", "のーと", "けしごむ"],
+      "outsider": "みかん"
+    },
+    { "name": "からだ", "members": ["め", "みみ", "て"], "outsider": "くるま" },
+    { "name": "てんき", "members": ["はれ", "あめ", "ゆき"], "outsider": "ばなな" }
+  ],
+  "counters": [
+    { "thing": "ねこ", "unit": "ひき" },
+    { "thing": "えんぴつ", "unit": "ほん" },
+    { "thing": "かみ", "unit": "まい" },
+    { "thing": "くるま", "unit": "だい" },
+    { "thing": "いす", "unit": "きゃく" },
+    { "thing": "りんご", "unit": "こ" },
+    { "thing": "ほん", "unit": "さつ" },
+    { "thing": "ひと", "unit": "にん" },
+    { "thing": "とり", "unit": "わ" },
+    { "thing": "くつ", "unit": "そく" }
+  ],
+  "polite": [
+    { "plain": "いく", "polite": "いきます" },
+    { "plain": "たべる", "polite": "たべます" },
+    { "plain": "みる", "polite": "みます" },
+    { "plain": "いう", "polite": "いいます" },
+    { "plain": "する", "polite": "します" },
+    { "plain": "くる", "polite": "きます" },
+    { "plain": "のむ", "polite": "のみます" },
+    { "plain": "よむ", "polite": "よみます" }
+  ],
+  "sentences": [
+    { "text": "ねこが はしった。", "subject": "ねこ", "predicate": "はしった" },
+    { "text": "とりが とんだ。", "subject": "とり", "predicate": "とんだ" },
+    { "text": "さかなが およいだ。", "subject": "さかな", "predicate": "およいだ" },
+    { "text": "こどもが わらった。", "subject": "こども", "predicate": "わらった" },
+    { "text": "いぬが ねた。", "subject": "いぬ", "predicate": "ねた" },
+    { "text": "おとうさんが よんだ。", "subject": "おとうさん", "predicate": "よんだ" },
+    { "text": "おかあさんが つくった。", "subject": "おかあさん", "predicate": "つくった" },
+    { "text": "せんせいが はなした。", "subject": "せんせい", "predicate": "はなした" }
+  ],
+  "yousu": [
+    {
+      "scene": "あめが つよく ふっている。",
+      "answer": "ざあざあ",
+      "wrongs": ["にこにこ", "きらきら", "ふわふわ"]
+    },
+    {
+      "scene": "うれしくて わらっている。",
+      "answer": "にこにこ",
+      "wrongs": ["ざあざあ", "ぐんぐん", "ひらひら"]
+    },
+    {
+      "scene": "ほしが ひかっている。",
+      "answer": "きらきら",
+      "wrongs": ["ふわふわ", "ざあざあ", "すやすや"]
+    },
+    {
+      "scene": "わたが やわらかい。",
+      "answer": "ふわふわ",
+      "wrongs": ["きらきら", "ぐんぐん", "どきどき"]
+    },
+    {
+      "scene": "めが どんどん のびる。",
+      "answer": "ぐんぐん",
+      "wrongs": ["すやすや", "ひらひら", "にこにこ"]
+    },
+    {
+      "scene": "あかちゃんが ねむっている。",
+      "answer": "すやすや",
+      "wrongs": ["ざあざあ", "どきどき", "ぐんぐん"]
+    },
+    {
+      "scene": "ちょうが とんでいる。",
+      "answer": "ひらひら",
+      "wrongs": ["きらきら", "すやすや", "ざあざあ"]
+    },
+    {
+      "scene": "はっぴょうの まえで むねが なる。",
+      "answer": "どきどき",
+      "wrongs": ["ふわふわ", "にこにこ", "ぐんぐん"]
+    }
+  ],
+  "shiritori": [
+    { "from": "りんご", "answer": "ごりら", "wrongs": ["らっぱ", "みかん", "ねこ"] },
+    { "from": "すいか", "answer": "かめ", "wrongs": ["めだか", "りんご", "ふね"] },
+    { "from": "ねこ", "answer": "こあら", "wrongs": ["らいおん", "いぬ", "さる"] },
+    { "from": "たぬき", "answer": "きつね", "wrongs": ["ねこ", "くま", "みかん"] },
+    { "from": "さくら", "answer": "らっぱ", "wrongs": ["ぱんだ", "かさ", "ねずみ"] },
+    { "from": "くるま", "answer": "まくら", "wrongs": ["らっぱ", "くつ", "りんご"] },
+    { "from": "かさ", "answer": "さかな", "wrongs": ["なす", "ねこ", "みかん"] },
+    { "from": "ふね", "answer": "ねずみ", "wrongs": ["みかん", "いぬ", "こあら"] }
+  ],
+  "readings": [
+    {
+      "text": "ねこが にわで ひるねを しました。",
+      "who": "ねこ",
+      "what": "ひるね",
+      "place": "にわ",
+      "keyword": "ひるね"
+    },
+    {
+      "text": "たろうが こうえんで ぼーるを なげました。",
+      "who": "たろう",
+      "what": "ぼーるなげ",
+      "place": "こうえん",
+      "keyword": "ぼーる"
+    },
+    {
+      "text": "みきが だいどころで さらを あらいました。",
+      "who": "みき",
+      "what": "さらあらい",
+      "place": "だいどころ",
+      "keyword": "さら"
+    },
+    {
+      "text": "いぬが げんかんで しっぽを ふりました。",
+      "who": "いぬ",
+      "what": "しっぽふり",
+      "place": "げんかん",
+      "keyword": "しっぽ"
+    },
+    {
+      "text": "ことりが きの うえで うたいました。",
+      "who": "ことり",
+      "what": "うた",
+      "place": "きの うえ",
+      "keyword": "うた"
+    },
+    {
+      "text": "おとうさんが へやで ほんを よみました。",
+      "who": "おとうさん",
+      "what": "ほんよみ",
+      "place": "へや",
+      "keyword": "ほん"
+    },
+    {
+      "text": "おかあさんが みせで ぱんを かいました。",
+      "who": "おかあさん",
+      "what": "ぱんの かいもの",
+      "place": "みせ",
+      "keyword": "ぱん"
+    },
+    {
+      "text": "せんせいが きょうしつで えほんを よみました。",
+      "who": "せんせい",
+      "what": "えほんよみ",
+      "place": "きょうしつ",
+      "keyword": "えほん"
+    },
+    {
+      "text": "りすが もりで どんぐりを ひろいました。",
+      "who": "りす",
+      "what": "どんぐりひろい",
+      "place": "もり",
+      "keyword": "どんぐり"
+    },
+    {
+      "text": "うさぎが はたけで にんじんを みつけました。",
+      "who": "うさぎ",
+      "what": "にんじんさがし",
+      "place": "はたけ",
+      "keyword": "にんじん"
+    },
+    {
+      "text": "さかなが いけで みずから はねました。",
+      "who": "さかな",
+      "what": "みずはね",
+      "place": "いけ",
+      "keyword": "みず"
+    },
+    {
+      "text": "くまが かわで さかなを とりました。",
+      "who": "くま",
+      "what": "さかなとり",
+      "place": "かわ",
+      "keyword": "さかな"
+    }
+  ],
+  "sequences": [
+    { "title": "あさの したく", "events": ["おきる", "かおを あらう", "あさごはんを たべる"] },
+    { "title": "がっこうへ", "events": ["いえを でる", "みちを あるく", "がっこうに つく"] },
+    { "title": "たねまき", "events": ["つちを ほる", "たねを まく", "みずを やる"] },
+    { "title": "てあらい", "events": ["てを ぬらす", "せっけんで あらう", "みずで ながす"] },
+    { "title": "ほんを よむ", "events": ["ほんを えらぶ", "ぺーじを ひらく", "おわりまで よむ"] },
+    { "title": "よるの したく", "events": ["はを みがく", "ぱじゃまを きる", "ふとんに はいる"] }
+  ],
+  "folktales": [
+    {
+      "title": "ももたろう",
+      "text": "ももたろうは なかまと おにがしまへ いきました。みんなで おにを こらしめました。",
+      "question": "ももたろうが いった しまは?",
+      "answer": "おにがしま",
+      "wrongs": ["たからじま", "つきの しま", "ねこの しま"]
+    },
+    {
+      "title": "うらしまたろう",
+      "text": "うらしまたろうは かめを たすけました。かめは りゅうぐうじょうへ つれて いきました。",
+      "question": "たすけた どうぶつは?",
+      "answer": "かめ",
+      "wrongs": ["いぬ", "さる", "きじ"]
+    },
+    {
+      "title": "きんたろう",
+      "text": "きんたろうは やまで どうぶつと すもうを とりました。とても ちからもちでした。",
+      "question": "きんたろうが したことは?",
+      "answer": "すもう",
+      "wrongs": ["おにごっこ", "さかなつり", "たこあげ"]
+    },
+    {
+      "title": "かぐやひめ",
+      "text": "おじいさんは ひかる たけを みつけました。なかには ちいさな おんなのこが いました。",
+      "question": "ひかっていた ものは?",
+      "answer": "たけ",
+      "wrongs": ["まつ", "いし", "かわ"]
+    },
+    {
+      "title": "さるかにがっせん",
+      "text": "かには おにぎりを さるの かきの たねと こうかんしました。たねを うえると かきが なりました。",
+      "question": "かにが うえた ものは?",
+      "answer": "かきの たね",
+      "wrongs": ["くり", "どんぐり", "まめ"]
+    },
+    {
+      "title": "おむすびころりん",
+      "text": "おじいさんの おむすびが あなへ ころがりました。あなの なかで ねずみが うたっていました。",
+      "question": "あなに いたのは?",
+      "answer": "ねずみ",
+      "wrongs": ["うさぎ", "たぬき", "きつね"]
+    },
+    {
+      "title": "はなさかじいさん",
+      "text": "おじいさんが はいを まくと、かれた きに はなが さきました。",
+      "question": "きに さいたものは?",
+      "answer": "はな",
+      "wrongs": ["み", "はっぱ", "きのこ"]
+    },
+    {
+      "title": "いっすんぼうし",
+      "text": "ちいさな いっすんぼうしは おわんの ふねで みやこへ いきました。",
+      "question": "ふねに した ものは?",
+      "answer": "おわん",
+      "wrongs": ["ぼうし", "さら", "かご"]
+    }
+  ],
+  "longReadings": [
+    {
+      "text": "あさ、そらは くもって いました。ゆうたが かさを もって でると、かえりみちに あめが ふりました。",
+      "question": "ゆうたが もって でたものは?",
+      "answer": "かさ",
+      "wrongs": ["ぼうし", "ほん", "ぼーる"]
+    },
+    {
+      "text": "みほは ちいさな たねを うえました。まいにち みずを やると、きいろい はなが さきました。",
+      "question": "みほが まいにち したことは?",
+      "answer": "みずやり",
+      "wrongs": ["えさやり", "そうじ", "どくしょ"]
+    },
+    {
+      "text": "こうたは こうえんで あかい てぶくろを ひろいました。こうばんへ とどけると、おまわりさんが ほめました。",
+      "question": "こうたが ひろったものは?",
+      "answer": "てぶくろ",
+      "wrongs": ["はんかち", "ぼうし", "かぎ"]
+    },
+    {
+      "text": "りなは いもうとに えほんを よみました。いもうとは ぞうの おはなしを きいて わらいました。",
+      "question": "えほんに でてきた どうぶつは?",
+      "answer": "ぞう",
+      "wrongs": ["きりん", "ねこ", "ぱんだ"]
+    },
+    {
+      "text": "たくみは うみで きれいな かいがらを みつけました。いえで あらって たからばこに いれました。",
+      "question": "たからばこに いれたものは?",
+      "answer": "かいがら",
+      "wrongs": ["いし", "すな", "はっぱ"]
+    },
+    {
+      "text": "さきは しろい こいぬと さんぽへ いきました。こいぬは はらっぱを げんきに はしりました。",
+      "question": "はらっぱを はしったのは?",
+      "answer": "こいぬ",
+      "wrongs": ["さき", "こねこ", "ことり"]
+    },
+    {
+      "text": "あきらは つみきで たかい とうを つくりました。さいごに あおい つみきを いちばん うえへ のせました。",
+      "question": "いちばん うえの つみきの いろは?",
+      "answer": "あお",
+      "wrongs": ["あか", "きいろ", "しろ"]
+    },
+    {
+      "text": "なおは おばあちゃんと くっきーを つくりました。やけた くっきーを かぞえると じゅうにこ ありました。",
+      "question": "つくった おかしは?",
+      "answer": "くっきー",
+      "wrongs": ["けーき", "ぷりん", "どーなつ"]
+    }
+  ],
+  "sentenceTiles": [
+    ["ぼくは", "こうえんで", "あそんだ。"],
+    ["ねこが", "いすで", "ねている。"],
+    ["あさは", "ぱんを", "たべました。"],
+    ["みんなで", "うたを", "うたった。"],
+    ["おとうとが", "えを", "かいた。"],
+    ["わたしは", "ほんを", "よみます。"],
+    ["とりが", "そらを", "とんだ。"],
+    ["せんせいが", "おはなしを", "しました。"]
+  ],
+  "particles": [
+    { "text": "ぼく□ がっこうへ いく。", "answer": "は", "wrongs": ["わ", "を", "え"] },
+    { "text": "こうえん□ あそぶ。", "answer": "で", "wrongs": ["へ", "を", "は"] },
+    { "text": "ぱん□ たべる。", "answer": "を", "wrongs": ["お", "は", "へ"] },
+    { "text": "うち□ かえる。", "answer": "へ", "wrongs": ["え", "を", "は"] },
+    { "text": "ねこ□ ねている。", "answer": "が", "wrongs": ["を", "へ", "で"] },
+    { "text": "はし□ わたる。", "answer": "を", "wrongs": ["お", "が", "へ"] },
+    { "text": "でんしゃ□ のる。", "answer": "に", "wrongs": ["を", "で", "は"] },
+    {
+      "text": "ともだち□ いっしょに あそぶ。",
+      "answer": "と",
+      "wrongs": ["を", "に", "へ"]
+    },
+    { "text": "そら□ ほしが みえる。", "answer": "に", "wrongs": ["を", "で", "は"] },
+    { "text": "はさみ□ かみを きる。", "answer": "で", "wrongs": ["へ", "に", "を"] }
+  ],
+  "punctuation": [
+    {
+      "plain": "きょうは はれです",
+      "correct": "きょうは はれです。",
+      "wrongs": ["。きょうは はれです", "きょうは。 はれです", "きょうは はれ。です"]
+    },
+    {
+      "plain": "ねこが います いぬも います",
+      "correct": "ねこが います。いぬも います。",
+      "wrongs": [
+        "ねこが。います いぬも。います",
+        "ねこが います、いぬも います",
+        "。ねこが います。いぬも います"
+      ]
+    },
+    {
+      "plain": "あさ ひる よる",
+      "correct": "あさ、ひる、よる",
+      "wrongs": ["あさ。ひる。よる", "、あさ ひる よる", "あさ ひる、よる、"]
+    },
+    {
+      "plain": "おはよう と いいました",
+      "correct": "「おはよう。」と いいました。",
+      "wrongs": [
+        "おはよう「。」と いいました",
+        "「おはよう。と」いいました",
+        "。おはよう と いいました"
+      ]
+    },
+    {
+      "plain": "どこへ いくの",
+      "correct": "どこへ いくの。",
+      "wrongs": ["。どこへ いくの", "どこへ。いくの", "どこへ いく。の"]
+    },
+    {
+      "plain": "りんご みかん ばななを かった",
+      "correct": "りんご、みかん、ばななを かった。",
+      "wrongs": [
+        "りんご。みかん。ばななを かった",
+        "、りんご みかん ばななを かった",
+        "りんご みかん ばななを。かった"
+      ]
+    },
+    {
+      "plain": "わあ きれいだね",
+      "correct": "「わあ、きれいだね。」",
+      "wrongs": ["わあ「きれいだね。」", "「わあ。きれいだね、」", "。わあ きれいだね"]
+    },
+    {
+      "plain": "ほんを よんで ねました",
+      "correct": "ほんを よんで、ねました。",
+      "wrongs": ["ほんを。よんで ねました", "、ほんを よんで ねました", "ほんを よんで ねました、"]
+    }
+  ],
+  "diarySequences": [
+    ["あさ おきた", "がっこうへ いった", "よる ねた"],
+    ["たねを まいた", "めが でた", "はなが さいた"],
+    ["くもが でた", "あめが ふった", "にじが でた"],
+    ["ざいりょうを まぜた", "かたちを つくった", "おーぶんで やいた"],
+    ["えきへ いった", "でんしゃに のった", "まちに ついた"],
+    ["ほんを かりた", "いえで よんだ", "としょかんへ かえした"]
+  ],
+  "fixes": [
+    {
+      "wrong": "ぼくわ がっこうへ いく。",
+      "correct": "ぼくは がっこうへ いく。",
+      "wrongs": ["ぼくを がっこうへ いく。", "ぼくが がっこうを いく。", "ぼくへ がっこうは いく。"]
+    },
+    {
+      "wrong": "ぱんお たべました。",
+      "correct": "ぱんを たべました。",
+      "wrongs": ["ぱんは たべをした。", "ぱんへ たべました。", "ぱんに たべました。"]
+    },
+    {
+      "wrong": "きょうは はれです",
+      "correct": "きょうは はれです。",
+      "wrongs": ["。きょうは はれです", "きょう。は はれです", "きょうは。はれです"]
+    },
+    {
+      "wrong": "とりが そらお とんだ。",
+      "correct": "とりが そらを とんだ。",
+      "wrongs": ["とりを そらが とんだ。", "とりが そらへ とんだ。", "とりが そらに ねた。"]
+    },
+    {
+      "wrong": "わたしは ほんが よんだ。",
+      "correct": "わたしは ほんを よんだ。",
+      "wrongs": ["わたしを ほんは よんだ。", "わたしが ほんへ よんだ。", "わたしへ ほんを よんだ。"]
+    },
+    {
+      "wrong": "あさ、ひる。よる",
+      "correct": "あさ、ひる、よる",
+      "wrongs": ["あさ。ひる。よる", "、あさ ひる よる", "あさ ひる よる、"]
+    },
+    {
+      "wrong": "うちえ かえります。",
+      "correct": "うちへ かえります。",
+      "wrongs": ["うちを かえります。", "うちは かえります。", "うちに かえをます。"]
+    },
+    {
+      "wrong": "いぬが みずを のみました",
+      "correct": "いぬが みずを のみました。",
+      "wrongs": [
+        "。いぬが みずを のみました",
+        "いぬが。みずを のみました",
+        "いぬが みずを。のみました"
+      ]
+    }
+  ]
+}
