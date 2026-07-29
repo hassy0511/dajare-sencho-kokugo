@@ -1,6 +1,9 @@
 import { expect, test } from '@playwright/test';
 import type { Locator, Page } from '@playwright/test';
 import { readFileSync } from 'node:fs';
+import { readFile } from 'node:fs/promises';
+import { createServer } from 'node:http';
+import { extname, resolve, sep } from 'node:path';
 
 import type { SeaDefinition } from '../src/types/content';
 
@@ -8,6 +11,71 @@ const sea = JSON.parse(
   readFileSync(new URL('../data/g1/sea.json', import.meta.url), 'utf8'),
 ) as SeaDefinition;
 const grade1StageIds = sea.islands.flatMap((island) => island.stages.map((stage) => stage.id));
+const APP_BASE = '/dajare-sencho-kokugo/';
+
+async function startUpdateTestServer(): Promise<{
+  activateUpdate: () => void;
+  close: () => Promise<void>;
+  origin: string;
+}> {
+  const distRoot = resolve('dist');
+  let updated = false;
+  const mimeTypes: Record<string, string> = {
+    '.css': 'text/css; charset=utf-8',
+    '.html': 'text/html; charset=utf-8',
+    '.js': 'text/javascript; charset=utf-8',
+    '.json': 'application/json',
+    '.png': 'image/png',
+    '.svg': 'image/svg+xml',
+    '.webmanifest': 'application/manifest+json',
+    '.woff': 'font/woff',
+  };
+  const server = createServer(async (request, response) => {
+    try {
+      const url = new URL(request.url ?? '/', 'http://127.0.0.1');
+      if (!url.pathname.startsWith(APP_BASE)) {
+        response.writeHead(404).end();
+        return;
+      }
+      const relativePath = url.pathname.slice(APP_BASE.length) || 'index.html';
+      const filePath = resolve(distRoot, relativePath);
+      if (!filePath.startsWith(`${distRoot}${sep}`)) {
+        response.writeHead(403).end();
+        return;
+      }
+      let contents: Buffer | string = await readFile(filePath);
+      if (relativePath === 'sw.js') {
+        if (!updated) {
+          contents = `${contents.toString('utf8')}\n/* update-test-version: before */`;
+        }
+      }
+      response.writeHead(200, {
+        'Cache-Control': 'no-store',
+        'Content-Type': mimeTypes[extname(filePath)] ?? 'application/octet-stream',
+        'Service-Worker-Allowed': APP_BASE,
+      });
+      response.end(contents);
+    } catch {
+      response.writeHead(404).end();
+    }
+  });
+  await new Promise<void>((resolveListen) => {
+    server.listen(0, '127.0.0.1', resolveListen);
+  });
+  const address = server.address();
+  if (!address || typeof address === 'string')
+    throw new Error('更新テスト用サーバを起動できません。');
+  return {
+    activateUpdate: () => {
+      updated = true;
+    },
+    close: () =>
+      new Promise<void>((resolveClose, rejectClose) => {
+        server.close((error) => (error ? rejectClose(error) : resolveClose()));
+      }),
+    origin: `http://127.0.0.1:${address.port}`,
+  };
+}
 
 async function tapGamePoint(
   page: Page,
@@ -295,6 +363,20 @@ test('PWAマニフェストとService Workerが有効で、オフライン再起
   expect(manifest.display).toBe('standalone');
   expect(manifest.orientation).toBe('portrait');
 
+  const serviceWorkerResponse = await page.request.get('./sw.js');
+  expect(serviceWorkerResponse.ok()).toBe(true);
+  const serviceWorker = await serviceWorkerResponse.text();
+  expect(serviceWorker).toContain('self.skipWaiting()');
+  expect(serviceWorker).toContain('sw-force-update.js');
+
+  const forceUpdateResponse = await page.request.get('./sw-force-update.js');
+  expect(forceUpdateResponse.ok()).toBe(true);
+  const forceUpdate = await forceUpdateResponse.text();
+  expect(forceUpdate).toContain('self.registration.active');
+  expect(forceUpdate).toContain('dsk-sw-update-marker-v1');
+  expect(forceUpdate).toContain('self.clients.claim()');
+  expect(forceUpdate).toContain('void client.navigate(client.url)');
+
   await page.evaluate(async () => {
     await navigator.serviceWorker.ready;
   });
@@ -322,4 +404,43 @@ test('PWAマニフェストとService Workerが有効で、オフライン再起
   await expect(page.locator('#game-shell')).toHaveAttribute('data-ready', 'true');
   await expect(page.locator('canvas')).toBeVisible();
   await context.setOffline(false);
+});
+
+test('旧キャッシュを持つ画面も新しいService Workerで自動再読み込みする', async ({ page }) => {
+  test.setTimeout(90_000);
+  const server = await startUpdateTestServer();
+  try {
+    await page.addInitScript(() => {
+      const count = Number(sessionStorage.getItem('dsk_test_load_count') ?? '0');
+      sessionStorage.setItem('dsk_test_load_count', String(count + 1));
+    });
+    await page.goto(`${server.origin}${APP_BASE}`);
+    await expect(page.locator('#game-shell')).toHaveAttribute('data-ready', 'true');
+    await page.waitForFunction(() => navigator.serviceWorker.controller !== null);
+    await expect
+      .poll(() => page.evaluate(() => Number(sessionStorage.getItem('dsk_test_load_count') ?? '0')))
+      .toBe(1);
+
+    server.activateUpdate();
+    const reloadPromise = page.waitForEvent('framenavigated', {
+      predicate: (frame) => frame === page.mainFrame(),
+      timeout: 30_000,
+    });
+    await page.evaluate(async () => {
+      const registration = await navigator.serviceWorker.getRegistration();
+      await registration?.update();
+    });
+    await reloadPromise;
+    await page.waitForLoadState('domcontentloaded');
+
+    await expect
+      .poll(
+        () => page.evaluate(() => Number(sessionStorage.getItem('dsk_test_load_count') ?? '0')),
+        { timeout: 30_000 },
+      )
+      .toBeGreaterThanOrEqual(2);
+    await expect(page.locator('#game-shell')).toHaveAttribute('data-ready', 'true');
+  } finally {
+    await server.close();
+  }
 });

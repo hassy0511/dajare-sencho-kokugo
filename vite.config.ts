@@ -5,7 +5,7 @@ export default defineConfig({
   base: '/dajare-sencho-kokugo/',
   plugins: [
     VitePWA({
-      registerType: 'prompt',
+      registerType: 'autoUpdate',
       injectRegister: null,
       manifest: {
         name: 'ダジャーレせんちょうと こくごの ぐんとう',
@@ -37,6 +37,9 @@ export default defineConfig({
         globPatterns: ['**/*.{js,css,html,svg,png,woff,json}'],
         navigateFallback: 'index.html',
         cleanupOutdatedCaches: true,
+        clientsClaim: true,
+        skipWaiting: true,
+        importScripts: ['sw-force-update.js'],
         maximumFileSizeToCacheInBytes: 10 * 1024 * 1024,
       },
     }),
@@ -57,6 +60,7 @@ export default defineConfig({
   test: {
     include: ['tests/**/*.test.ts'],
     environment: 'node',
+    testTimeout: 15_000,
     coverage: {
       reporter: ['text', 'html'],
     },

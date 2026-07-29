@@ -84,35 +84,6 @@ body {
   border: 0;
 }
 
-.update-toast {
-  position: fixed;
-  z-index: 10;
-  left: 50%;
-  bottom: calc(20px + var(--safe-bottom));
-  width: min(90vw, 520px);
-  padding: 14px 18px;
-  transform: translateX(-50%);
-  border: 3px solid #3d3323;
-  border-radius: 18px;
-  color: #293a32;
-  background: #fff7d0;
-  box-shadow: 0 8px 0 #a06b32;
-  font: inherit;
-  font-size: 16px;
-  cursor: pointer;
-}
-
-.update-toast span {
-  display: block;
-  color: #176b72;
-  font-weight: 700;
-}
-
-.update-toast:active {
-  transform: translate(-50%, 4px);
-  box-shadow: 0 4px 0 #a06b32;
-}
-
 noscript {
   position: fixed;
   inset: 0;
