@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 
 import { loadSea } from '../../content/loader';
 import type { IslandDefinition } from '../../types/content';
+import { enterSceneAudio } from '../audio/director';
 import { COLORS, GAME_FONT, GAME_HEIGHT, GAME_WIDTH } from '../constants';
 import { addGameTapListener } from '../input/logical-input';
 import { loadState } from '../save/state';
@@ -24,6 +25,7 @@ export class IslandSelectScene extends Phaser.Scene {
 
   create(): void {
     this.leaving = false;
+    enterSceneAudio(this, 'map');
     const sea = loadSea();
     this.drawBackground();
     this.add

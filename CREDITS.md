@@ -10,6 +10,16 @@
 
 The runtime subset contains kana, punctuation, ASCII, and all 1,026 elementary-school kanji.
 
+## Original music and sound effects
+
+- **Map / quiz / boss music (3 looping tracks)** — original procedural chiptune compositions created for this project
+- **UI and game sound effects (8 sounds)** — original procedural sound design created for this project
+- Runtime assets: `public/assets/audio/*.wav`
+- Reproducible source: `scripts/generate-audio.mjs`
+- Third-party audio sources: none
+
+The audio is generated deterministically as mono 16-bit PCM at 22.05 kHz, then bundled for offline play.
+
 ## Generated illustrations
 
 - **Word picture cards (16 images)** — generated with OpenAI Images 2.0 using the built-in image generation workflow

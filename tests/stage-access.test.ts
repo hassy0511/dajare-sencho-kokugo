@@ -15,6 +15,7 @@ function stateWithClears(...stageIds: string[]): SaveState {
       stageIds.map((stageId) => [stageId, { bestScore: 8, bestStars: 3, cleared: true }]),
     ),
     seen: {},
+    settings: { bgm: true, sfx: true, reducedMotion: false },
   };
 }
 

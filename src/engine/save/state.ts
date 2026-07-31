@@ -6,14 +6,26 @@ export interface StageProgress {
   cleared: boolean;
 }
 
+export interface GameSettings {
+  bgm: boolean;
+  sfx: boolean;
+  reducedMotion: boolean;
+}
+
 export interface SaveState {
   v: 1;
   stages: Record<string, StageProgress>;
   seen: Record<string, boolean>;
+  settings: GameSettings;
 }
 
 export function createDefaultState(): SaveState {
-  return { v: 1, stages: {}, seen: {} };
+  return {
+    v: 1,
+    stages: {},
+    seen: {},
+    settings: { bgm: true, sfx: true, reducedMotion: false },
+  };
 }
 
 export function loadState(storage: Pick<Storage, 'getItem'> = localStorage): SaveState {
@@ -31,10 +43,30 @@ export function loadState(storage: Pick<Storage, 'getItem'> = localStorage): Sav
         typeof parsed.seen === 'object' && parsed.seen !== null
           ? (parsed.seen as Record<string, boolean>)
           : {},
+      settings: normalizeSettings(parsed.settings),
     };
   } catch {
     return createDefaultState();
   }
+}
+
+function normalizeSettings(settings: Partial<GameSettings> | undefined): GameSettings {
+  return {
+    bgm: typeof settings?.bgm === 'boolean' ? settings.bgm : true,
+    sfx: typeof settings?.sfx === 'boolean' ? settings.sfx : true,
+    reducedMotion: typeof settings?.reducedMotion === 'boolean' ? settings.reducedMotion : false,
+  };
+}
+
+export function setAudioEnabled(
+  enabled: boolean,
+  storage: Pick<Storage, 'getItem' | 'setItem'> = localStorage,
+): SaveState {
+  const state = loadState(storage);
+  state.settings.bgm = enabled;
+  state.settings.sfx = enabled;
+  storage.setItem(SAVE_KEY, JSON.stringify(state));
+  return state;
 }
 
 export function markSeen(

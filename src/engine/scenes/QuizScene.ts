@@ -3,6 +3,7 @@ import Phaser from 'phaser';
 import { questionGenerators } from '../../content/gen/registry';
 import { loadGrade1Bank, loadHiraWordPool, loadSea } from '../../content/loader';
 import type { ChoiceQuestion } from '../../types/content';
+import { enterSceneAudio, playSfx } from '../audio/director';
 import { COLORS, GAME_FONT, GAME_HEIGHT, GAME_WIDTH } from '../constants';
 import { ChoiceQType } from '../qtypes/ChoiceQType';
 
@@ -37,6 +38,7 @@ export class QuizScene extends Phaser.Scene {
       ?.stages.find((candidate) => candidate.id === this.stageId);
     if (!stage) throw new Error(`ステージが見つかりません: ${this.stageId}`);
     if (!stage.gen) throw new Error('このステージの問題はまだ準備中です。');
+    enterSceneAudio(this, stage.id.endsWith('-boss') ? 'boss' : 'quiz');
     this.questions = questionGenerators[stage.gen](
       { stageId: stage.id, hira, grade1 },
       stage.n,
@@ -134,12 +136,14 @@ export class QuizScene extends Phaser.Scene {
     if (correct) {
       this.score += 1;
       this.combo += 1;
+      playSfx(this, this.combo >= 3 ? 'combo' : 'correct');
       this.feedback
         ?.setText(this.combo >= 2 ? `せいかい! ${this.combo}れんぞく!` : 'せいかい!')
         .setColor('#367151');
       this.releaseStars(CHOICE_X(selected), CHOICE_Y(selected));
     } else {
       this.combo = 0;
+      playSfx(this, 'wrong');
       this.feedback?.setText(`おしい! ${question.explanation}`).setColor('#9b3f41');
       if (this.questionLayer) {
         this.tweens.add({

@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 
+import { enterSceneAudio } from '../audio/director';
 import { COLORS, GAME_FONT, GAME_HEIGHT, GAME_TITLE, GAME_WIDTH, SAFE_AREA } from '../constants';
 import { addGameTapListener } from '../input/logical-input';
 
@@ -18,6 +19,7 @@ export class WelcomeScene extends Phaser.Scene {
 
   create(): void {
     this.started = false;
+    enterSceneAudio(this, 'map');
     this.drawWorld();
 
     const ship = this.drawShip();

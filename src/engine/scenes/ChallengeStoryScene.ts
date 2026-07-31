@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 
 import { loadSea } from '../../content/loader';
 import type { StoryPage } from '../../types/content';
+import { enterSceneAudio, playSfx } from '../audio/director';
 import { COLORS, GAME_FONT, GAME_HEIGHT, GAME_WIDTH } from '../constants';
 import { addGameTapListener } from '../input/logical-input';
 import { markSeen } from '../save/state';
@@ -22,6 +23,7 @@ export class ChallengeStoryScene extends Phaser.Scene {
     this.pages = loadSea().challenge;
     this.pageIndex = 0;
     this.leaving = false;
+    enterSceneAudio(this, 'map');
     this.drawBackground();
     this.showPage();
     this.bindInput();
@@ -112,10 +114,12 @@ export class ChallengeStoryScene extends Phaser.Scene {
     this.cleanupInput = addGameTapListener(this.game.canvas, ({ x, y }) => {
       if (this.leaving || Math.abs(x - 405) > 215 || y < 855 || y > 980) return;
       if (this.pageIndex < this.pages.length - 1) {
+        playSfx(this, 'page');
         this.pageIndex += 1;
         this.showPage();
         if (window.__DSK_APP__) window.__DSK_APP__.storyPage = this.pageIndex;
       } else {
+        playSfx(this, 'page');
         this.leaving = true;
         markSeen('challenge:g1');
         this.cleanupInput?.();

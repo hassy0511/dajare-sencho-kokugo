@@ -12,5 +12,8 @@ interface Window {
     storyPage?: number;
     islandId?: string;
     stageId?: string;
+    audioEnabled?: boolean;
+    bgm?: 'map' | 'quiz' | 'boss';
+    lastSfx?: string;
   };
 }

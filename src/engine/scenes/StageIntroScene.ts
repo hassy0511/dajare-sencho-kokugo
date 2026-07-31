@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 
 import { loadSea } from '../../content/loader';
 import type { StageDefinition } from '../../types/content';
+import { enterSceneAudio } from '../audio/director';
 import { COLORS, GAME_FONT, GAME_HEIGHT, GAME_WIDTH } from '../constants';
 import { addGameTapListener } from '../input/logical-input';
 
@@ -27,6 +28,7 @@ export class StageIntroScene extends Phaser.Scene {
   }
 
   create(): void {
+    enterSceneAudio(this, 'map');
     const { stage, islandSymbol } = this.findStage();
     this.drawBeach(stage, islandSymbol);
     this.bindInput();

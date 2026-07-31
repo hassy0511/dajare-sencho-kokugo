@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 
 import type { StoryPage } from '../../types/content';
+import { enterSceneAudio, playSfx } from '../audio/director';
 import { COLORS, GAME_FONT, GAME_HEIGHT, GAME_WIDTH } from '../constants';
 import { addGameTapListener } from '../input/logical-input';
 import { markSeen } from '../save/state';
@@ -37,6 +38,8 @@ export class GradeCompleteScene extends Phaser.Scene {
   create(): void {
     this.pageIndex = 0;
     this.leaving = false;
+    enterSceneAudio(this, 'map');
+    playSfx(this, 'treasure');
     this.drawBackground();
     this.showPage();
     this.bindInput();
@@ -126,11 +129,13 @@ export class GradeCompleteScene extends Phaser.Scene {
     this.cleanupInput = addGameTapListener(this.game.canvas, ({ x, y }) => {
       if (this.leaving || Math.abs(x - 405) > 215 || y < 855 || y > 995) return;
       if (this.pageIndex < COMPLETE_PAGES.length - 1) {
+        playSfx(this, 'page');
         this.pageIndex += 1;
         this.showPage();
         if (window.__DSK_APP__) window.__DSK_APP__.storyPage = this.pageIndex;
         return;
       }
+      playSfx(this, 'page');
       this.leaving = true;
       this.cleanupInput?.();
       this.scene.start('IslandSelect');

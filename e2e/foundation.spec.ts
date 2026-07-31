@@ -27,6 +27,7 @@ async function startUpdateTestServer(): Promise<{
     '.json': 'application/json',
     '.png': 'image/png',
     '.svg': 'image/svg+xml',
+    '.wav': 'audio/wav',
     '.webmanifest': 'application/manifest+json',
     '.woff': 'font/woff',
   };
@@ -145,6 +146,8 @@ test('物語から入り、最初のステージをクリアして次へ進め�
   await expect(canvas).toBeVisible();
   await expect(canvas).toHaveAttribute('width', '810');
   await expect(canvas).toHaveAttribute('height', '1080');
+  await expect(page.locator('#audio-toggle')).toHaveAttribute('data-enabled', 'true');
+  await expect(shell).toHaveAttribute('data-bgm', 'map');
 
   await page.screenshot({ path: testInfo.outputPath('welcome.png'), fullPage: true });
 
@@ -182,6 +185,7 @@ test('物語から入り、最初のステージをクリアして次へ進め�
   await tapGamePoint(page, canvas, 405, 835);
   await expect(shell).toHaveAttribute('data-scene', 'quiz');
   await expect(shell).toHaveAttribute('data-input-ready', 'true');
+  await expect(shell).toHaveAttribute('data-bgm', 'quiz');
   await page.screenshot({ path: testInfo.outputPath('quiz-first-question.png'), fullPage: true });
 
   await answerQuiz(page, canvas, shell, 10);
@@ -194,6 +198,25 @@ test('物語から入り、最初のステージをクリアして次へ進め�
   await page.screenshot({ path: testInfo.outputPath('dakuon-stage-intro.png'), fullPage: true });
   const saved = await page.evaluate(() => localStorage.getItem('dsk_state'));
   expect(saved).toContain('g1-moji-seion');
+});
+
+test('おとのオン・オフを保存し、再読み込み後も引き継ぐ', async ({ page }, testInfo) => {
+  await page.goto('./');
+
+  const shell = page.locator('#game-shell');
+  const toggle = page.locator('#audio-toggle');
+  await expect(toggle).toHaveAttribute('data-enabled', 'true');
+  await page.screenshot({ path: testInfo.outputPath('audio-toggle-on.png'), fullPage: true });
+  await toggle.click();
+  await expect(toggle).toHaveAttribute('data-enabled', 'false');
+  await expect(shell).toHaveAttribute('data-audio', 'off');
+  await page.screenshot({ path: testInfo.outputPath('audio-toggle-off.png'), fullPage: true });
+  expect(await page.evaluate(() => localStorage.getItem('dsk_state'))).toContain('"bgm":false');
+
+  await page.reload();
+  await expect(shell).toHaveAttribute('data-ready', 'true');
+  await expect(page.locator('#audio-toggle')).toHaveAttribute('data-enabled', 'false');
+  await expect(shell).toHaveAttribute('data-audio', 'off');
 });
 
 const additionalStageCases = [

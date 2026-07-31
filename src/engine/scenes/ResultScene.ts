@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 
 import { loadSea } from '../../content/loader';
 import type { StageDefinition } from '../../types/content';
+import { enterSceneAudio, playSfx } from '../audio/director';
 import { COLORS, GAME_FONT, GAME_HEIGHT, GAME_WIDTH } from '../constants';
 import { addGameTapListener } from '../input/logical-input';
 import { getNextPlayableStage, isSeaComplete } from '../progression/stage-access';
@@ -46,6 +47,7 @@ export class ResultScene extends Phaser.Scene {
   }
 
   create(): void {
+    enterSceneAudio(this, 'map');
     const stars = starsForResult(this.score, this.total);
     const state = recordStageResult(this.stageId, this.score, this.total, stars);
     const sea = loadSea();
@@ -53,6 +55,8 @@ export class ResultScene extends Phaser.Scene {
     const nextStage = stars > 0 && island ? getNextPlayableStage(island, this.stageId) : undefined;
     const seaComplete = stars > 0 && isSeaComplete(sea, state);
     this.drawResult(stars, nextStage, seaComplete);
+    playSfx(this, stars > 0 ? 'clear' : 'wrong');
+    if (stars === 3) this.time.delayedCall(520, () => playSfx(this, 'treasure'));
     this.bindButtons(nextStage, seaComplete);
     this.markReady(stars, nextStage, seaComplete);
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => this.cleanupInput?.());

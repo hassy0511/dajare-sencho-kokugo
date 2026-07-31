@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 
 import { loadSea } from '../../content/loader';
 import type { IslandDefinition, StageDefinition } from '../../types/content';
+import { enterSceneAudio, playSfx } from '../audio/director';
 import { COLORS, GAME_FONT, GAME_HEIGHT, GAME_WIDTH } from '../constants';
 import { addGameTapListener } from '../input/logical-input';
 import { getStageAccess } from '../progression/stage-access';
@@ -27,6 +28,7 @@ export class IslandMapScene extends Phaser.Scene {
   }
 
   create(): void {
+    enterSceneAudio(this, 'map');
     const island = loadSea().islands.find((candidate) => candidate.id === this.islandId);
     if (!island) throw new Error(`島データが見つかりません: ${this.islandId}`);
     this.drawBackground(island);
@@ -164,6 +166,7 @@ export class IslandMapScene extends Phaser.Scene {
       if (!stage) return;
       const access = getStageAccess(island.stages, index, state);
       if (access !== 'available') {
+        playSfx(this, 'wrong');
         const message =
           access === 'locked'
             ? 'ひとつ まえの ステージを クリアすると ひらくよ!'

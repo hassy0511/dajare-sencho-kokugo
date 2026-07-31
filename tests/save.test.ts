@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { loadState, recordStageResult, SAVE_KEY } from '../src/engine/save/state';
+import { loadState, recordStageResult, SAVE_KEY, setAudioEnabled } from '../src/engine/save/state';
 
 function memoryStorage(): Pick<Storage, 'getItem' | 'setItem'> {
   const values = new Map<string, string>();
@@ -13,7 +13,31 @@ function memoryStorage(): Pick<Storage, 'getItem' | 'setItem'> {
 describe('進行保存', () => {
   it('不正な保存値では初期状態へ戻る', () => {
     const storage = { getItem: () => '{not-json' };
-    expect(loadState(storage)).toEqual({ v: 1, stages: {}, seen: {} });
+    expect(loadState(storage)).toEqual({
+      v: 1,
+      stages: {},
+      seen: {},
+      settings: { bgm: true, sfx: true, reducedMotion: false },
+    });
+  });
+
+  it('以前の保存値には音の初期設定を補う', () => {
+    const storage = {
+      getItem: () => JSON.stringify({ v: 1, stages: {}, seen: { 'challenge:g1': true } }),
+    };
+    expect(loadState(storage).settings).toEqual({
+      bgm: true,
+      sfx: true,
+      reducedMotion: false,
+    });
+  });
+
+  it('BGMと効果音のオン・オフをまとめて保存する', () => {
+    const storage = memoryStorage();
+    setAudioEnabled(false, storage);
+    expect(loadState(storage).settings).toMatchObject({ bgm: false, sfx: false });
+    setAudioEnabled(true, storage);
+    expect(loadState(storage).settings).toMatchObject({ bgm: true, sfx: true });
   });
 
   it('自己ベストを下げずにクリア状態を保存する', () => {
