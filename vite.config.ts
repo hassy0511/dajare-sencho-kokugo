@@ -49,6 +49,10 @@ export default defineConfig({
     sourcemap: true,
     chunkSizeWarningLimit: 1800,
     rollupOptions: {
+      input: {
+        game: 'index.html',
+        audioPreview: 'audio-preview.html',
+      },
       output: {
         manualChunks(id) {
           if (id.includes('/node_modules/phaser/')) return 'phaser';

@@ -219,6 +219,26 @@ test('おとのオン・オフを保存し、再読み込み後も引き継ぐ',
   await expect(shell).toHaveAttribute('data-audio', 'off');
 });
 
+test('音源視聴ページでBGMと効果音を個別に確認できる', async ({ page }, testInfo) => {
+  await page.goto('./audio-preview.html');
+
+  const preview = page.locator('#audio-preview');
+  await expect(preview).toHaveAttribute('data-ready', 'true');
+  await expect(page.locator('[data-kind="bgm"]')).toHaveCount(3);
+  await expect(page.locator('[data-kind="sfx"]')).toHaveCount(8);
+  await expect(page.locator('#preview-volume-value')).toHaveText('100%（ゲームと おなじ）');
+
+  const mapButton = page.locator('[data-audio-key="bgm:map"] .play-button');
+  await mapButton.click();
+  await expect(preview).toHaveAttribute('data-playing', 'map');
+  await expect(mapButton).toHaveText('とめる');
+  await page.screenshot({ path: testInfo.outputPath('audio-preview-playing.png'), fullPage: true });
+
+  await page.locator('#preview-stop').click();
+  await expect(preview).toHaveAttribute('data-playing', 'none');
+  await expect(mapButton).toHaveText('きく');
+});
+
 const additionalStageCases = [
   {
     id: 'g1-moji-test1',
