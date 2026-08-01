@@ -22,4 +22,24 @@ describe('音声アセット', () => {
       expect(contents.length).toBeLessThan(1_000_000);
     }
   });
+
+  it('モバイル端末で聞き取れるピーク音量へ正規化する', () => {
+    for (const asset of [...BGM_ASSETS, ...SFX_ASSETS]) {
+      const url = new URL(`../public/${asset.src}`, import.meta.url);
+      const contents = readFileSync(fileURLToPath(url));
+      let peak = 0;
+      let squared = 0;
+      let samples = 0;
+      for (let offset = 44; offset < contents.length; offset += 2) {
+        const sample = contents.readInt16LE(offset) / 32_768;
+        peak = Math.max(peak, Math.abs(sample));
+        squared += sample * sample;
+        samples += 1;
+      }
+      const effectiveRms = Math.sqrt(squared / samples) * asset.volume;
+      expect(peak).toBeGreaterThanOrEqual(0.79);
+      expect(peak).toBeLessThanOrEqual(0.85);
+      expect(effectiveRms).toBeGreaterThan(0.04);
+    }
+  });
 });

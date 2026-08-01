@@ -153,6 +153,9 @@ test('物語から入り、最初のステージをクリアして次へ進め�
 
   await tapGamePoint(page, canvas, 405, 882);
   await expect(shell).toHaveAttribute('data-scene', 'sea-select');
+  await expect(shell).toHaveAttribute('data-audio-context', 'running');
+  await expect(shell).toHaveAttribute('data-bgm-playing', 'map');
+  await expect(shell).toHaveAttribute('data-last-sfx', 'tap');
   await page.screenshot({ path: testInfo.outputPath('sea-select.png'), fullPage: true });
 
   await tapGamePoint(page, canvas, 405, 315);
@@ -217,6 +220,21 @@ test('おとのオン・オフを保存し、再読み込み後も引き継ぐ',
   await expect(shell).toHaveAttribute('data-ready', 'true');
   await expect(page.locator('#audio-toggle')).toHaveAttribute('data-enabled', 'false');
   await expect(shell).toHaveAttribute('data-audio', 'off');
+});
+
+test('最初のタップで音声を開始し、BGMと効果音を再生する', async ({ page }) => {
+  await page.addInitScript(() => localStorage.clear());
+  await page.goto('./');
+
+  const shell = page.locator('#game-shell');
+  const canvas = page.locator('canvas');
+  await expect(shell).toHaveAttribute('data-ready', 'true');
+  await tapGamePoint(page, canvas, 405, 882);
+
+  await expect(shell).toHaveAttribute('data-scene', 'sea-select');
+  await expect(shell).toHaveAttribute('data-audio-context', 'running');
+  await expect(shell).toHaveAttribute('data-bgm-playing', 'map');
+  await expect(shell).toHaveAttribute('data-last-sfx', 'tap');
 });
 
 test('音源視聴ページでBGMと効果音を個別に確認できる', async ({ page }, testInfo) => {

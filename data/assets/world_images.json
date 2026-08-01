@@ -1,0 +1,53 @@
+{
+  "version": 1,
+  "generator": {
+    "provider": "OpenAI",
+    "model": "Images 2.0",
+    "mode": "approved-character-style world art",
+    "styleReference": "art/source/characters/dajare-sencho-approved.png"
+  },
+  "items": [
+    {
+      "key": "welcome-ship",
+      "kind": "ship",
+      "src": "assets/images/world/dajare-ship.png",
+      "source": "art/source/world/dajare-ship-source.png",
+      "alt": "赤と紺と金色の帆を張った、緑のひげ飾りがあるダジャーレせんちょうの船"
+    },
+    {
+      "key": "g1-moji",
+      "kind": "island",
+      "src": "assets/images/world/island-moji.png",
+      "source": "art/source/world/island-moji-source.png",
+      "alt": "文字の形をした石と学び小屋がある緑豊かな島"
+    },
+    {
+      "key": "g1-kanji",
+      "kind": "island",
+      "src": "assets/images/world/island-kanji.png",
+      "source": "art/source/world/island-kanji-source.png",
+      "alt": "竹林と赤い門と石碑がある山の島"
+    },
+    {
+      "key": "g1-kotoba",
+      "kind": "island",
+      "src": "assets/images/world/island-kotoba.png",
+      "source": "art/source/world/island-kotoba-source.png",
+      "alt": "本の葉を茂らせた大木と丸い図書館がある花の島"
+    },
+    {
+      "key": "g1-yomitoki",
+      "kind": "island",
+      "src": "assets/images/world/island-yomi.png",
+      "source": "art/source/world/island-yomi-source.png",
+      "alt": "灯台と天文台と虫眼鏡の庭がある紫の島"
+    },
+    {
+      "key": "g1-kakikata",
+      "kind": "island",
+      "src": "assets/images/world/island-kaki.png",
+      "source": "art/source/world/island-kaki-source.png",
+      "alt": "大きな筆と金色のインク工房と紙の橋がある紫の島"
+    }
+  ]
+}

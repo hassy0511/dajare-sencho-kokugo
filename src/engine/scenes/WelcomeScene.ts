@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 
+import { worldImageTextureKey } from '../assets/world-image-library';
 import { enterSceneAudio } from '../audio/director';
 import { COLORS, GAME_FONT, GAME_HEIGHT, GAME_TITLE, GAME_WIDTH, SAFE_AREA } from '../constants';
 import { addGameTapListener } from '../input/logical-input';
@@ -121,56 +122,10 @@ export class WelcomeScene extends Phaser.Scene {
       .setOrigin(0.5);
   }
 
-  private drawShip(): Phaser.GameObjects.Container {
-    const ship = this.add.container(GAME_WIDTH / 2, 610);
-    const art = this.add.graphics();
-
-    art.fillStyle(COLORS.brownDark).lineStyle(6, COLORS.ink, 1);
-    art.fillPoints(
-      [
-        new Phaser.Geom.Point(-128, 58),
-        new Phaser.Geom.Point(132, 58),
-        new Phaser.Geom.Point(87, 132),
-        new Phaser.Geom.Point(-83, 132),
-      ],
-      true,
-    );
-    art.strokePoints(
-      [
-        new Phaser.Geom.Point(-128, 58),
-        new Phaser.Geom.Point(132, 58),
-        new Phaser.Geom.Point(87, 132),
-        new Phaser.Geom.Point(-83, 132),
-      ],
-      true,
-    );
-    art.fillStyle(COLORS.brown).fillRect(-100, 64, 200, 32);
-
-    art.lineStyle(10, COLORS.ink, 1).lineBetween(0, -116, 0, 70);
-    art.fillStyle(COLORS.cream).lineStyle(5, COLORS.ink, 1);
-    art.fillTriangle(-7, -105, -7, 42, -118, 42);
-    art.strokeTriangle(-7, -105, -7, 42, -118, 42);
-    art.fillStyle(COLORS.coral).fillTriangle(10, -82, 10, 42, 100, 42);
-    art.lineStyle(5, COLORS.ink, 1).strokeTriangle(10, -82, 10, 42, 100, 42);
-
-    art.fillStyle(COLORS.seaDark).lineStyle(4, COLORS.ink, 1);
-    art.fillCircle(-55, 93, 14).strokeCircle(-55, 93, 14);
-    art.fillCircle(0, 93, 14).strokeCircle(0, 93, 14);
-    art.fillCircle(55, 93, 14).strokeCircle(55, 93, 14);
-
-    const badge = this.add.graphics({ x: 47, y: -12 });
-    badge.fillStyle(COLORS.cream).lineStyle(4, COLORS.ink, 1);
-    badge.fillCircle(0, 0, 27).strokeCircle(0, 0, 27);
-    const badgeText = this.add
-      .text(47, -14, 'ダ', {
-        ...TEXT_STYLE,
-        fontSize: '24px',
-        fontStyle: 'bold',
-      })
-      .setOrigin(0.5);
-
-    ship.add([art, badge, badgeText]);
-    return ship;
+  private drawShip(): Phaser.GameObjects.Image {
+    return this.add
+      .image(GAME_WIDTH / 2, 610, worldImageTextureKey('welcome-ship'))
+      .setDisplaySize(430, 430);
   }
 
   private createStartButton(): void {

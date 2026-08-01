@@ -12,20 +12,20 @@ interface AudioAsset<TName extends string> {
 }
 
 export const BGM_ASSETS: readonly AudioAsset<BgmName>[] = [
-  { name: 'map', key: 'bgm:map', src: 'assets/audio/bgm-map.wav', volume: 0.2 },
-  { name: 'quiz', key: 'bgm:quiz', src: 'assets/audio/bgm-quiz.wav', volume: 0.16 },
-  { name: 'boss', key: 'bgm:boss', src: 'assets/audio/bgm-boss.wav', volume: 0.19 },
+  { name: 'map', key: 'bgm:map', src: 'assets/audio/bgm-map.wav', volume: 0.32 },
+  { name: 'quiz', key: 'bgm:quiz', src: 'assets/audio/bgm-quiz.wav', volume: 0.28 },
+  { name: 'boss', key: 'bgm:boss', src: 'assets/audio/bgm-boss.wav', volume: 0.32 },
 ];
 
 export const SFX_ASSETS: readonly AudioAsset<SfxName>[] = [
-  { name: 'tap', key: 'sfx:tap', src: 'assets/audio/sfx-tap.wav', volume: 0.28 },
-  { name: 'correct', key: 'sfx:correct', src: 'assets/audio/sfx-correct.wav', volume: 0.42 },
-  { name: 'wrong', key: 'sfx:wrong', src: 'assets/audio/sfx-wrong.wav', volume: 0.3 },
-  { name: 'clear', key: 'sfx:clear', src: 'assets/audio/sfx-clear.wav', volume: 0.48 },
-  { name: 'treasure', key: 'sfx:treasure', src: 'assets/audio/sfx-treasure.wav', volume: 0.42 },
-  { name: 'page', key: 'sfx:page', src: 'assets/audio/sfx-page.wav', volume: 0.25 },
-  { name: 'unlock', key: 'sfx:unlock', src: 'assets/audio/sfx-unlock.wav', volume: 0.38 },
-  { name: 'combo', key: 'sfx:combo', src: 'assets/audio/sfx-combo.wav', volume: 0.44 },
+  { name: 'tap', key: 'sfx:tap', src: 'assets/audio/sfx-tap.wav', volume: 0.45 },
+  { name: 'correct', key: 'sfx:correct', src: 'assets/audio/sfx-correct.wav', volume: 0.58 },
+  { name: 'wrong', key: 'sfx:wrong', src: 'assets/audio/sfx-wrong.wav', volume: 0.45 },
+  { name: 'clear', key: 'sfx:clear', src: 'assets/audio/sfx-clear.wav', volume: 0.62 },
+  { name: 'treasure', key: 'sfx:treasure', src: 'assets/audio/sfx-treasure.wav', volume: 0.58 },
+  { name: 'page', key: 'sfx:page', src: 'assets/audio/sfx-page.wav', volume: 0.42 },
+  { name: 'unlock', key: 'sfx:unlock', src: 'assets/audio/sfx-unlock.wav', volume: 0.55 },
+  { name: 'combo', key: 'sfx:combo', src: 'assets/audio/sfx-combo.wav', volume: 0.62 },
 ];
 
 export function bgmAsset(name: BgmName): AudioAsset<BgmName> {

@@ -98,9 +98,15 @@ function mixKick(track, start, volume = 0.12) {
   });
 }
 
-function master(track, gain = 0.92) {
+function master(track, gain = 0.92, targetPeak = 0.82) {
+  let peak = 0;
   for (let index = 0; index < track.length; index += 1) {
     track[index] = Math.tanh(track[index] * 1.08) * gain;
+    peak = Math.max(peak, Math.abs(track[index]));
+  }
+  const normalization = peak > 0 ? targetPeak / peak : 1;
+  for (let index = 0; index < track.length; index += 1) {
+    track[index] *= normalization;
   }
   return track;
 }

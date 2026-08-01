@@ -1,7 +1,8 @@
 import Phaser from 'phaser';
 
 import { loadSea } from '../../content/loader';
-import type { IslandDefinition } from '../../types/content';
+import type { IslandDefinition, WorldImageKey } from '../../types/content';
+import { worldImageTextureKey } from '../assets/world-image-library';
 import { enterSceneAudio } from '../audio/director';
 import { COLORS, GAME_FONT, GAME_HEIGHT, GAME_WIDTH } from '../constants';
 import { addGameTapListener } from '../input/logical-input';
@@ -76,34 +77,28 @@ export class IslandSelectScene extends Phaser.Scene {
       .strokeRoundedRect(x - 160, y - 88, 320, 196, 32);
     card.fillStyle(face).lineStyle(5, COLORS.ink, 1);
     card
-      .fillRoundedRect(x - 160, y - 98, 320, 192, 32)
-      .strokeRoundedRect(x - 160, y - 98, 320, 192, 32);
+      .fillRoundedRect(x - 160, y + 18, 320, 76, 26)
+      .strokeRoundedRect(x - 160, y + 18, 320, 76, 26);
+    card.fillStyle(COLORS.cream).lineStyle(5, COLORS.ink, 1);
     card
-      .fillStyle(COLORS.cream)
-      .lineStyle(4, COLORS.ink, 1)
-      .fillCircle(x, y - 39, 43)
-      .strokeCircle(x, y - 39, 43);
+      .fillRoundedRect(x - 160, y - 98, 320, 130, 32)
+      .strokeRoundedRect(x - 160, y - 98, 320, 130, 32);
     this.add
-      .text(x, y - 41, island.symbol, {
+      .image(x, y - 45, worldImageTextureKey(island.id as WorldImageKey))
+      .setDisplaySize(178, 178);
+    this.add
+      .text(x, y + 43, island.name, {
         fontFamily: GAME_FONT,
-        color: '#3d3323',
-        fontSize: island.symbol.length > 2 ? '21px' : '37px',
+        color: '#fff7d0',
+        fontSize: '25px',
         fontStyle: 'bold',
       })
       .setOrigin(0.5);
     this.add
-      .text(x, y + 22, island.name, {
+      .text(x, y + 75, `${cleared} / ${island.stages.length} クリア`, {
         fontFamily: GAME_FONT,
         color: '#fff7d0',
-        fontSize: '27px',
-        fontStyle: 'bold',
-      })
-      .setOrigin(0.5);
-    this.add
-      .text(x, y + 63, `${cleared} / ${island.stages.length} クリア`, {
-        fontFamily: GAME_FONT,
-        color: '#fff7d0',
-        fontSize: '19px',
+        fontSize: '17px',
       })
       .setOrigin(0.5);
   }

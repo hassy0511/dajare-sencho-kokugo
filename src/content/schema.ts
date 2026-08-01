@@ -200,6 +200,34 @@ export const characterImageLibrarySchema = z.object({
     .min(1),
 });
 
+export const worldImageLibrarySchema = z.object({
+  version: z.literal(1),
+  generator: z.object({
+    provider: z.string().min(1),
+    model: z.string().min(1),
+    mode: z.string().min(1),
+    styleReference: z.literal('art/source/characters/dajare-sencho-approved.png'),
+  }),
+  items: z
+    .array(
+      z.object({
+        key: z.enum([
+          'welcome-ship',
+          'g1-moji',
+          'g1-kanji',
+          'g1-kotoba',
+          'g1-yomitoki',
+          'g1-kakikata',
+        ]),
+        kind: z.enum(['ship', 'island']),
+        src: z.string().regex(/^assets\/images\/world\/[a-z-]+\.png$/),
+        source: z.string().regex(/^art\/source\/world\/[a-z-]+-source\.png$/),
+        alt: z.string().min(1),
+      }),
+    )
+    .length(6),
+});
+
 export const seaSchema = z.object({
   id: z.literal('g1'),
   name: z.string().min(1),

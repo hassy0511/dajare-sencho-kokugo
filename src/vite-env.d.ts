@@ -13,7 +13,9 @@ interface Window {
     islandId?: string;
     stageId?: string;
     audioEnabled?: boolean;
+    audioContext?: string;
     bgm?: 'map' | 'quiz' | 'boss';
+    bgmPlaying?: 'map' | 'quiz' | 'boss';
     lastSfx?: string;
   };
 }

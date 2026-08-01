@@ -108,6 +108,28 @@ export interface CharacterImageLibrary {
   items: CharacterImageAsset[];
 }
 
+export type WorldImageKey =
+  'welcome-ship' | 'g1-moji' | 'g1-kanji' | 'g1-kotoba' | 'g1-yomitoki' | 'g1-kakikata';
+
+export interface WorldImageAsset {
+  key: WorldImageKey;
+  kind: 'ship' | 'island';
+  src: string;
+  source: string;
+  alt: string;
+}
+
+export interface WorldImageLibrary {
+  version: 1;
+  generator: {
+    provider: string;
+    model: string;
+    mode: string;
+    styleReference: string;
+  };
+  items: WorldImageAsset[];
+}
+
 export interface StageDefinition {
   id: string;
   name: string;

@@ -13,14 +13,19 @@ class AudioDirector {
   private pendingBgm: BgmName = 'map';
   private button: HTMLButtonElement;
   private lastTapAt = 0;
+  private pendingSfx: SfxName | undefined;
 
   constructor(game: Phaser.Game) {
     this.game = game;
     this.button = this.createToggle();
-    this.game.sound.on(Phaser.Sound.Events.UNLOCKED, () => this.syncMusic());
+    this.game.sound.on(Phaser.Sound.Events.UNLOCKED, () => this.flushAudio());
     this.game.canvas.addEventListener('pointerdown', this.onCanvasTap, true);
     window.addEventListener('resize', this.positionToggle);
     window.addEventListener('orientationchange', this.positionToggle);
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible')
+        void this.resumeAudio().then(() => this.flushAudio());
+    });
     this.positionToggle();
     this.syncToggle();
   }
@@ -34,9 +39,14 @@ class AudioDirector {
     this.syncMusic();
   }
 
-  playSfx(name: SfxName): void {
+  requestSfx(name: SfxName): void {
+    this.pendingSfx = name;
+    void this.resumeAudio().then(() => this.flushAudio());
+  }
+
+  private playSfxNow(name: SfxName): void {
     const state = loadState();
-    if (!state.settings.sfx || this.game.sound.locked) return;
+    if (!state.settings.sfx || !this.audioReady()) return;
     const asset = sfxAsset(name);
     if (!this.game.cache.audio.exists(asset.key)) return;
     this.game.sound.play(asset.key, { volume: asset.volume });
@@ -49,7 +59,7 @@ class AudioDirector {
     const now = Date.now();
     if (now - this.lastTapAt < 100) return;
     this.lastTapAt = now;
-    this.playSfx('tap');
+    this.requestSfx('tap');
   };
 
   private createToggle(): HTMLButtonElement {
@@ -62,8 +72,8 @@ class AudioDirector {
       const enabled = !(state.settings.bgm || state.settings.sfx);
       setAudioEnabled(enabled);
       this.syncToggle();
-      this.syncMusic();
-      if (enabled) this.playSfx('unlock');
+      if (enabled) this.requestSfx('unlock');
+      else this.syncMusic();
       const status = document.querySelector<HTMLElement>('#game-status');
       if (status) status.textContent = enabled ? 'おとを つけました' : 'おとを けしました';
     });
@@ -98,7 +108,7 @@ class AudioDirector {
       this.stopMusic();
       return;
     }
-    if (this.game.sound.locked) return;
+    if (!this.audioReady()) return;
     if (this.activeBgmName === this.pendingBgm && this.activeBgm?.isPlaying) return;
 
     this.stopMusic();
@@ -108,6 +118,9 @@ class AudioDirector {
     this.activeBgm = sound;
     this.activeBgmName = this.pendingBgm;
     sound.play();
+    const shell = document.querySelector<HTMLElement>('#game-shell');
+    if (shell) shell.dataset.bgmPlaying = this.pendingBgm;
+    if (window.__DSK_APP__) window.__DSK_APP__.bgmPlaying = this.pendingBgm;
     const scene = this.currentScene;
     if (scene?.sys.isActive()) {
       scene.tweens.add({ targets: sound, volume: asset.volume, duration: 320 });
@@ -116,10 +129,50 @@ class AudioDirector {
     }
   }
 
+  private async resumeAudio(): Promise<void> {
+    const context = this.audioContext();
+    if (context?.state === 'suspended') {
+      try {
+        await context.resume();
+      } catch {
+        // Safari may keep the context suspended until the next direct user gesture.
+      }
+    }
+    this.markAudioContext();
+  }
+
+  private audioContext(): AudioContext | undefined {
+    return (this.game.sound as Phaser.Sound.BaseSoundManager & { context?: AudioContext }).context;
+  }
+
+  private audioReady(): boolean {
+    const context = this.audioContext();
+    return !this.game.sound.locked && context?.state !== 'suspended';
+  }
+
+  private flushAudio(): void {
+    this.markAudioContext();
+    if (!this.audioReady()) return;
+    this.syncMusic();
+    const pending = this.pendingSfx;
+    this.pendingSfx = undefined;
+    if (pending) this.playSfxNow(pending);
+  }
+
+  private markAudioContext(): void {
+    const state = this.audioContext()?.state ?? (this.game.sound.locked ? 'locked' : 'ready');
+    const shell = document.querySelector<HTMLElement>('#game-shell');
+    if (shell) shell.dataset.audioContext = state;
+    if (window.__DSK_APP__) window.__DSK_APP__.audioContext = state;
+  }
+
   private stopMusic(): void {
     const sound = this.activeBgm;
     this.activeBgm = undefined;
     this.activeBgmName = undefined;
+    const shell = document.querySelector<HTMLElement>('#game-shell');
+    if (shell) shell.dataset.bgmPlaying = 'none';
+    if (window.__DSK_APP__) delete window.__DSK_APP__.bgmPlaying;
     if (!sound) return;
     const scene = this.currentScene;
     if (sound.isPlaying && scene?.sys.isActive()) {
@@ -147,5 +200,5 @@ export function enterSceneAudio(scene: Phaser.Scene, bgm: BgmName): void {
 }
 
 export function playSfx(scene: Phaser.Scene, name: SfxName): void {
-  getDirector(scene).playSfx(name);
+  getDirector(scene).requestSfx(name);
 }
