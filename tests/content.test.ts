@@ -87,23 +87,39 @@ describe('ひらがな清音の問題生成', () => {
     }
   });
 
-  it('船と5つの島がImages 2.0の台帳と対応し、軽量な透過画像になっている', () => {
+  it('背景・船・5つの島がImages 2.0の台帳と対応し、配信用に軽量化されている', () => {
     const library = loadWorldImageLibrary();
     expect(library.generator.model).toBe('Images 2.0');
-    expect(library.items).toHaveLength(6);
+    expect(library.items).toHaveLength(9);
     expect(new Set(library.items.map((item) => item.key))).toEqual(
-      new Set(['welcome-ship', 'g1-moji', 'g1-kanji', 'g1-kotoba', 'g1-yomitoki', 'g1-kakikata']),
+      new Set([
+        'welcome-background',
+        'ocean-map-background',
+        'island-board-background',
+        'welcome-ship',
+        'g1-moji',
+        'g1-kanji',
+        'g1-kotoba',
+        'g1-yomitoki',
+        'g1-kakikata',
+      ]),
     );
 
     for (const asset of library.items) {
       const assetPath = resolve('public', asset.src);
       expect(existsSync(assetPath)).toBe(true);
       expect(existsSync(resolve(asset.source))).toBe(true);
-      const png = readFileSync(assetPath);
-      expect(png.readUInt32BE(16)).toBe(512);
-      expect(png.readUInt32BE(20)).toBe(512);
-      expect(png.includes(Buffer.from('tRNS'))).toBe(true);
-      expect(png.byteLength).toBeLessThan(150 * 1024);
+      const image = readFileSync(assetPath);
+      if (asset.kind === 'background') {
+        expect(image.subarray(0, 4).toString('ascii')).toBe('RIFF');
+        expect(image.subarray(8, 12).toString('ascii')).toBe('WEBP');
+        expect(image.byteLength).toBeLessThan(150 * 1024);
+      } else {
+        expect(image.readUInt32BE(16)).toBe(512);
+        expect(image.readUInt32BE(20)).toBe(512);
+        expect(image.includes(Buffer.from('tRNS'))).toBe(true);
+        expect(image.byteLength).toBeLessThan(150 * 1024);
+      }
     }
   });
 

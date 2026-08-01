@@ -8,6 +8,27 @@
   },
   "items": [
     {
+      "key": "welcome-background",
+      "kind": "background",
+      "src": "assets/images/world/background-welcome.webp",
+      "source": "art/source/world/background-welcome-source.png",
+      "alt": "南国の島にはさまれた明るい空と波立つ海と砂浜"
+    },
+    {
+      "key": "ocean-map-background",
+      "kind": "background",
+      "src": "assets/images/world/background-ocean-map.webp",
+      "source": "art/source/world/background-ocean-map-source.png",
+      "alt": "5つの島を置く航路と渦巻き模様が描かれた青い海"
+    },
+    {
+      "key": "island-board-background",
+      "kind": "background",
+      "src": "assets/images/world/background-island-board.webp",
+      "source": "art/source/world/background-island-board-source.png",
+      "alt": "花と海に囲まれた大きな巻物の冒険地図"
+    },
+    {
       "key": "welcome-ship",
       "kind": "ship",
       "src": "assets/images/world/dajare-ship.png",

@@ -2,8 +2,9 @@ import Phaser from 'phaser';
 
 import { loadSea } from '../../content/loader';
 import type { IslandDefinition, StageDefinition } from '../../types/content';
+import { addWorldBackground } from '../assets/world-image-library';
 import { enterSceneAudio, playSfx } from '../audio/director';
-import { COLORS, GAME_FONT, GAME_HEIGHT, GAME_WIDTH } from '../constants';
+import { COLORS, GAME_FONT } from '../constants';
 import { addGameTapListener } from '../input/logical-input';
 import { getStageAccess } from '../progression/stage-access';
 import { loadState } from '../save/state';
@@ -50,11 +51,10 @@ export class IslandMapScene extends Phaser.Scene {
   }
 
   private drawBackground(island: IslandDefinition): void {
-    const background = this.add.graphics();
-    background.fillStyle(COLORS.sky).fillRect(0, 0, GAME_WIDTH, 165);
-    background.fillStyle(COLORS.sea).fillRect(0, 165, GAME_WIDTH, GAME_HEIGHT - 165);
-    background.fillStyle(COLORS.sand).lineStyle(6, COLORS.ink, 1);
-    background.fillRoundedRect(42, 160, 726, 800, 46).strokeRoundedRect(42, 160, 726, 800, 46);
+    addWorldBackground(this, 'island-board-background');
+    const header = this.add.graphics();
+    header.fillStyle(COLORS.cream, 0.95).lineStyle(5, COLORS.ink, 1);
+    header.fillRoundedRect(160, 22, 500, 118, 30).strokeRoundedRect(160, 22, 500, 118, 30);
     this.add
       .text(405, 68, island.name, {
         fontFamily: GAME_FONT,
@@ -75,6 +75,19 @@ export class IslandMapScene extends Phaser.Scene {
 
   private drawNodes(island: IslandDefinition): void {
     const state = loadState();
+    const route = this.add.graphics();
+    route.lineStyle(10, COLORS.ink, 0.28);
+    for (let index = 1; index < island.stages.length; index += 1) {
+      const previous = nodePosition(index - 1);
+      const current = nodePosition(index);
+      route.lineBetween(previous.x, previous.y, current.x, current.y);
+    }
+    route.lineStyle(5, 0xe0a83d, 0.78);
+    for (let index = 1; index < island.stages.length; index += 1) {
+      const previous = nodePosition(index - 1);
+      const current = nodePosition(index);
+      route.lineBetween(previous.x, previous.y, current.x, current.y);
+    }
     island.stages.forEach((stage, index) => {
       const position = nodePosition(index);
       const cleared = Boolean(state.stages[stage.id]?.cleared);
@@ -83,22 +96,23 @@ export class IslandMapScene extends Phaser.Scene {
       const face = cleared ? COLORS.green : available ? COLORS.coral : 0xaab5ad;
       const shadow = cleared ? COLORS.greenDark : available ? COLORS.coralDark : 0x718078;
       const card = this.add.graphics();
-      card.fillStyle(shadow).lineStyle(4, COLORS.ink, 1);
+      card.fillStyle(COLORS.ink, 0.28);
+      card.fillRoundedRect(position.x - 153, position.y - 53, 306, 120, 25);
+      card.fillStyle(COLORS.cream, 0.97).lineStyle(4, COLORS.ink, 1);
       card
-        .fillRoundedRect(position.x - 158, position.y - 55, 316, 126, 25)
-        .strokeRoundedRect(position.x - 158, position.y - 55, 316, 126, 25);
-      card.fillStyle(face).lineStyle(4, COLORS.ink, 1);
-      card
-        .fillRoundedRect(position.x - 158, position.y - 64, 316, 122, 25)
-        .strokeRoundedRect(position.x - 158, position.y - 64, 316, 122, 25);
-      card.fillStyle(COLORS.cream).lineStyle(3, COLORS.ink, 1);
+        .fillRoundedRect(position.x - 153, position.y - 62, 306, 116, 25)
+        .strokeRoundedRect(position.x - 153, position.y - 62, 306, 116, 25);
+      card.fillStyle(face);
+      card.fillRoundedRect(position.x - 150, position.y - 59, 300, 28, 20);
+      card.fillRect(position.x - 150, position.y - 44, 300, 13);
+      card.fillStyle(face).lineStyle(3, COLORS.ink, 1);
       card
         .fillCircle(position.x - 118, position.y - 4, 29)
         .strokeCircle(position.x - 118, position.y - 4, 29);
       this.add
         .text(position.x - 118, position.y - 6, cleared ? '★' : String(index + 1), {
           fontFamily: GAME_FONT,
-          color: cleared ? '#9b3f41' : '#3d3323',
+          color: '#fff7d0',
           fontSize: '25px',
           fontStyle: 'bold',
         })
@@ -106,7 +120,7 @@ export class IslandMapScene extends Phaser.Scene {
       this.add
         .text(position.x + 28, position.y - 20, stage.name, {
           fontFamily: GAME_FONT,
-          color: available || cleared ? '#fff7d0' : '#f0f3ed',
+          color: '#3d3323',
           fontSize: stage.name.length > 13 ? '18px' : '21px',
           fontStyle: 'bold',
           align: 'center',
@@ -126,7 +140,7 @@ export class IslandMapScene extends Phaser.Scene {
                 : 'じゅんびちゅう',
           {
             fontFamily: GAME_FONT,
-            color: '#fff7d0',
+            color: `#${shadow.toString(16).padStart(6, '0')}`,
             fontSize: '16px',
           },
         )

@@ -212,6 +212,9 @@ export const worldImageLibrarySchema = z.object({
     .array(
       z.object({
         key: z.enum([
+          'welcome-background',
+          'ocean-map-background',
+          'island-board-background',
           'welcome-ship',
           'g1-moji',
           'g1-kanji',
@@ -219,13 +222,13 @@ export const worldImageLibrarySchema = z.object({
           'g1-yomitoki',
           'g1-kakikata',
         ]),
-        kind: z.enum(['ship', 'island']),
-        src: z.string().regex(/^assets\/images\/world\/[a-z-]+\.png$/),
+        kind: z.enum(['background', 'ship', 'island']),
+        src: z.string().regex(/^assets\/images\/world\/[a-z-]+\.(png|webp)$/),
         source: z.string().regex(/^art\/source\/world\/[a-z-]+-source\.png$/),
         alt: z.string().min(1),
       }),
     )
-    .length(6),
+    .length(9),
 });
 
 export const seaSchema = z.object({

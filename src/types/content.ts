@@ -109,11 +109,19 @@ export interface CharacterImageLibrary {
 }
 
 export type WorldImageKey =
-  'welcome-ship' | 'g1-moji' | 'g1-kanji' | 'g1-kotoba' | 'g1-yomitoki' | 'g1-kakikata';
+  | 'welcome-background'
+  | 'ocean-map-background'
+  | 'island-board-background'
+  | 'welcome-ship'
+  | 'g1-moji'
+  | 'g1-kanji'
+  | 'g1-kotoba'
+  | 'g1-yomitoki'
+  | 'g1-kakikata';
 
 export interface WorldImageAsset {
   key: WorldImageKey;
-  kind: 'ship' | 'island';
+  kind: 'background' | 'ship' | 'island';
   src: string;
   source: string;
   alt: string;

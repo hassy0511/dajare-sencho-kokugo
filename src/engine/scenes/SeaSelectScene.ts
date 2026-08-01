@@ -1,8 +1,9 @@
 import Phaser from 'phaser';
 
 import { loadSea } from '../../content/loader';
+import { addWorldBackground, worldImageTextureKey } from '../assets/world-image-library';
 import { enterSceneAudio } from '../audio/director';
-import { COLORS, GAME_FONT, GAME_HEIGHT, GAME_WIDTH } from '../constants';
+import { COLORS, GAME_FONT, GAME_WIDTH } from '../constants';
 import { addGameTapListener } from '../input/logical-input';
 import { loadState } from '../save/state';
 
@@ -50,15 +51,7 @@ export class SeaSelectScene extends Phaser.Scene {
   }
 
   private drawOcean(): void {
-    const background = this.add.graphics();
-    background.fillStyle(COLORS.sky).fillRect(0, 0, GAME_WIDTH, 170);
-    background.fillStyle(COLORS.sea).fillRect(0, 170, GAME_WIDTH, GAME_HEIGHT - 170);
-    background.lineStyle(5, COLORS.foam, 0.9);
-    for (let y = 210; y < GAME_HEIGHT; y += 105) {
-      for (let x = -30 + ((y / 105) % 2) * 70; x < GAME_WIDTH + 50; x += 170) {
-        background.beginPath().arc(x, y, 38, 3.6, 5.8).strokePath();
-      }
-    }
+    addWorldBackground(this, 'ocean-map-background');
   }
 
   private drawMainSea(name: string): void {
@@ -67,13 +60,15 @@ export class SeaSelectScene extends Phaser.Scene {
     card.fillRoundedRect(65, 205, 680, 245, 38).strokeRoundedRect(65, 205, 680, 245, 38);
     card.fillStyle(COLORS.cream).lineStyle(6, COLORS.ink, 1);
     card.fillRoundedRect(65, 193, 680, 245, 38).strokeRoundedRect(65, 193, 680, 245, 38);
-    card.fillStyle(COLORS.green).lineStyle(5, COLORS.ink, 1);
-    card.fillCircle(170, 315, 75).strokeCircle(170, 315, 75);
+    this.add.image(180, 315, worldImageTextureKey('g1-moji')).setDisplaySize(195, 195);
+    const badge = this.add.graphics();
+    badge.fillStyle(COLORS.coral).lineStyle(4, COLORS.ink, 1);
+    badge.fillRoundedRect(92, 220, 108, 50, 20).strokeRoundedRect(92, 220, 108, 50, 20);
     this.add
-      .text(170, 307, '1', {
+      .text(146, 244, '1ねん', {
         fontFamily: GAME_FONT,
         color: '#fff7d0',
-        fontSize: '76px',
+        fontSize: '22px',
         fontStyle: 'bold',
       })
       .setOrigin(0.5);

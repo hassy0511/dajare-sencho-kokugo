@@ -2,17 +2,17 @@ import Phaser from 'phaser';
 
 import { loadSea } from '../../content/loader';
 import type { IslandDefinition, WorldImageKey } from '../../types/content';
-import { worldImageTextureKey } from '../assets/world-image-library';
+import { addWorldBackground, worldImageTextureKey } from '../assets/world-image-library';
 import { enterSceneAudio } from '../audio/director';
-import { COLORS, GAME_FONT, GAME_HEIGHT, GAME_WIDTH } from '../constants';
+import { COLORS, GAME_FONT } from '../constants';
 import { addGameTapListener } from '../input/logical-input';
 import { loadState } from '../save/state';
 
 const ISLAND_POSITIONS = [
-  { x: 220, y: 315 },
-  { x: 590, y: 315 },
-  { x: 220, y: 565 },
-  { x: 590, y: 565 },
+  { x: 220, y: 285 },
+  { x: 590, y: 285 },
+  { x: 220, y: 550 },
+  { x: 590, y: 550 },
   { x: 405, y: 815 },
 ] as const;
 
@@ -56,11 +56,10 @@ export class IslandSelectScene extends Phaser.Scene {
   }
 
   private drawBackground(): void {
-    const background = this.add.graphics();
-    background.fillStyle(COLORS.sky).fillRect(0, 0, GAME_WIDTH, 180);
-    background.fillStyle(COLORS.sea).fillRect(0, 180, GAME_WIDTH, GAME_HEIGHT - 180);
-    background.fillStyle(COLORS.sand).lineStyle(5, COLORS.ink, 0.8);
-    background.fillEllipse(405, 1045, 700, 120).strokeEllipse(405, 1045, 700, 120);
+    addWorldBackground(this, 'ocean-map-background');
+    const header = this.add.graphics();
+    header.fillStyle(COLORS.cream, 0.94).lineStyle(5, COLORS.ink, 1);
+    header.fillRoundedRect(175, 27, 460, 128, 32).strokeRoundedRect(175, 27, 460, 128, 32);
   }
 
   private drawIslandCard(island: IslandDefinition, x: number, y: number, index: number): void {
@@ -71,34 +70,30 @@ export class IslandSelectScene extends Phaser.Scene {
     const face = colors[index] ?? COLORS.green;
     const shadow = shadows[index] ?? COLORS.greenDark;
     const card = this.add.graphics();
+    this.add
+      .image(x, y - 32, worldImageTextureKey(island.id as WorldImageKey))
+      .setDisplaySize(210, 210);
     card.fillStyle(shadow).lineStyle(5, COLORS.ink, 1);
     card
-      .fillRoundedRect(x - 160, y - 88, 320, 196, 32)
-      .strokeRoundedRect(x - 160, y - 88, 320, 196, 32);
+      .fillRoundedRect(x - 138, y + 51, 276, 86, 26)
+      .strokeRoundedRect(x - 138, y + 51, 276, 86, 26);
     card.fillStyle(face).lineStyle(5, COLORS.ink, 1);
     card
-      .fillRoundedRect(x - 160, y + 18, 320, 76, 26)
-      .strokeRoundedRect(x - 160, y + 18, 320, 76, 26);
-    card.fillStyle(COLORS.cream).lineStyle(5, COLORS.ink, 1);
-    card
-      .fillRoundedRect(x - 160, y - 98, 320, 130, 32)
-      .strokeRoundedRect(x - 160, y - 98, 320, 130, 32);
+      .fillRoundedRect(x - 138, y + 42, 276, 82, 26)
+      .strokeRoundedRect(x - 138, y + 42, 276, 82, 26);
     this.add
-      .image(x, y - 45, worldImageTextureKey(island.id as WorldImageKey))
-      .setDisplaySize(178, 178);
-    this.add
-      .text(x, y + 43, island.name, {
+      .text(x, y + 65, island.name, {
         fontFamily: GAME_FONT,
         color: '#fff7d0',
-        fontSize: '25px',
+        fontSize: '24px',
         fontStyle: 'bold',
       })
       .setOrigin(0.5);
     this.add
-      .text(x, y + 75, `${cleared} / ${island.stages.length} クリア`, {
+      .text(x, y + 98, `${cleared} / ${island.stages.length} クリア`, {
         fontFamily: GAME_FONT,
         color: '#fff7d0',
-        fontSize: '17px',
+        fontSize: '16px',
       })
       .setOrigin(0.5);
   }

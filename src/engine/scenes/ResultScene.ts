@@ -2,8 +2,9 @@ import Phaser from 'phaser';
 
 import { loadSea } from '../../content/loader';
 import type { StageDefinition } from '../../types/content';
+import { addWorldBackground } from '../assets/world-image-library';
 import { enterSceneAudio, playSfx } from '../audio/director';
-import { COLORS, GAME_FONT, GAME_HEIGHT, GAME_WIDTH } from '../constants';
+import { COLORS, GAME_FONT } from '../constants';
 import { addGameTapListener } from '../input/logical-input';
 import { getNextPlayableStage, isSeaComplete } from '../progression/stage-access';
 import { recordStageResult } from '../save/state';
@@ -63,9 +64,8 @@ export class ResultScene extends Phaser.Scene {
   }
 
   private drawResult(stars: number, nextStage?: StageDefinition, seaComplete = false): void {
+    addWorldBackground(this, 'welcome-background');
     const background = this.add.graphics();
-    background.fillStyle(COLORS.sky).fillRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
-    background.fillStyle(COLORS.sea).fillRect(0, 420, GAME_WIDTH, GAME_HEIGHT - 420);
     background.fillStyle(COLORS.cream).lineStyle(6, COLORS.ink, 1);
     background.fillRoundedRect(65, 80, 680, 850, 42);
     background.strokeRoundedRect(65, 80, 680, 850, 42);

@@ -2,8 +2,9 @@ import Phaser from 'phaser';
 
 import { loadSea } from '../../content/loader';
 import type { StageDefinition } from '../../types/content';
+import { addWorldBackground } from '../assets/world-image-library';
 import { enterSceneAudio } from '../audio/director';
-import { COLORS, GAME_FONT, GAME_HEIGHT, GAME_WIDTH } from '../constants';
+import { COLORS, GAME_FONT } from '../constants';
 import { addGameTapListener } from '../input/logical-input';
 
 interface StageIntroData {
@@ -44,26 +45,7 @@ export class StageIntroScene extends Phaser.Scene {
   }
 
   private drawBeach(stage: StageDefinition, islandSymbol: string): void {
-    const background = this.add.graphics();
-    background.fillStyle(COLORS.sky).fillRect(0, 0, GAME_WIDTH, 420);
-    background.fillStyle(COLORS.sea).fillRect(0, 420, GAME_WIDTH, 300);
-    background.fillStyle(COLORS.sand).fillRect(0, 720, GAME_WIDTH, GAME_HEIGHT - 720);
-    background
-      .fillStyle(0xffe08b)
-      .lineStyle(5, COLORS.ink, 1)
-      .fillCircle(675, 125, 58)
-      .strokeCircle(675, 125, 58);
-    background
-      .lineStyle(6, COLORS.foam, 0.9)
-      .beginPath()
-      .moveTo(0, 690)
-      .lineTo(120, 675)
-      .lineTo(250, 700)
-      .lineTo(390, 680)
-      .lineTo(540, 704)
-      .lineTo(680, 678)
-      .lineTo(810, 695)
-      .strokePath();
+    addWorldBackground(this, 'welcome-background');
 
     const card = this.add.graphics();
     card.fillStyle(COLORS.cream).lineStyle(6, COLORS.ink, 1);

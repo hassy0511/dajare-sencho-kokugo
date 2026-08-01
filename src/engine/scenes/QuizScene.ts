@@ -3,8 +3,9 @@ import Phaser from 'phaser';
 import { questionGenerators } from '../../content/gen/registry';
 import { loadGrade1Bank, loadHiraWordPool, loadSea } from '../../content/loader';
 import type { ChoiceQuestion } from '../../types/content';
+import { addWorldBackground } from '../assets/world-image-library';
 import { enterSceneAudio, playSfx } from '../audio/director';
-import { COLORS, GAME_FONT, GAME_HEIGHT, GAME_WIDTH } from '../constants';
+import { COLORS, GAME_FONT, GAME_WIDTH } from '../constants';
 import { ChoiceQType } from '../qtypes/ChoiceQType';
 
 export class QuizScene extends Phaser.Scene {
@@ -64,9 +65,8 @@ export class QuizScene extends Phaser.Scene {
   }
 
   private drawFrame(stageName: string): void {
+    addWorldBackground(this, 'ocean-map-background');
     const background = this.add.graphics();
-    background.fillStyle(COLORS.sky).fillRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
-    background.fillStyle(COLORS.sea).fillRect(0, 115, GAME_WIDTH, GAME_HEIGHT - 115);
     background.fillStyle(COLORS.cream).lineStyle(6, COLORS.ink, 1);
     background.fillRoundedRect(35, 145, 740, 830, 38);
     background.strokeRoundedRect(35, 145, 740, 830, 38);

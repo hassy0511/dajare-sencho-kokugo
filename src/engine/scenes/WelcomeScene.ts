@@ -1,8 +1,8 @@
 import Phaser from 'phaser';
 
-import { worldImageTextureKey } from '../assets/world-image-library';
+import { addWorldBackground, worldImageTextureKey } from '../assets/world-image-library';
 import { enterSceneAudio } from '../audio/director';
-import { COLORS, GAME_FONT, GAME_HEIGHT, GAME_TITLE, GAME_WIDTH, SAFE_AREA } from '../constants';
+import { COLORS, GAME_FONT, GAME_TITLE, GAME_WIDTH, SAFE_AREA } from '../constants';
 import { addGameTapListener } from '../input/logical-input';
 
 const TEXT_STYLE: Phaser.Types.GameObjects.Text.TextStyle = {
@@ -45,45 +45,7 @@ export class WelcomeScene extends Phaser.Scene {
   }
 
   private drawWorld(): void {
-    const background = this.add.graphics();
-    background.fillStyle(COLORS.sky).fillRect(0, 0, GAME_WIDTH, 480);
-    background.fillStyle(COLORS.sea).fillRect(0, 480, GAME_WIDTH, GAME_HEIGHT - 480);
-
-    background.fillStyle(0xffe08b).lineStyle(5, COLORS.ink, 1);
-    background.fillCircle(680, 140, 58).strokeCircle(680, 140, 58);
-
-    this.drawCloud(122, 140, 1);
-    this.drawCloud(546, 275, 0.72);
-
-    background.fillStyle(COLORS.sandDark).lineStyle(5, COLORS.ink, 1);
-    background.fillEllipse(120, 585, 220, 72).strokeEllipse(120, 585, 220, 72);
-    background.fillEllipse(714, 640, 205, 66).strokeEllipse(714, 640, 205, 66);
-    background.fillStyle(COLORS.greenDark);
-    background.fillEllipse(115, 565, 145, 42);
-    background.fillEllipse(710, 620, 126, 36);
-
-    background.lineStyle(5, COLORS.foam, 0.9);
-    for (let y = 520; y < GAME_HEIGHT; y += 92) {
-      for (let x = -40 + ((y / 92) % 2) * 50; x < GAME_WIDTH + 40; x += 150) {
-        background.beginPath();
-        background.arc(x, y, 32, Phaser.Math.DegToRad(205), Phaser.Math.DegToRad(335));
-        background.strokePath();
-      }
-    }
-
-    const foreground = this.add.graphics();
-    foreground.fillStyle(COLORS.sand).lineStyle(5, COLORS.ink, 1);
-    foreground.fillEllipse(405, 1055, 760, 120).strokeEllipse(405, 1055, 760, 120);
-  }
-
-  private drawCloud(x: number, y: number, scale: number): void {
-    const cloud = this.add.graphics({ x, y }).setScale(scale);
-    cloud.fillStyle(0xf7fbef).lineStyle(4, COLORS.ink, 0.55);
-    cloud.fillCircle(-48, 10, 32);
-    cloud.fillCircle(-10, -8, 44);
-    cloud.fillCircle(38, 7, 35);
-    cloud.fillRoundedRect(-75, 2, 145, 42, 20);
-    cloud.strokeRoundedRect(-75, 2, 145, 42, 20);
+    addWorldBackground(this, 'welcome-background');
   }
 
   private drawTitle(): void {

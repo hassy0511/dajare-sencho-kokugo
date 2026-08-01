@@ -2,8 +2,9 @@ import Phaser from 'phaser';
 
 import { loadSea } from '../../content/loader';
 import type { StoryPage } from '../../types/content';
+import { addWorldBackground } from '../assets/world-image-library';
 import { enterSceneAudio, playSfx } from '../audio/director';
-import { COLORS, GAME_FONT, GAME_HEIGHT, GAME_WIDTH } from '../constants';
+import { COLORS, GAME_FONT } from '../constants';
 import { addGameTapListener } from '../input/logical-input';
 import { markSeen } from '../save/state';
 import { drawStoryPortrait } from '../ui/story-portraits';
@@ -32,9 +33,8 @@ export class ChallengeStoryScene extends Phaser.Scene {
   }
 
   private drawBackground(): void {
+    addWorldBackground(this, 'welcome-background');
     const background = this.add.graphics();
-    background.fillStyle(COLORS.sky).fillRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
-    background.fillStyle(COLORS.seaDark).fillRect(0, 610, GAME_WIDTH, GAME_HEIGHT - 610);
     background.fillStyle(COLORS.cream).lineStyle(6, COLORS.ink, 1);
     background.fillRoundedRect(45, 55, 720, 915, 42).strokeRoundedRect(45, 55, 720, 915, 42);
     this.add
