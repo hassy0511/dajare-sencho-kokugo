@@ -1,5 +1,11 @@
-import type { CurriculumItem, KanjiGroup } from '../types/content';
-import { loadCurriculumDefinition, loadGrade1Bank, loadSea } from './loader';
+import type { CurriculumItem, KanjiGroup, SeaId } from '../types/content';
+import {
+  loadCurriculumDefinition,
+  loadGrade1Bank,
+  loadGrade2Bank,
+  loadGrade2CurriculumDefinition,
+  loadSea,
+} from './loader';
 
 const KANJI_STAGE_BY_GROUP: Record<KanjiGroup, string> = {
   nature: 'g1-kanji-shizen',
@@ -9,7 +15,7 @@ const KANJI_STAGE_BY_GROUP: Record<KanjiGroup, string> = {
   action: 'g1-kanji-muki',
 };
 
-let cachedItems: CurriculumItem[] | undefined;
+const cachedItems = new Map<SeaId, CurriculumItem[]>();
 
 export function curriculumCharacterId(
   kind: 'hiragana' | 'katakana' | 'kanji',
@@ -23,11 +29,18 @@ export function curriculumConceptId(stageId: string): string {
   return `g1-concept-${stageId}`;
 }
 
-export function loadCurriculumItems(): CurriculumItem[] {
-  if (cachedItems) return cachedItems;
+export function loadCurriculumItems(seaId: SeaId = 'g1'): CurriculumItem[] {
+  const cached = cachedItems.get(seaId);
+  if (cached) return cached;
+  const items = seaId === 'g2' ? loadGrade2CurriculumItems() : loadGrade1CurriculumItems();
+  cachedItems.set(seaId, items);
+  return items;
+}
+
+function loadGrade1CurriculumItems(): CurriculumItem[] {
   const definition = loadCurriculumDefinition();
   const bank = loadGrade1Bank();
-  const sea = loadSea();
+  const sea = loadSea('g1');
   const islandByStage = new Map(
     sea.islands.flatMap((island) => island.stages.map((stage) => [stage.id, island.id] as const)),
   );
@@ -71,20 +84,53 @@ export function loadCurriculumItems(): CurriculumItem[] {
     detail: concept.detail,
     order,
   }));
-  cachedItems = [...hiragana, ...katakana, ...kanji, ...concepts];
-  return cachedItems;
+  return [...hiragana, ...katakana, ...kanji, ...concepts];
+}
+
+function loadGrade2CurriculumItems(): CurriculumItem[] {
+  const definition = loadGrade2CurriculumDefinition();
+  const bank = loadGrade2Bank();
+  const sea = loadSea('g2');
+  const islandByStage = new Map(
+    sea.islands.flatMap((island) => island.stages.map((stage) => [stage.id, island.id] as const)),
+  );
+  const kanji = bank.kanji.map((item, order) => ({
+    id: `g2-kanji-${item.char}`,
+    kind: 'kanji' as const,
+    islandId: 'g2-kanji',
+    stageId: item.stageId,
+    display: item.char,
+    reading: item.reading,
+    detail: `「${item.char}」は「${item.reading}」`,
+    order,
+  }));
+  const concepts = definition.concepts.map((concept, order) => ({
+    id: `g2-concept-${concept.stageId}`,
+    kind: 'concept' as const,
+    islandId: islandByStage.get(concept.stageId) ?? 'g2-kotoba',
+    stageId: concept.stageId,
+    display: concept.display,
+    reading: concept.display,
+    detail: concept.detail,
+    order,
+  }));
+  return [...kanji, ...concepts];
 }
 
 export function curriculumItemsForStage(stageId: string): CurriculumItem[] {
-  return loadCurriculumItems().filter((item) => item.stageId === stageId);
+  return loadCurriculumItems(seaIdFromContentId(stageId)).filter(
+    (item) => item.stageId === stageId,
+  );
 }
 
 export function curriculumItemsForIsland(islandId: string): CurriculumItem[] {
-  return loadCurriculumItems().filter((item) => item.islandId === islandId);
+  return loadCurriculumItems(seaIdFromContentId(islandId)).filter(
+    (item) => item.islandId === islandId,
+  );
 }
 
 export function curriculumItemById(itemId: string): CurriculumItem | undefined {
-  return loadCurriculumItems().find((item) => item.id === itemId);
+  return loadCurriculumItems(seaIdFromContentId(itemId)).find((item) => item.id === itemId);
 }
 
 export function curriculumIdsInText(kind: 'hiragana' | 'katakana', text: string): string[] {
@@ -94,4 +140,8 @@ export function curriculumIdsInText(kind: 'hiragana' | 'katakana', text: string)
   return [...new Set([...text].filter((character) => allowed.has(character)))].map((character) =>
     curriculumCharacterId(kind, character),
   );
+}
+
+function seaIdFromContentId(contentId: string): SeaId {
+  return contentId.startsWith('g2-') ? 'g2' : 'g1';
 }

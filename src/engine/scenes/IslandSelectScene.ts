@@ -1,7 +1,7 @@
 import Phaser from 'phaser';
 
 import { loadSea } from '../../content/loader';
-import type { IslandDefinition, WorldImageKey } from '../../types/content';
+import type { IslandDefinition, SeaId, WorldImageKey } from '../../types/content';
 import { addWorldBackground, worldImageTextureKey } from '../assets/world-image-library';
 import { enterSceneAudio } from '../audio/director';
 import { COLORS, GAME_FONT } from '../constants';
@@ -17,6 +17,7 @@ const ISLAND_POSITIONS = [
 ] as const;
 
 export class IslandSelectScene extends Phaser.Scene {
+  private seaId: SeaId = 'g1';
   private cleanupInput?: () => void;
   private leaving = false;
 
@@ -24,10 +25,14 @@ export class IslandSelectScene extends Phaser.Scene {
     super('IslandSelect');
   }
 
+  init(data: { seaId?: SeaId }): void {
+    this.seaId = data.seaId ?? 'g1';
+  }
+
   create(): void {
     this.leaving = false;
     enterSceneAudio(this, 'map');
-    const sea = loadSea();
+    const sea = loadSea(this.seaId);
     this.drawBackground();
     this.add
       .text(405, 74, sea.name, {
@@ -71,7 +76,7 @@ export class IslandSelectScene extends Phaser.Scene {
     const shadow = shadows[index] ?? COLORS.greenDark;
     const card = this.add.graphics();
     this.add
-      .image(x, y - 32, worldImageTextureKey(island.id as WorldImageKey))
+      .image(x, y - 32, worldImageTextureKey(island.artKey ?? (island.id as WorldImageKey)))
       .setDisplaySize(210, 210);
     card.fillStyle(shadow).lineStyle(5, COLORS.ink, 1);
     card
@@ -148,7 +153,7 @@ export class IslandSelectScene extends Phaser.Scene {
       if (x >= 285 && x <= 525 && y >= 945) {
         this.leaving = true;
         this.cleanupInput?.();
-        this.scene.start('Collection', { backScene: 'IslandSelect' });
+        this.scene.start('Collection', { backScene: 'IslandSelect', seaId: this.seaId });
         return;
       }
       const index = ISLAND_POSITIONS.findIndex(
@@ -158,7 +163,7 @@ export class IslandSelectScene extends Phaser.Scene {
       if (island) {
         this.leaving = true;
         this.cleanupInput?.();
-        this.scene.start('IslandMap', { islandId: island.id });
+        this.scene.start('IslandMap', { seaId: this.seaId, islandId: island.id });
       }
     });
   }
@@ -166,7 +171,7 @@ export class IslandSelectScene extends Phaser.Scene {
   private go(scene: 'SeaSelect' | 'ChallengeStory'): void {
     this.leaving = true;
     this.cleanupInput?.();
-    this.scene.start(scene);
+    this.scene.start(scene, { seaId: this.seaId });
   }
 
   private markReady(): void {
@@ -176,7 +181,7 @@ export class IslandSelectScene extends Phaser.Scene {
       shell.dataset.scene = 'island-select';
       shell.dataset.inputReady = 'true';
     }
-    if (status) status.textContent = '5つの しまから えらべます';
+    if (status) status.textContent = `${loadSea(this.seaId).name}の 5つの しまから えらべます`;
     if (window.__DSK_APP__) window.__DSK_APP__.scene = 'island-select';
   }
 }

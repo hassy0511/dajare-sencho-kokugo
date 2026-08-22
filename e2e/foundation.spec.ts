@@ -273,6 +273,55 @@ test('物語から入り、文字を図鑑へ回収して最初のステージ�
   expect(saved).toContain('g1-hira-あ');
 });
 
+test('2年生の海へ入り、意味からカタカナ語を選ぶ最初のステージを遊べる', async ({
+  page,
+}, testInfo) => {
+  test.setTimeout(120_000);
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.addInitScript(() => localStorage.clear());
+  await page.goto('./');
+
+  const shell = page.locator('#game-shell');
+  const canvas = page.locator('canvas');
+  await expect(shell).toHaveAttribute('data-ready', 'true');
+  await tapGamePoint(page, canvas, 405, 882);
+  await expect(shell).toHaveAttribute('data-scene', 'sea-select');
+  await page.screenshot({ path: testInfo.outputPath('grade2-sea-card.png'), fullPage: true });
+
+  await tapGamePoint(page, canvas, 405, 495);
+  await expect(shell).toHaveAttribute('data-scene', 'challenge-story');
+  await page.screenshot({ path: testInfo.outputPath('grade2-challenge.png'), fullPage: true });
+  await tapGamePoint(page, canvas, 405, 910);
+  await tapGamePoint(page, canvas, 405, 910);
+  await tapGamePoint(page, canvas, 405, 910);
+  await expect(shell).toHaveAttribute('data-scene', 'island-select');
+  await page.screenshot({ path: testInfo.outputPath('grade2-islands.png'), fullPage: true });
+
+  await tapGamePoint(page, canvas, 405, 1005);
+  await expect(shell).toHaveAttribute('data-scene', 'collection');
+  await expect(shell).toHaveAttribute('data-collection-island', 'g2-moji');
+  await expect(shell).toHaveAttribute('data-collection-total', '7');
+  await tapGamePoint(page, canvas, 87, 60);
+  await expect(shell).toHaveAttribute('data-scene', 'island-select');
+
+  await tapGamePoint(page, canvas, 220, 315);
+  await expect(shell).toHaveAttribute('data-scene', 'island-map');
+  await expect(shell).toHaveAttribute('data-island', 'g2-moji');
+  await tapGamePoint(page, canvas, 220, 245);
+  await expect(shell).toHaveAttribute('data-stage', 'g2-moji-gairaigo');
+  await tapGamePoint(page, canvas, 405, 835);
+  await expect(shell).toHaveAttribute('data-scene', 'quiz');
+  await page.screenshot({ path: testInfo.outputPath('grade2-first-question.png'), fullPage: true });
+
+  await answerQuiz(page, canvas, shell, 8);
+  await expect(shell).toHaveAttribute('data-stage-cleared', 'true');
+  await expect(shell).not.toHaveAttribute('data-next-stage');
+  await page.screenshot({ path: testInfo.outputPath('grade2-first-result.png'), fullPage: true });
+  const saved = await page.evaluate(() => localStorage.getItem('dsk_state'));
+  expect(saved).toContain('g2-moji-gairaigo');
+  expect(saved).toContain('g2-concept-g2-moji-gairaigo');
+});
+
 test('おとのオン・オフを保存し、再読み込み後も引き継ぐ', async ({ page }, testInfo) => {
   await page.goto('./');
 

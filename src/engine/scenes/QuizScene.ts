@@ -2,8 +2,8 @@ import Phaser from 'phaser';
 
 import { questionGenerators } from '../../content/gen/registry';
 import { curriculumItemById } from '../../content/curriculum';
-import { loadGrade1Bank, loadHiraWordPool, loadSea } from '../../content/loader';
-import type { ChoiceQuestion } from '../../types/content';
+import { loadGrade1Bank, loadGrade2Bank, loadHiraWordPool, loadSea } from '../../content/loader';
+import type { ChoiceQuestion, SeaId } from '../../types/content';
 import { addWorldBackground } from '../assets/world-image-library';
 import { enterSceneAudio, playSfx } from '../audio/director';
 import { COLORS, GAME_FONT, GAME_WIDTH } from '../constants';
@@ -11,6 +11,7 @@ import { ChoiceQType } from '../qtypes/ChoiceQType';
 import { getStageCollectionProgress, loadState, recordCurriculumAnswer } from '../save/state';
 
 export class QuizScene extends Phaser.Scene {
+  private seaId: SeaId = 'g1';
   private islandId = 'g1-moji';
   private stageId = 'g1-moji-seion';
   private questions: ChoiceQuestion[] = [];
@@ -29,15 +30,17 @@ export class QuizScene extends Phaser.Scene {
     super('Quiz');
   }
 
-  init(data: { islandId?: string; stageId?: string }): void {
+  init(data: { seaId?: SeaId; islandId?: string; stageId?: string }): void {
+    this.seaId = data.seaId ?? 'g1';
     this.islandId = data.islandId ?? 'g1-moji';
     this.stageId = data.stageId ?? 'g1-moji-seion';
   }
 
   create(): void {
-    const sea = loadSea();
+    const sea = loadSea(this.seaId);
     const hira = loadHiraWordPool();
     const grade1 = loadGrade1Bank();
+    const grade2 = loadGrade2Bank();
     const stage = sea.islands
       .find((island) => island.id === this.islandId)
       ?.stages.find((candidate) => candidate.id === this.stageId);
@@ -50,6 +53,7 @@ export class QuizScene extends Phaser.Scene {
         stageId: stage.id,
         hira,
         grade1,
+        grade2,
         missingItemIds: collectionProgress.missingItemIds,
       },
       stage.n,
@@ -334,10 +338,11 @@ export class QuizScene extends Phaser.Scene {
     this.choiceType?.destroy();
     const shell = document.querySelector<HTMLElement>('#game-shell');
     if (shell) delete shell.dataset.inputReady;
-    const stage = loadSea()
+    const stage = loadSea(this.seaId)
       .islands.find((island) => island.id === this.islandId)
       ?.stages.find((candidate) => candidate.id === this.stageId);
     this.scene.start('Result', {
+      seaId: this.seaId,
       score: this.score,
       total: this.questions.length,
       islandId: this.islandId,

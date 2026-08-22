@@ -1,0 +1,166 @@
+{
+  "version": 1,
+  "concepts": [
+    {
+      "stageId": "g2-moji-gairaigo",
+      "display": "がいらいご",
+      "detail": "がいこくから きて カタカナで かく ことば"
+    },
+    {
+      "stageId": "g2-moji-giongo",
+      "display": "ぎせいご",
+      "detail": "きこえる おとを あらわす ことば"
+    },
+    {
+      "stageId": "g2-moji-gitaigo",
+      "display": "ぎたいご",
+      "detail": "ものの ようすを あらわす ことば"
+    },
+    {
+      "stageId": "g2-moji-kakikata",
+      "display": "カタカナの つかいわけ",
+      "detail": "カタカナで かく ことばを わける ちから"
+    },
+    {
+      "stageId": "g2-moji-test1",
+      "display": "カタカナことばの かくにん",
+      "detail": "カタカナことばを たしかめる ちから"
+    },
+    {
+      "stageId": "g2-moji-kagikakko",
+      "display": "かぎかっこ",
+      "detail": "はなした ことばを かこむ しるし"
+    },
+    {
+      "stageId": "g2-moji-boss",
+      "display": "もじの まとめ",
+      "detail": "2ねんの もじを つかいわける ちから"
+    },
+    {
+      "stageId": "g2-kanji-test1",
+      "display": "かんじの かくにん",
+      "detail": "2ねんの かんじを たしかめる ちから"
+    },
+    {
+      "stageId": "g2-kanji-boss",
+      "display": "160じの まとめ",
+      "detail": "2ねんの かんじ160じを つかう ちから"
+    },
+    {
+      "stageId": "g2-kotoba-hantai",
+      "display": "はんたいことば",
+      "detail": "はんたいの いみの ことば"
+    },
+    { "stageId": "g2-kotoba-niteru", "display": "にたことば", "detail": "いみの にている ことば" },
+    {
+      "stageId": "g2-kotoba-nakama",
+      "display": "まとめて よぶ ことば",
+      "detail": "いくつかの ことばを まとめる なまえ"
+    },
+    {
+      "stageId": "g2-kotoba-shugo",
+      "display": "しゅご",
+      "detail": "だれが・なにがを あらわす ぶぶん"
+    },
+    {
+      "stageId": "g2-kotoba-test1",
+      "display": "ことばの かくにん",
+      "detail": "ことばの いみと ぶんを たしかめる ちから"
+    },
+    {
+      "stageId": "g2-kotoba-jutsugo",
+      "display": "じゅつご",
+      "detail": "どうする・どんなだを あらわす ぶぶん"
+    },
+    {
+      "stageId": "g2-kotoba-tsunagu",
+      "display": "しゅごと じゅつご",
+      "detail": "ぶんの ふたつの はしらを つなぐ ちから"
+    },
+    {
+      "stageId": "g2-kotoba-boss",
+      "display": "ことばの まとめ",
+      "detail": "2ねんの ことばを つかう ちから"
+    },
+    {
+      "stageId": "g2-yomi-bamen",
+      "display": "ばめんの うつりかわり",
+      "detail": "ときや ばしょの かわりめを よむ しるし"
+    },
+    {
+      "stageId": "g2-yomi-kimochi",
+      "display": "じんぶつの きもち",
+      "detail": "こうどうから きもちを かんがえる ちから"
+    },
+    {
+      "stageId": "g2-yomi-kodo",
+      "display": "こうどうの てがかり",
+      "detail": "きもちが わかる こうどうを みつける ちから"
+    },
+    {
+      "stageId": "g2-yomi-junjo",
+      "display": "じゅんじょことば",
+      "detail": "まず・つぎ・さいごを あらわす ことば"
+    },
+    {
+      "stageId": "g2-yomi-test1",
+      "display": "よみときの かくにん",
+      "detail": "ばめんと きもちを たしかめる ちから"
+    },
+    {
+      "stageId": "g2-yomi-kosei",
+      "display": "はじめ・なか・おわり",
+      "detail": "おはなしの みっつの まとまり"
+    },
+    {
+      "stageId": "g2-yomi-densetsu",
+      "display": "しんわ・でんしょう",
+      "detail": "むかしから つたわる おはなし"
+    },
+    {
+      "stageId": "g2-yomi-boss",
+      "display": "よみときの まとめ",
+      "detail": "おはなしの うつりかわりを よむ ちから"
+    },
+    {
+      "stageId": "g2-kaki-junjo",
+      "display": "まず・つぎ・さいご",
+      "detail": "できごとの じゅんばんを しめす ことば"
+    },
+    {
+      "stageId": "g2-kaki-shujutsu",
+      "display": "しゅごじゅつごの たいおう",
+      "detail": "だれが どうしたを つなぐ ちから"
+    },
+    {
+      "stageId": "g2-kaki-sanbun",
+      "display": "みっつの ぶん",
+      "detail": "みじかい ぶんを つないで つたえる ちから"
+    },
+    {
+      "stageId": "g2-kaki-matome",
+      "display": "ぶんの まとまり",
+      "detail": "つながりの ある ぶんを まとめる ちから"
+    },
+    {
+      "stageId": "g2-kaki-test1",
+      "display": "かきかたの かくにん",
+      "detail": "じゅんじょの ある ぶんを たしかめる ちから"
+    },
+    {
+      "stageId": "g2-kaki-kosei",
+      "display": "ぶんしょうの くみたて",
+      "detail": "はじめ・なか・おわりで くみたてる ちから"
+    },
+    {
+      "stageId": "g2-kaki-naoshi",
+      "display": "よみかえし",
+      "detail": "ぶんを よみかえして よくする ちから"
+    },
+    {
+      "stageId": "g2-kaki-boss",
+      "display": "かきかたの まとめ",
+      "detail": "じゅんじょの ある みじかい ぶんを つくる ちから"
+    }
+  ]
+}

@@ -183,6 +183,41 @@ export const grade1BankSchema = z.object({
     .min(8),
 });
 
+export const grade2BankSchema = z.object({
+  version: z.literal(1),
+  kanji: z
+    .array(
+      z.object({
+        char: z.string().length(1),
+        reading: z.string().min(1),
+        stageId: z.string().regex(/^g2-kanji-[a-h]$/),
+      }),
+    )
+    .length(160),
+  katakanaWords: z
+    .array(
+      z.object({
+        key: z.string().min(1),
+        clue: z.string().min(1),
+        answer: z.string().min(2),
+      }),
+    )
+    .min(12),
+});
+
+export const grade2CurriculumDefinitionSchema = z.object({
+  version: z.literal(1),
+  concepts: z
+    .array(
+      z.object({
+        stageId: z.string().regex(/^g2-/),
+        display: z.string().min(1),
+        detail: z.string().min(1),
+      }),
+    )
+    .min(20),
+});
+
 export const wordImageLibrarySchema = z.object({
   version: z.literal(1),
   generator: z.object({
@@ -259,9 +294,9 @@ export const worldImageLibrarySchema = z.object({
 });
 
 export const seaSchema = z.object({
-  id: z.literal('g1'),
+  id: z.enum(['g1', 'g2']),
   name: z.string().min(1),
-  grade: z.literal(1),
+  grade: z.union([z.literal(1), z.literal(2)]),
   challenge: z
     .array(
       z.object({
@@ -278,6 +313,9 @@ export const seaSchema = z.object({
         name: z.string().min(1),
         subtitle: z.string().min(1),
         symbol: z.string().min(1),
+        artKey: z
+          .enum(['g1-moji', 'g1-kanji', 'g1-kotoba', 'g1-yomitoki', 'g1-kakikata'])
+          .optional(),
         stages: z
           .array(
             z.object({
@@ -290,7 +328,7 @@ export const seaSchema = z.object({
               marker: z.string().min(1).optional(),
               n: z.number().int().min(1).max(20),
               gen: z
-                .enum(['hiraPicture', 'hiraDakuon', 'hiraSokuon', 'hiraChouon', 'grade1'])
+                .enum(['hiraPicture', 'hiraDakuon', 'hiraSokuon', 'hiraChouon', 'grade1', 'grade2'])
                 .nullable(),
               status: z.enum(['playable', 'planned']),
               treasure: z.string().min(1),

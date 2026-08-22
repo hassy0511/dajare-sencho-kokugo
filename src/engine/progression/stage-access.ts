@@ -35,6 +35,6 @@ export function isSeaComplete(
       .flatMap((island) => island.stages)
       .filter((stage) => stage.status === 'playable')
       .every((stage) => state.stages[stage.id]?.cleared === true) &&
-    getSeaCollectionProgress(state).complete
+    getSeaCollectionProgress(sea.id, state).complete
   );
 }

@@ -1,18 +1,14 @@
 import Phaser from 'phaser';
 
-import { loadSea } from '../../content/loader';
+import { loadSeas } from '../../content/loader';
+import type { SeaDefinition, SeaId, WorldImageKey } from '../../types/content';
 import { addWorldBackground, worldImageTextureKey } from '../assets/world-image-library';
 import { enterSceneAudio } from '../audio/director';
 import { COLORS, GAME_FONT, GAME_WIDTH } from '../constants';
 import { addGameTapListener } from '../input/logical-input';
 import { getSeaCollectionProgress, loadState } from '../save/state';
 
-interface SeaCard {
-  grade: number;
-  x: number;
-  y: number;
-  available: boolean;
-}
+const SEA_CARD_Y: Record<SeaId, number> = { g1: 155, g2: 390 };
 
 export class SeaSelectScene extends Phaser.Scene {
   private cleanupInput?: () => void;
@@ -25,26 +21,20 @@ export class SeaSelectScene extends Phaser.Scene {
   create(): void {
     this.leaving = false;
     enterSceneAudio(this, 'map');
-    const sea = loadSea();
-    const collection = getSeaCollectionProgress(loadState());
     this.drawOcean();
     this.add
-      .text(GAME_WIDTH / 2, 75, 'どの うみへ いく?', {
+      .text(GAME_WIDTH / 2, 65, 'どの うみへ いく?', {
         fontFamily: GAME_FONT,
         color: '#3d3323',
-        fontSize: '42px',
+        fontSize: '40px',
         fontStyle: 'bold',
       })
       .setOrigin(0.5);
-    this.drawMainSea(sea.name, collection);
-    const futureCards: SeaCard[] = [
-      { grade: 2, x: 220, y: 540, available: false },
-      { grade: 3, x: 590, y: 540, available: false },
-      { grade: 4, x: 220, y: 740, available: false },
-      { grade: 5, x: 590, y: 740, available: false },
-      { grade: 6, x: 405, y: 940, available: false },
-    ];
-    futureCards.forEach((card) => this.drawFutureSea(card));
+    loadSeas().forEach((sea) => this.drawAvailableSea(sea));
+    this.drawFutureSea(3, 220, 745);
+    this.drawFutureSea(4, 590, 745);
+    this.drawFutureSea(5, 220, 920);
+    this.drawFutureSea(6, 590, 920);
     this.drawBackButton();
     this.bindInput();
     this.markReady();
@@ -55,83 +45,96 @@ export class SeaSelectScene extends Phaser.Scene {
     addWorldBackground(this, 'ocean-map-background');
   }
 
-  private drawMainSea(
-    name: string,
-    collection: { recovered: number; total: number; complete: boolean },
-  ): void {
+  private drawAvailableSea(sea: SeaDefinition): void {
+    const y = SEA_CARD_Y[sea.id];
+    const collection = getSeaCollectionProgress(sea.id, loadState());
+    const stageCount = sea.islands.flatMap((island) => island.stages).length;
+    const playableCount = sea.islands
+      .flatMap((island) => island.stages)
+      .filter((stage) => stage.status === 'playable').length;
     const card = this.add.graphics();
-    card.fillStyle(COLORS.sandDark).lineStyle(6, COLORS.ink, 1);
-    card.fillRoundedRect(65, 205, 680, 245, 38).strokeRoundedRect(65, 205, 680, 245, 38);
+    card
+      .fillStyle(sea.id === 'g1' ? COLORS.sandDark : COLORS.greenDark)
+      .lineStyle(6, COLORS.ink, 1);
+    card.fillRoundedRect(65, y + 12, 680, 205, 34).strokeRoundedRect(65, y + 12, 680, 205, 34);
     card.fillStyle(COLORS.cream).lineStyle(6, COLORS.ink, 1);
-    card.fillRoundedRect(65, 193, 680, 245, 38).strokeRoundedRect(65, 193, 680, 245, 38);
-    this.add.image(180, 315, worldImageTextureKey('g1-moji')).setDisplaySize(195, 195);
+    card.fillRoundedRect(65, y, 680, 205, 34).strokeRoundedRect(65, y, 680, 205, 34);
+    const imageKey: WorldImageKey = sea.id === 'g1' ? 'g1-moji' : 'g1-kanji';
+    this.add.image(170, y + 105, worldImageTextureKey(imageKey)).setDisplaySize(170, 170);
     const badge = this.add.graphics();
-    badge.fillStyle(COLORS.coral).lineStyle(4, COLORS.ink, 1);
-    badge.fillRoundedRect(92, 220, 108, 50, 20).strokeRoundedRect(92, 220, 108, 50, 20);
+    badge.fillStyle(sea.id === 'g1' ? COLORS.coral : COLORS.green).lineStyle(4, COLORS.ink, 1);
+    badge.fillRoundedRect(92, y + 20, 108, 48, 18).strokeRoundedRect(92, y + 20, 108, 48, 18);
     this.add
-      .text(146, 244, '1ねん', {
+      .text(146, y + 44, `${sea.grade}ねん`, {
         fontFamily: GAME_FONT,
         color: '#fff7d0',
-        fontSize: '22px',
+        fontSize: '21px',
         fontStyle: 'bold',
       })
       .setOrigin(0.5);
     this.add
-      .text(485, 275, name, {
+      .text(485, y + 49, sea.name, {
         fontFamily: GAME_FONT,
         color: '#3d3323',
-        fontSize: '45px',
+        fontSize: '40px',
         fontStyle: 'bold',
       })
       .setOrigin(0.5);
     this.add
-      .text(485, 335, '41ステージ・こくごの たから', {
-        fontFamily: GAME_FONT,
-        color: '#176b72',
-        fontSize: '25px',
-        fontStyle: 'bold',
-      })
+      .text(
+        485,
+        y + 101,
+        sea.id === 'g1'
+          ? `${stageCount}ステージ・こくごの たから`
+          : `${stageCount}ステージせっけい・${playableCount}ステージ こうかい`,
+        {
+          fontFamily: GAME_FONT,
+          color: '#176b72',
+          fontSize: sea.id === 'g1' ? '23px' : '20px',
+          fontStyle: 'bold',
+        },
+      )
       .setOrigin(0.5);
     this.add
-      .text(485, 377, `${collection.recovered} / ${collection.total} こ とりかえした`, {
+      .text(485, y + 143, `${collection.recovered} / ${collection.total} こ とりかえした`, {
         fontFamily: GAME_FONT,
         color: collection.complete ? '#367151' : '#176b72',
-        fontSize: '22px',
+        fontSize: '20px',
         fontStyle: 'bold',
       })
       .setOrigin(0.5);
     this.add
-      .text(485, 412, 'タップして しゅっぱつ!', {
+      .text(485, y + 177, 'タップして しゅっぱつ!', {
         fontFamily: GAME_FONT,
         color: '#9b3f41',
-        fontSize: '19px',
+        fontSize: '18px',
       })
       .setOrigin(0.5);
   }
 
-  private drawFutureSea(card: SeaCard): void {
+  private drawFutureSea(grade: number, x: number, y: number): void {
     const art = this.add.graphics();
-    art.fillStyle(0x6f807d).lineStyle(5, COLORS.ink, 0.9);
+    art.fillStyle(0x6f807d).lineStyle(4, COLORS.ink, 0.9);
     art
-      .fillRoundedRect(card.x - 155, card.y - 75, 310, 160, 28)
-      .strokeRoundedRect(card.x - 155, card.y - 75, 310, 160, 28);
-    art.fillStyle(0xcbd6ce).lineStyle(5, COLORS.ink, 0.9);
+      .fillRoundedRect(x - 155, y - 64, 310, 136, 25)
+      .strokeRoundedRect(x - 155, y - 64, 310, 136, 25);
+    art.fillStyle(0xcbd6ce).lineStyle(4, COLORS.ink, 0.9);
     art
-      .fillRoundedRect(card.x - 155, card.y - 85, 310, 156, 28)
-      .strokeRoundedRect(card.x - 155, card.y - 85, 310, 156, 28);
+      .fillRoundedRect(x - 155, y - 74, 310, 132, 25)
+      .strokeRoundedRect(x - 155, y - 74, 310, 132, 25);
     this.add
-      .text(card.x, card.y - 26, `${card.grade}ねんの うみ`, {
+      .text(x, y - 28, `${grade}ねんの うみ`, {
         fontFamily: GAME_FONT,
         color: '#3d3323',
-        fontSize: '30px',
+        fontSize: '27px',
         fontStyle: 'bold',
       })
       .setOrigin(0.5);
     this.add
-      .text(card.x, card.y + 30, 'じゅんびちゅう', {
+      .text(x, y + 24, 'じゅんびちゅう', {
         fontFamily: GAME_FONT,
         color: '#52615e',
-        fontSize: '21px',
+        fontSize: '19px',
       })
       .setOrigin(0.5);
   }
@@ -139,12 +142,12 @@ export class SeaSelectScene extends Phaser.Scene {
   private drawBackButton(): void {
     const button = this.add.graphics();
     button.fillStyle(COLORS.cream).lineStyle(4, COLORS.ink, 1);
-    button.fillRoundedRect(28, 35, 105, 68, 22).strokeRoundedRect(28, 35, 105, 68, 22);
+    button.fillRoundedRect(25, 25, 105, 64, 20).strokeRoundedRect(25, 25, 105, 64, 20);
     this.add
-      .text(80, 66, 'もどる', {
+      .text(77, 56, 'もどる', {
         fontFamily: GAME_FONT,
         color: '#3d3323',
-        fontSize: '20px',
+        fontSize: '19px',
         fontStyle: 'bold',
       })
       .setOrigin(0.5);
@@ -153,21 +156,24 @@ export class SeaSelectScene extends Phaser.Scene {
   private bindInput(): void {
     this.cleanupInput = addGameTapListener(this.game.canvas, ({ x, y }) => {
       if (this.leaving) return;
-      if (x <= 145 && y <= 120) {
+      if (x <= 145 && y <= 110) {
         this.go('Welcome');
         return;
       }
-      if (x >= 65 && x <= 745 && y >= 185 && y <= 455) {
-        const seenChallenge = Boolean(loadState().seen['challenge:g1']);
-        this.go(seenChallenge ? 'IslandSelect' : 'ChallengeStory');
-      }
+      const seaId = (Object.entries(SEA_CARD_Y) as [SeaId, number][]).find(
+        ([, cardY]) => x >= 65 && x <= 745 && y >= cardY && y <= cardY + 220,
+      )?.[0];
+      if (!seaId) return;
+      this.registry.set('seaId', seaId);
+      const seenChallenge = Boolean(loadState().seen[`challenge:${seaId}`]);
+      this.go(seenChallenge ? 'IslandSelect' : 'ChallengeStory', seaId);
     });
   }
 
-  private go(scene: 'Welcome' | 'IslandSelect' | 'ChallengeStory'): void {
+  private go(scene: 'Welcome' | 'IslandSelect' | 'ChallengeStory', seaId: SeaId = 'g1'): void {
     this.leaving = true;
     this.cleanupInput?.();
-    this.scene.start(scene);
+    this.scene.start(scene, { seaId });
   }
 
   private markReady(): void {
@@ -179,7 +185,7 @@ export class SeaSelectScene extends Phaser.Scene {
       delete shell.dataset.question;
       delete shell.dataset.stars;
     }
-    if (status) status.textContent = '1ねんの うみを えらべます';
+    if (status) status.textContent = '1ねんと 2ねんの うみを えらべます';
     if (window.__DSK_APP__) window.__DSK_APP__.scene = 'sea-select';
   }
 }

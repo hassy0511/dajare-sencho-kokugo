@@ -4,6 +4,7 @@ import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 import { makeGrade1Quiz } from '../src/content/gen/grade1';
+import { makeGrade2Quiz } from '../src/content/gen/grade2';
 import { makeHiraSeionQuiz } from '../src/content/gen/hiraSeion';
 import { makeMojiChoiceQuiz } from '../src/content/gen/mojiChoice';
 import { loadCurriculumItems } from '../src/content/curriculum';
@@ -11,8 +12,10 @@ import {
   loadCharacterImageLibrary,
   loadCurriculumDefinition,
   loadGrade1Bank,
+  loadGrade2Bank,
   loadHiraWordPool,
   loadSea,
+  loadSeas,
   loadWordImageLibrary,
   loadWorldImageLibrary,
 } from '../src/content/loader';
@@ -50,6 +53,45 @@ describe('ひらがな清音の問題生成', () => {
         ].join(''),
       ),
     );
+  });
+
+  it('2年生の41ステージと必修漢字160字を台帳から読み込める', () => {
+    const seas = loadSeas();
+    expect(seas.map((sea) => sea.id)).toEqual(['g1', 'g2']);
+    const sea = loadSea('g2');
+    const stages = sea.islands.flatMap((island) => island.stages);
+    expect(sea.islands).toHaveLength(5);
+    expect(stages).toHaveLength(41);
+    expect(stages.filter((stage) => stage.status === 'playable').map((stage) => stage.id)).toEqual([
+      'g2-moji-gairaigo',
+    ]);
+    const bank = loadGrade2Bank();
+    expect(bank.kanji).toHaveLength(160);
+    expect(new Set(bank.kanji.map((item) => item.char)).size).toBe(160);
+    expect(new Set(bank.kanji.map((item) => item.char))).toEqual(
+      new Set(
+        [
+          '引羽雲園遠何科夏家歌画回会海絵外角楽活間丸岩顔汽記帰弓牛魚京強教近兄形計元言原戸古午後語工公広交光考行高黄合谷国黒今才細作算止市矢姉思紙寺自時室社弱首秋週春書少場色食心新親図数西声星晴切雪船線前組走多太体台地池知茶昼長鳥朝直通弟店点電刀冬当東答頭同道読内南肉馬売買麦半番父風分聞米歩母方北毎妹万明鳴毛門夜野友用曜来里理話',
+        ].join(''),
+      ),
+    );
+    expect(loadCurriculumItems('g2')).toHaveLength(193);
+  });
+
+  it('2年生の最初の問題は意味からカタカナ語を選ぶ重複なし8問になる', () => {
+    const bank = loadGrade2Bank();
+    for (let seed = 0; seed < 100; seed += 1) {
+      const questions = makeGrade2Quiz('g2-moji-gairaigo', bank, 8, seed);
+      expect(questions).toHaveLength(8);
+      expect(new Set(questions.map((question) => question.key)).size).toBe(8);
+      questions.forEach((question) => {
+        expect(question.prompt).toContain('せつめいに あう');
+        expect(question.emphasis).toBeTruthy();
+        expect(question.choices).toHaveLength(4);
+        expect(new Set(question.choices).size).toBe(4);
+        expect(question.curriculumItemIds).toEqual(['g2-concept-g2-moji-gairaigo']);
+      });
+    }
   });
 
   it('承認済みキャラクター画像が台帳と対応し、配信用と原本が存在する', () => {

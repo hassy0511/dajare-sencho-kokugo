@@ -67,4 +67,15 @@ describe('ステージの順次アンロック', () => {
     expect(isSeaComplete(sea, stateWithClears(...stageIds))).toBe(true);
     expect(isSeaComplete(sea, stateWithClears(...stageIds.slice(0, -1)))).toBe(false);
   });
+
+  it('2年生は最初の縦切りだけ遊べて、未公開ステージを開かない', () => {
+    const sea = loadSea('g2');
+    const firstIsland = sea.islands[0];
+    if (!firstIsland) throw new Error('2年生の もじの しまがありません。');
+    expect(getStageAccess(firstIsland.stages, 0, stateWithClears())).toBe('available');
+    expect(getStageAccess(firstIsland.stages, 1, stateWithClears('g2-moji-gairaigo'))).toBe(
+      'planned',
+    );
+    expect(isSeaComplete(sea, stateWithClears('g2-moji-gairaigo'))).toBe(false);
+  });
 });

@@ -2,7 +2,7 @@ import Phaser from 'phaser';
 
 import { loadSea } from '../../content/loader';
 import { curriculumItemById } from '../../content/curriculum';
-import type { StageDefinition } from '../../types/content';
+import type { SeaId, StageDefinition } from '../../types/content';
 import { addWorldBackground } from '../assets/world-image-library';
 import { enterSceneAudio, playSfx } from '../audio/director';
 import { COLORS, GAME_FONT } from '../constants';
@@ -11,6 +11,7 @@ import { getNextPlayableStage, isSeaComplete } from '../progression/stage-access
 import { getStageCollectionProgress, recordStageResult } from '../save/state';
 
 interface ResultData {
+  seaId?: SeaId;
   score?: number;
   total?: number;
   islandId?: string;
@@ -28,6 +29,7 @@ export function starsForResult(score: number, total: number): number {
 }
 
 export class ResultScene extends Phaser.Scene {
+  private seaId: SeaId = 'g1';
   private score = 0;
   private total = 10;
   private islandId = 'g1-moji';
@@ -42,6 +44,7 @@ export class ResultScene extends Phaser.Scene {
   }
 
   init(data: ResultData): void {
+    this.seaId = data.seaId ?? 'g1';
     this.score = data.score ?? 0;
     this.total = data.total ?? 10;
     this.islandId = data.islandId ?? 'g1-moji';
@@ -57,7 +60,7 @@ export class ResultScene extends Phaser.Scene {
     const state = recordStageResult(this.stageId, this.score, this.total, stars);
     const collection = getStageCollectionProgress(this.stageId, state);
     const stageCleared = state.stages[this.stageId]?.cleared === true;
-    const sea = loadSea();
+    const sea = loadSea(this.seaId);
     const island = sea.islands.find((candidate) => candidate.id === this.islandId);
     const nextStage =
       stageCleared && island ? getNextPlayableStage(island, this.stageId) : undefined;
@@ -212,7 +215,7 @@ export class ResultScene extends Phaser.Scene {
   ): void {
     this.leaving = true;
     this.cleanupInput?.();
-    this.scene.start(scene, { islandId: this.islandId, stageId });
+    this.scene.start(scene, { seaId: this.seaId, islandId: this.islandId, stageId });
   }
 
   private markReady(

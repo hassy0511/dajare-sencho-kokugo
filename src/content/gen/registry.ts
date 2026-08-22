@@ -1,5 +1,6 @@
-import type { ChoiceQuestion, Grade1Bank, HiraWordPool } from '../../types/content';
+import type { ChoiceQuestion, Grade1Bank, Grade2Bank, HiraWordPool } from '../../types/content';
 import { makeGrade1Quiz } from './grade1';
+import { makeGrade2Quiz } from './grade2';
 import { makeHiraSeionQuiz } from './hiraSeion';
 import { makeMojiChoiceQuiz } from './mojiChoice';
 
@@ -7,6 +8,7 @@ export interface QuestionGeneratorContext {
   stageId: string;
   hira: HiraWordPool;
   grade1: Grade1Bank;
+  grade2: Grade2Bank;
   missingItemIds: string[];
 }
 
@@ -50,5 +52,8 @@ export const questionGenerators = {
       seed,
       context.missingItemIds,
     );
+  },
+  grade2(context: QuestionGeneratorContext, count: number, seed: number): ChoiceQuestion[] {
+    return makeGrade2Quiz(context.stageId, context.grade2, count, seed);
   },
 } as const;

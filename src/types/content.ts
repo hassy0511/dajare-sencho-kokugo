@@ -93,6 +93,17 @@ export interface Grade1Bank {
   fixes: { wrong: string; correct: string; wrongs: string[] }[];
 }
 
+export interface Grade2Bank {
+  version: 1;
+  kanji: { char: string; reading: string; stageId: string }[];
+  katakanaWords: { key: string; clue: string; answer: string }[];
+}
+
+export interface Grade2CurriculumDefinition {
+  version: 1;
+  concepts: CurriculumConceptDefinition[];
+}
+
 export interface WordImageAsset {
   key: string;
   word: string;
@@ -175,7 +186,7 @@ export interface StageDefinition {
   intro: string;
   marker?: string | undefined;
   n: number;
-  gen: 'hiraPicture' | 'hiraDakuon' | 'hiraSokuon' | 'hiraChouon' | 'grade1' | null;
+  gen: 'hiraPicture' | 'hiraDakuon' | 'hiraSokuon' | 'hiraChouon' | 'grade1' | 'grade2' | null;
   status: 'playable' | 'planned';
   treasure: string;
 }
@@ -185,6 +196,7 @@ export interface IslandDefinition {
   name: string;
   subtitle: string;
   symbol: string;
+  artKey?: WorldImageKey | undefined;
   stages: StageDefinition[];
 }
 
@@ -194,10 +206,12 @@ export interface StoryPage {
   text: string;
 }
 
+export type SeaId = 'g1' | 'g2';
+
 export interface SeaDefinition {
-  id: 'g1';
+  id: SeaId;
   name: string;
-  grade: 1;
+  grade: 1 | 2;
   challenge: StoryPage[];
   islands: IslandDefinition[];
 }

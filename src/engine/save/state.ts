@@ -3,6 +3,7 @@ import {
   curriculumItemsForStage,
   loadCurriculumItems,
 } from '../../content/curriculum';
+import type { SeaId } from '../../types/content';
 
 export const SAVE_KEY = 'dsk_state';
 
@@ -207,13 +208,16 @@ export function getIslandCollectionProgress(
   );
 }
 
-export function getSeaCollectionProgress(state: Pick<SaveState, 'collection'> = loadState()): {
+export function getSeaCollectionProgress(
+  seaId: SeaId = 'g1',
+  state: Pick<SaveState, 'collection'> = loadState(),
+): {
   recovered: number;
   total: number;
   complete: boolean;
 } {
   return collectionProgress(
-    loadCurriculumItems().map((item) => item.id),
+    loadCurriculumItems(seaId).map((item) => item.id),
     state,
   );
 }

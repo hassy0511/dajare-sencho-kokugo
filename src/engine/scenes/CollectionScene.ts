@@ -1,29 +1,24 @@
 import Phaser from 'phaser';
 
 import { curriculumItemsForIsland } from '../../content/curriculum';
-import type { CurriculumItem } from '../../types/content';
+import { loadSea } from '../../content/loader';
+import type { CurriculumItem, SeaId } from '../../types/content';
 import { addWorldBackground } from '../assets/world-image-library';
 import { enterSceneAudio, playSfx } from '../audio/director';
 import { COLORS, GAME_FONT } from '../constants';
 import { addGameTapListener } from '../input/logical-input';
 import { getIslandCollectionProgress, loadState } from '../save/state';
 
-const CATEGORIES = [
-  { islandId: 'g1-moji', label: 'もじ' },
-  { islandId: 'g1-kanji', label: 'かんじ' },
-  { islandId: 'g1-kotoba', label: 'ことば' },
-  { islandId: 'g1-yomitoki', label: 'よみとき' },
-  { islandId: 'g1-kakikata', label: 'かきかた' },
-] as const;
-
 const PAGE_SIZE = 20;
 
 interface CollectionData {
+  seaId?: SeaId;
   backScene?: 'IslandSelect' | 'IslandMap';
   islandId?: string;
 }
 
 export class CollectionScene extends Phaser.Scene {
+  private seaId: SeaId = 'g1';
   private backScene: 'IslandSelect' | 'IslandMap' = 'IslandSelect';
   private backIslandId = 'g1-moji';
   private categoryIndex = 0;
@@ -36,12 +31,20 @@ export class CollectionScene extends Phaser.Scene {
   }
 
   init(data: CollectionData): void {
+    this.seaId = data.seaId ?? 'g1';
     this.backScene = data.backScene ?? 'IslandSelect';
-    this.backIslandId = data.islandId ?? 'g1-moji';
-    const selected = CATEGORIES.findIndex((category) => category.islandId === data.islandId);
+    this.backIslandId = data.islandId ?? `${this.seaId}-moji`;
+    const selected = this.categories.findIndex((category) => category.islandId === data.islandId);
     this.categoryIndex = selected >= 0 ? selected : 0;
     this.page = 0;
     this.selectedItemId = undefined;
+  }
+
+  private get categories(): { islandId: string; label: string }[] {
+    return loadSea(this.seaId).islands.map((island) => ({
+      islandId: island.id,
+      label: island.name.replace('の しま', ''),
+    }));
   }
 
   create(): void {
@@ -88,7 +91,7 @@ export class CollectionScene extends Phaser.Scene {
   }
 
   private drawTabs(): void {
-    CATEGORIES.forEach((category, index) => {
+    this.categories.forEach((category, index) => {
       const x = 92 + index * 156;
       const selected = index === this.categoryIndex;
       const tab = this.add.graphics();
@@ -106,7 +109,8 @@ export class CollectionScene extends Phaser.Scene {
   }
 
   private drawItems(): void {
-    const category = CATEGORIES[this.categoryIndex] ?? CATEGORIES[0];
+    const category = this.categories[this.categoryIndex] ?? this.categories[0];
+    if (!category) return;
     const state = loadState();
     const progress = getIslandCollectionProgress(category.islandId, state);
     const items = curriculumItemsForIsland(category.islandId);
@@ -170,7 +174,8 @@ export class CollectionScene extends Phaser.Scene {
 
   private drawDetail(): void {
     const state = loadState();
-    const category = CATEGORIES[this.categoryIndex] ?? CATEGORIES[0];
+    const category = this.categories[this.categoryIndex] ?? this.categories[0];
+    if (!category) return;
     const item = this.selectedItemId
       ? curriculumItemsForIsland(category.islandId).find(
           (candidate) => candidate.id === this.selectedItemId,
@@ -201,7 +206,8 @@ export class CollectionScene extends Phaser.Scene {
   }
 
   private drawPagination(): void {
-    const category = CATEGORIES[this.categoryIndex] ?? CATEGORIES[0];
+    const category = this.categories[this.categoryIndex] ?? this.categories[0];
+    if (!category) return;
     const pageCount = Math.max(
       1,
       Math.ceil(curriculumItemsForIsland(category.islandId).length / PAGE_SIZE),
@@ -235,12 +241,12 @@ export class CollectionScene extends Phaser.Scene {
   private bindInput(): void {
     this.cleanupInput = addGameTapListener(this.game.canvas, ({ x, y }) => {
       if (x <= 165 && y <= 110) {
-        this.scene.start(this.backScene, { islandId: this.backIslandId });
+        this.scene.start(this.backScene, { seaId: this.seaId, islandId: this.backIslandId });
         return;
       }
       if (y >= 125 && y <= 220) {
         const index = Math.floor((x - 15) / 156);
-        if (index >= 0 && index < CATEGORIES.length) {
+        if (index >= 0 && index < this.categories.length) {
           this.categoryIndex = index;
           this.page = 0;
           this.selectedItemId = undefined;
@@ -254,7 +260,8 @@ export class CollectionScene extends Phaser.Scene {
         const column = Math.round((x - 105) / 150);
         const row = Math.round((y - 335) / 140);
         if (column >= 0 && column < 5 && row >= 0 && row < 4) {
-          const category = CATEGORIES[this.categoryIndex] ?? CATEGORIES[0];
+          const category = this.categories[this.categoryIndex] ?? this.categories[0];
+          if (!category) return;
           const item = curriculumItemsForIsland(category.islandId)[
             this.page * PAGE_SIZE + row * 5 + column
           ];
@@ -270,7 +277,8 @@ export class CollectionScene extends Phaser.Scene {
         return;
       }
       if (y < 950) return;
-      const category = CATEGORIES[this.categoryIndex] ?? CATEGORIES[0];
+      const category = this.categories[this.categoryIndex] ?? this.categories[0];
+      if (!category) return;
       const pageCount = Math.max(
         1,
         Math.ceil(curriculumItemsForIsland(category.islandId).length / PAGE_SIZE),
@@ -287,7 +295,8 @@ export class CollectionScene extends Phaser.Scene {
 
   private markReady(): void {
     const shell = document.querySelector<HTMLElement>('#game-shell');
-    const category = CATEGORIES[this.categoryIndex] ?? CATEGORIES[0];
+    const category = this.categories[this.categoryIndex] ?? this.categories[0];
+    if (!category) return;
     const progress = getIslandCollectionProgress(category.islandId, loadState());
     if (shell) {
       shell.dataset.scene = 'collection';

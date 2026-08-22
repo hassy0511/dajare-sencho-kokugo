@@ -1,7 +1,7 @@
 import Phaser from 'phaser';
 
 import { loadSea } from '../../content/loader';
-import type { StoryPage } from '../../types/content';
+import type { SeaId, StoryPage } from '../../types/content';
 import { addWorldBackground } from '../assets/world-image-library';
 import { enterSceneAudio, playSfx } from '../audio/director';
 import { COLORS, GAME_FONT } from '../constants';
@@ -10,6 +10,7 @@ import { markSeen } from '../save/state';
 import { drawStoryPortrait } from '../ui/story-portraits';
 
 export class ChallengeStoryScene extends Phaser.Scene {
+  private seaId: SeaId = 'g1';
   private pageIndex = 0;
   private pages: StoryPage[] = [];
   private pageLayer?: Phaser.GameObjects.Container;
@@ -20,8 +21,12 @@ export class ChallengeStoryScene extends Phaser.Scene {
     super('ChallengeStory');
   }
 
+  init(data: { seaId?: SeaId }): void {
+    this.seaId = data.seaId ?? 'g1';
+  }
+
   create(): void {
-    this.pages = loadSea().challenge;
+    this.pages = loadSea(this.seaId).challenge;
     this.pageIndex = 0;
     this.leaving = false;
     enterSceneAudio(this, 'map');
@@ -122,9 +127,9 @@ export class ChallengeStoryScene extends Phaser.Scene {
       } else {
         playSfx(this, 'page');
         this.leaving = true;
-        markSeen('challenge:g1');
+        markSeen(`challenge:${this.seaId}`);
         this.cleanupInput?.();
-        this.scene.start('IslandSelect');
+        this.scene.start('IslandSelect', { seaId: this.seaId });
       }
     });
   }
@@ -136,7 +141,8 @@ export class ChallengeStoryScene extends Phaser.Scene {
       shell.dataset.scene = 'challenge-story';
       shell.dataset.inputReady = 'true';
     }
-    if (status) status.textContent = 'ダジャレかいぞくだんの ちょうせんじょうです';
+    if (status)
+      status.textContent = `${loadSea(this.seaId).name}への ダジャレかいぞくだんの ちょうせんじょうです`;
     if (window.__DSK_APP__) {
       window.__DSK_APP__.scene = 'challenge-story';
       window.__DSK_APP__.storyPage = 0;

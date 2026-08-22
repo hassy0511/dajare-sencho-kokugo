@@ -2,7 +2,7 @@ import Phaser from 'phaser';
 
 import { loadSea } from '../../content/loader';
 import { curriculumItemById } from '../../content/curriculum';
-import type { StageDefinition } from '../../types/content';
+import type { SeaId, StageDefinition } from '../../types/content';
 import { addWorldBackground } from '../assets/world-image-library';
 import { enterSceneAudio } from '../audio/director';
 import { COLORS, GAME_FONT } from '../constants';
@@ -10,11 +10,13 @@ import { addGameTapListener } from '../input/logical-input';
 import { getStageCollectionProgress, loadState } from '../save/state';
 
 interface StageIntroData {
+  seaId?: SeaId;
   islandId?: string;
   stageId?: string;
 }
 
 export class StageIntroScene extends Phaser.Scene {
+  private seaId: SeaId = 'g1';
   private islandId = 'g1-moji';
   private stageId = 'g1-moji-seion';
   private cleanupInput?: () => void;
@@ -25,6 +27,7 @@ export class StageIntroScene extends Phaser.Scene {
   }
 
   init(data: StageIntroData): void {
+    this.seaId = data.seaId ?? 'g1';
     this.islandId = data.islandId ?? 'g1-moji';
     this.stageId = data.stageId ?? 'g1-moji-seion';
     this.leaving = false;
@@ -41,7 +44,7 @@ export class StageIntroScene extends Phaser.Scene {
   }
 
   private findStage(): { stage: StageDefinition; islandSymbol: string } {
-    const island = loadSea().islands.find((candidate) => candidate.id === this.islandId);
+    const island = loadSea(this.seaId).islands.find((candidate) => candidate.id === this.islandId);
     const stage = island?.stages.find((candidate) => candidate.id === this.stageId);
     if (!stage) throw new Error(`ステージが見つかりません: ${this.stageId}`);
     return { stage, islandSymbol: island?.symbol ?? 'あ' };
@@ -167,7 +170,11 @@ export class StageIntroScene extends Phaser.Scene {
   private go(scene: 'Quiz' | 'IslandMap'): void {
     this.leaving = true;
     this.cleanupInput?.();
-    this.scene.start(scene, { islandId: this.islandId, stageId: this.stageId });
+    this.scene.start(scene, {
+      seaId: this.seaId,
+      islandId: this.islandId,
+      stageId: this.stageId,
+    });
   }
 
   private markReady(stage: StageDefinition): void {

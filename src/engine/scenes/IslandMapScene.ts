@@ -1,7 +1,7 @@
 import Phaser from 'phaser';
 
 import { loadSea } from '../../content/loader';
-import type { IslandDefinition, StageDefinition } from '../../types/content';
+import type { IslandDefinition, SeaId, StageDefinition } from '../../types/content';
 import { addWorldBackground } from '../assets/world-image-library';
 import { enterSceneAudio, playSfx } from '../audio/director';
 import { COLORS, GAME_FONT } from '../constants';
@@ -10,10 +10,12 @@ import { getStageAccess } from '../progression/stage-access';
 import { getIslandCollectionProgress, getStageCollectionProgress, loadState } from '../save/state';
 
 interface IslandMapData {
+  seaId?: SeaId;
   islandId?: string;
 }
 
 export class IslandMapScene extends Phaser.Scene {
+  private seaId: SeaId = 'g1';
   private islandId = 'g1-moji';
   private cleanupInput?: () => void;
   private leaving = false;
@@ -24,13 +26,14 @@ export class IslandMapScene extends Phaser.Scene {
   }
 
   init(data: IslandMapData): void {
+    this.seaId = data.seaId ?? 'g1';
     this.islandId = data.islandId ?? 'g1-moji';
     this.leaving = false;
   }
 
   create(): void {
     enterSceneAudio(this, 'map');
-    const island = loadSea().islands.find((candidate) => candidate.id === this.islandId);
+    const island = loadSea(this.seaId).islands.find((candidate) => candidate.id === this.islandId);
     if (!island) throw new Error(`島データが見つかりません: ${this.islandId}`);
     this.drawBackground(island);
     this.drawNodes(island);
@@ -198,13 +201,17 @@ export class IslandMapScene extends Phaser.Scene {
       if (x <= 165 && y <= 115) {
         this.leaving = true;
         this.cleanupInput?.();
-        this.scene.start('IslandSelect');
+        this.scene.start('IslandSelect', { seaId: this.seaId });
         return;
       }
       if (x >= 650 && y <= 115) {
         this.leaving = true;
         this.cleanupInput?.();
-        this.scene.start('Collection', { backScene: 'IslandMap', islandId: this.islandId });
+        this.scene.start('Collection', {
+          backScene: 'IslandMap',
+          seaId: this.seaId,
+          islandId: this.islandId,
+        });
         return;
       }
       const index = island.stages.findIndex((_, stageIndex) => {
@@ -238,7 +245,11 @@ export class IslandMapScene extends Phaser.Scene {
   private startStage(stage: StageDefinition): void {
     this.leaving = true;
     this.cleanupInput?.();
-    this.scene.start('StageIntro', { islandId: this.islandId, stageId: stage.id });
+    this.scene.start('StageIntro', {
+      seaId: this.seaId,
+      islandId: this.islandId,
+      stageId: stage.id,
+    });
   }
 
   private markReady(island: IslandDefinition): void {
