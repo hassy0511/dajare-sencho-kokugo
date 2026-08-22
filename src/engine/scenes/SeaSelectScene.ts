@@ -5,7 +5,7 @@ import { addWorldBackground, worldImageTextureKey } from '../assets/world-image-
 import { enterSceneAudio } from '../audio/director';
 import { COLORS, GAME_FONT, GAME_WIDTH } from '../constants';
 import { addGameTapListener } from '../input/logical-input';
-import { loadState } from '../save/state';
+import { getSeaCollectionProgress, loadState } from '../save/state';
 
 interface SeaCard {
   grade: number;
@@ -26,6 +26,7 @@ export class SeaSelectScene extends Phaser.Scene {
     this.leaving = false;
     enterSceneAudio(this, 'map');
     const sea = loadSea();
+    const collection = getSeaCollectionProgress(loadState());
     this.drawOcean();
     this.add
       .text(GAME_WIDTH / 2, 75, 'どの うみへ いく?', {
@@ -35,7 +36,7 @@ export class SeaSelectScene extends Phaser.Scene {
         fontStyle: 'bold',
       })
       .setOrigin(0.5);
-    this.drawMainSea(sea.name);
+    this.drawMainSea(sea.name, collection);
     const futureCards: SeaCard[] = [
       { grade: 2, x: 220, y: 540, available: false },
       { grade: 3, x: 590, y: 540, available: false },
@@ -54,7 +55,10 @@ export class SeaSelectScene extends Phaser.Scene {
     addWorldBackground(this, 'ocean-map-background');
   }
 
-  private drawMainSea(name: string): void {
+  private drawMainSea(
+    name: string,
+    collection: { recovered: number; total: number; complete: boolean },
+  ): void {
     const card = this.add.graphics();
     card.fillStyle(COLORS.sandDark).lineStyle(6, COLORS.ink, 1);
     card.fillRoundedRect(65, 205, 680, 245, 38).strokeRoundedRect(65, 205, 680, 245, 38);
@@ -81,7 +85,7 @@ export class SeaSelectScene extends Phaser.Scene {
       })
       .setOrigin(0.5);
     this.add
-      .text(485, 345, '5つの しま・41ステージ', {
+      .text(485, 335, '41ステージ・こくごの たから', {
         fontFamily: GAME_FONT,
         color: '#176b72',
         fontSize: '25px',
@@ -89,10 +93,18 @@ export class SeaSelectScene extends Phaser.Scene {
       })
       .setOrigin(0.5);
     this.add
-      .text(485, 390, 'ここを タップして しゅっぱつ!', {
+      .text(485, 377, `${collection.recovered} / ${collection.total} こ とりかえした`, {
+        fontFamily: GAME_FONT,
+        color: collection.complete ? '#367151' : '#176b72',
+        fontSize: '22px',
+        fontStyle: 'bold',
+      })
+      .setOrigin(0.5);
+    this.add
+      .text(485, 412, 'タップして しゅっぱつ!', {
         fontFamily: GAME_FONT,
         color: '#9b3f41',
-        fontSize: '22px',
+        fontSize: '19px',
       })
       .setOrigin(0.5);
   }

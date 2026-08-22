@@ -88,7 +88,7 @@ export class ResultScene extends Phaser.Scene {
         405,
         155,
         stageCleared
-          ? 'ぜんぶ とりもどした!'
+          ? 'ぜんぶ とりかえした!'
           : stars > 0
             ? 'まだ かくれているよ!'
             : 'もう いっかい!',
@@ -118,12 +118,12 @@ export class ResultScene extends Phaser.Scene {
         405,
         535,
         this.recoveredItemIds.length > 0
-          ? `こんかい とりもどしたよ!\n${this.recoveredItemIds
+          ? `ずかんに とうろくしたよ!\n${this.recoveredItemIds
               .slice(0, 8)
               .map((itemId) => curriculumItemById(itemId)?.display ?? '')
               .join('　')}`
           : stars > 0
-            ? 'かくれている たからを\nもうすこし さがそう!'
+            ? 'すみに かくれた たからを\nもうすこし さがそう!'
             : 'つぎは きっと みつかるよ!',
         {
           fontFamily: GAME_FONT,
@@ -142,7 +142,7 @@ export class ResultScene extends Phaser.Scene {
         stageCleared
           ? `おたから: ${this.treasure}`
           : collection.total > 0
-            ? `${collection.recovered} / ${collection.total} こ とりもどした`
+            ? `${collection.recovered} / ${collection.total} こ とりかえした`
             : 'つぎは きっと みつかるよ!',
         {
           fontFamily: GAME_FONT,

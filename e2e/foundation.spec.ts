@@ -106,7 +106,17 @@ async function answerQuiz(
   shell: Locator,
   questionCount: number,
 ): Promise<void> {
-  for (let index = 0; index < questionCount; index += 1) {
+  await answerQuizFrom(page, canvas, shell, 0, questionCount);
+}
+
+async function answerQuizFrom(
+  page: Page,
+  canvas: Locator,
+  shell: Locator,
+  startIndex: number,
+  questionCount: number,
+): Promise<void> {
+  for (let index = startIndex; index < questionCount; index += 1) {
     const answer = await page.evaluate(() => window.__DSK_APP__?.answerIndex);
     if (answer === undefined) throw new Error(`${index + 1}問目の正解位置を取得できません。`);
     const center = choiceCenters[answer];
@@ -186,7 +196,10 @@ test('物語から入り、文字を図鑑へ回収して最初のステージ�
   });
   await tapGamePoint(page, canvas, 405, 910);
   await expect.poll(() => page.evaluate(() => window.__DSK_APP__?.storyPage)).toBe(2);
-  await page.screenshot({ path: testInfo.outputPath('challenge-story-buddy.png'), fullPage: true });
+  await page.screenshot({ path: testInfo.outputPath('challenge-story-rule.png'), fullPage: true });
+  await tapGamePoint(page, canvas, 405, 910);
+  await expect.poll(() => page.evaluate(() => window.__DSK_APP__?.storyPage)).toBe(3);
+  await page.screenshot({ path: testInfo.outputPath('challenge-story-goal.png'), fullPage: true });
   await tapGamePoint(page, canvas, 405, 910);
   await expect(shell).toHaveAttribute('data-scene', 'island-select');
   await page.screenshot({ path: testInfo.outputPath('island-select.png'), fullPage: true });
@@ -215,7 +228,28 @@ test('物語から入り、文字を図鑑へ回収して最初のステージ�
   await expect(shell).toHaveAttribute('data-bgm', 'quiz');
   await page.screenshot({ path: testInfo.outputPath('quiz-first-question.png'), fullPage: true });
 
-  await recoverAndClearCurrentStage(page, canvas, shell, 10);
+  await page.clock.install();
+  await page.clock.pauseAt(Date.now() + 1000);
+  const firstAnswer = await page.evaluate(() => window.__DSK_APP__?.answerIndex);
+  if (firstAnswer === undefined) throw new Error('1もんめの正解位置を取得できませんでした。');
+  const firstCenter = choiceCenters[firstAnswer];
+  if (!firstCenter) throw new Error(`正解位置 ${firstAnswer} が選択肢の範囲外です。`);
+  await tapGamePoint(page, canvas, firstCenter.x, firstCenter.y);
+  await expect(shell).toHaveAttribute('data-recovery-reveal', 'true');
+  await expect(shell).toHaveAttribute('data-recovered-items', /.+/);
+  await page.clock.runFor(16);
+  await canvas.screenshot({ path: testInfo.outputPath('ink-reveal-register.png') });
+  await page.clock.runFor(900);
+  await page.clock.resume();
+  await expect(shell).toHaveAttribute('data-question', '1');
+  await answerQuizFrom(page, canvas, shell, 1, 10);
+  if ((await shell.getAttribute('data-stage-cleared')) !== 'true') {
+    await tapGamePoint(page, canvas, 580, 790);
+    await expect(shell).toHaveAttribute('data-scene', 'stage-intro');
+    await tapGamePoint(page, canvas, 405, 835);
+    await expect(shell).toHaveAttribute('data-scene', 'quiz');
+    await recoverAndClearCurrentStage(page, canvas, shell, 10);
+  }
   await page.screenshot({ path: testInfo.outputPath('result-three-stars.png'), fullPage: true });
 
   await expect(shell).toHaveAttribute('data-next-stage', 'g1-moji-dakuon');
@@ -223,6 +257,17 @@ test('物語から入り、文字を図鑑へ回収して最初のステージ�
   await expect(shell).toHaveAttribute('data-scene', 'stage-intro');
   await expect(shell).toHaveAttribute('data-stage', 'g1-moji-dakuon');
   await page.screenshot({ path: testInfo.outputPath('dakuon-stage-intro.png'), fullPage: true });
+  await tapGamePoint(page, canvas, 405, 970);
+  await expect(shell).toHaveAttribute('data-scene', 'island-map');
+  await tapGamePoint(page, canvas, 725, 65);
+  await expect(shell).toHaveAttribute('data-scene', 'collection');
+  await tapGamePoint(page, canvas, 105, 335);
+  await expect(shell).toHaveAttribute('data-collection-item', 'あ');
+  await expect(shell).toHaveAttribute('data-collection-item-recovered', 'true');
+  await page.screenshot({
+    path: testInfo.outputPath('collection-after-detail.png'),
+    fullPage: true,
+  });
   const saved = await page.evaluate(() => localStorage.getItem('dsk_state'));
   expect(saved).toContain('g1-moji-seion');
   expect(saved).toContain('g1-hira-あ');

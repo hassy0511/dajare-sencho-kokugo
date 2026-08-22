@@ -34,7 +34,7 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: 'npm run preview:e2e',
+    command: 'node ./node_modules/vite/bin/vite.js preview --host 127.0.0.1',
     url: 'http://127.0.0.1:4173/dajare-sencho-kokugo/',
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,

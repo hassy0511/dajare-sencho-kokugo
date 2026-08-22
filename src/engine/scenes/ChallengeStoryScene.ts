@@ -84,9 +84,10 @@ export class ChallengeStoryScene extends Phaser.Scene {
       .setOrigin(0.5);
     layer.add([speaker, text]);
 
+    const firstDotX = 405 - ((this.pages.length - 1) * 50) / 2;
     for (let index = 0; index < this.pages.length; index += 1) {
       const dot = this.add.circle(
-        355 + index * 50,
+        firstDotX + index * 50,
         850,
         10,
         index === this.pageIndex ? 0xffd65a : 0xc8c0a3,

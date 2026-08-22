@@ -28,6 +28,7 @@ export class CollectionScene extends Phaser.Scene {
   private backIslandId = 'g1-moji';
   private categoryIndex = 0;
   private page = 0;
+  private selectedItemId: string | undefined;
   private cleanupInput?: () => void;
 
   constructor() {
@@ -40,6 +41,7 @@ export class CollectionScene extends Phaser.Scene {
     const selected = CATEGORIES.findIndex((category) => category.islandId === data.islandId);
     this.categoryIndex = selected >= 0 ? selected : 0;
     this.page = 0;
+    this.selectedItemId = undefined;
   }
 
   create(): void {
@@ -59,6 +61,7 @@ export class CollectionScene extends Phaser.Scene {
     this.drawHeader();
     this.drawTabs();
     this.drawItems();
+    this.drawDetail();
     this.drawPagination();
   }
 
@@ -109,7 +112,7 @@ export class CollectionScene extends Phaser.Scene {
     const items = curriculumItemsForIsland(category.islandId);
     const pageItems = items.slice(this.page * PAGE_SIZE, (this.page + 1) * PAGE_SIZE);
     this.add
-      .text(405, 240, `${progress.recovered} / ${progress.total} こ とりもどした`, {
+      .text(405, 240, `${progress.recovered} / ${progress.total} こ とりかえした`, {
         fontFamily: GAME_FONT,
         color: progress.complete ? '#367151' : '#176b72',
         fontSize: '25px',
@@ -117,17 +120,24 @@ export class CollectionScene extends Phaser.Scene {
       })
       .setOrigin(0.5);
     pageItems.forEach((item, index) =>
-      this.drawItem(item, index, state.collection[item.id]?.recovered),
+      this.drawItem(
+        item,
+        index,
+        state.collection[item.id]?.recovered,
+        item.id === this.selectedItemId,
+      ),
     );
   }
 
-  private drawItem(item: CurriculumItem, index: number, recovered = false): void {
+  private drawItem(item: CurriculumItem, index: number, recovered = false, selected = false): void {
     const column = index % 5;
     const row = Math.floor(index / 5);
     const x = 105 + column * 150;
     const y = 335 + row * 140;
     const card = this.add.graphics();
-    card.fillStyle(recovered ? 0xffefac : 0x5f6663).lineStyle(4, COLORS.ink, 1);
+    card
+      .fillStyle(recovered ? 0xffefac : 0x5f6663)
+      .lineStyle(selected ? 7 : 4, selected ? COLORS.coralDark : COLORS.ink, 1);
     card
       .fillRoundedRect(x - 62, y - 53, 124, 112, 22)
       .strokeRoundedRect(x - 62, y - 53, 124, 112, 22);
@@ -158,6 +168,38 @@ export class CollectionScene extends Phaser.Scene {
     }
   }
 
+  private drawDetail(): void {
+    const state = loadState();
+    const category = CATEGORIES[this.categoryIndex] ?? CATEGORIES[0];
+    const item = this.selectedItemId
+      ? curriculumItemsForIsland(category.islandId).find(
+          (candidate) => candidate.id === this.selectedItemId,
+        )
+      : undefined;
+    const recovered = item ? state.collection[item.id]?.recovered === true : false;
+    const detail = item
+      ? recovered
+        ? `${item.display}  ${item.detail}  ずかんに とうろく ずみ!`
+        : 'まだ すみに かくれているよ。もんだいに せいかいして とりかえそう!'
+      : 'カードを タップすると たからの せつめいが よめるよ';
+    const panel = this.add.graphics();
+    panel
+      .fillStyle(recovered ? 0xffefac : 0xe7dfc8)
+      .lineStyle(3, COLORS.ink, 0.9)
+      .fillRoundedRect(70, 822, 670, 68, 20)
+      .strokeRoundedRect(70, 822, 670, 68, 20);
+    this.add
+      .text(405, 856, detail, {
+        fontFamily: GAME_FONT,
+        color: recovered ? '#176b72' : '#52615e',
+        fontSize: detail.length > 38 ? '17px' : '19px',
+        fontStyle: 'bold',
+        align: 'center',
+        wordWrap: { width: 630 },
+      })
+      .setOrigin(0.5);
+  }
+
   private drawPagination(): void {
     const category = CATEGORIES[this.categoryIndex] ?? CATEGORIES[0];
     const pageCount = Math.max(
@@ -165,7 +207,7 @@ export class CollectionScene extends Phaser.Scene {
       Math.ceil(curriculumItemsForIsland(category.islandId).length / PAGE_SIZE),
     );
     this.add
-      .text(405, 907, `${this.page + 1} / ${pageCount} ページ`, {
+      .text(405, 922, `${this.page + 1} / ${pageCount} ページ`, {
         fontFamily: GAME_FONT,
         color: '#3d3323',
         fontSize: '21px',
@@ -201,9 +243,29 @@ export class CollectionScene extends Phaser.Scene {
         if (index >= 0 && index < CATEGORIES.length) {
           this.categoryIndex = index;
           this.page = 0;
+          this.selectedItemId = undefined;
           playSfx(this, 'page');
           this.draw();
           this.markReady();
+        }
+        return;
+      }
+      if (y >= 270 && y <= 825) {
+        const column = Math.round((x - 105) / 150);
+        const row = Math.round((y - 335) / 140);
+        if (column >= 0 && column < 5 && row >= 0 && row < 4) {
+          const category = CATEGORIES[this.categoryIndex] ?? CATEGORIES[0];
+          const item = curriculumItemsForIsland(category.islandId)[
+            this.page * PAGE_SIZE + row * 5 + column
+          ];
+          const itemX = 105 + column * 150;
+          const itemY = 335 + row * 140;
+          if (item && Math.abs(x - itemX) <= 70 && Math.abs(y - itemY) <= 65) {
+            this.selectedItemId = item.id;
+            playSfx(this, 'page');
+            this.draw();
+            this.markReady();
+          }
         }
         return;
       }
@@ -216,6 +278,7 @@ export class CollectionScene extends Phaser.Scene {
       if (x < 330 && this.page > 0) this.page -= 1;
       else if (x > 480 && this.page + 1 < pageCount) this.page += 1;
       else return;
+      this.selectedItemId = undefined;
       playSfx(this, 'page');
       this.draw();
       this.markReady();
@@ -231,10 +294,25 @@ export class CollectionScene extends Phaser.Scene {
       shell.dataset.collectionIsland = category.islandId;
       shell.dataset.collectionRecovered = String(progress.recovered);
       shell.dataset.collectionTotal = String(progress.total);
+      if (this.selectedItemId) {
+        const selected = curriculumItemsForIsland(category.islandId).find(
+          (item) => item.id === this.selectedItemId,
+        );
+        shell.dataset.collectionItem = selected?.display ?? '';
+        shell.dataset.collectionItemRecovered = String(
+          selected ? loadState().collection[selected.id]?.recovered === true : false,
+        );
+      } else {
+        delete shell.dataset.collectionItem;
+        delete shell.dataset.collectionItemRecovered;
+      }
       shell.dataset.inputReady = 'true';
     }
     const status = document.querySelector<HTMLElement>('#game-status');
-    if (status) status.textContent = `${category.label}を ${progress.recovered}こ とりもどしました`;
+    if (status)
+      status.textContent = this.selectedItemId
+        ? `${shell?.dataset.collectionItem ?? 'たから'}の せつめいです`
+        : `${category.label}を ${progress.recovered}こ とりかえしました`;
     if (window.__DSK_APP__) window.__DSK_APP__.scene = 'collection';
   }
 }

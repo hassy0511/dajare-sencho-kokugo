@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 
 import { questionGenerators } from '../../content/gen/registry';
+import { curriculumItemById } from '../../content/curriculum';
 import { loadGrade1Bank, loadHiraWordPool, loadSea } from '../../content/loader';
 import type { ChoiceQuestion } from '../../types/content';
 import { addWorldBackground } from '../assets/world-image-library';
@@ -20,6 +21,7 @@ export class QuizScene extends Phaser.Scene {
   private questionLayer?: Phaser.GameObjects.Container;
   private choiceType?: ChoiceQType;
   private feedback?: Phaser.GameObjects.Text;
+  private recoveryLayer: Phaser.GameObjects.Container | undefined;
   private nextTimer?: number;
   private recoveredItemIds: string[] = [];
 
@@ -97,6 +99,13 @@ export class QuizScene extends Phaser.Scene {
       return;
     }
     this.answering = false;
+    this.recoveryLayer?.destroy(true);
+    this.recoveryLayer = undefined;
+    const shell = document.querySelector<HTMLElement>('#game-shell');
+    if (shell) {
+      delete shell.dataset.recoveryReveal;
+      delete shell.dataset.recoveredItems;
+    }
     this.questionLayer?.destroy(true);
     this.choiceType?.destroy();
     this.questionLayer = this.add.container(0, 0);
@@ -150,7 +159,7 @@ export class QuizScene extends Phaser.Scene {
       playSfx(this, this.combo >= 3 ? 'combo' : 'correct');
       const recoveredText =
         collectionResult.newlyRecovered.length > 0
-          ? ` ${collectionResult.newlyRecovered.length}こ とりもどした!`
+          ? ` ${collectionResult.newlyRecovered.length}こ とりかえした!`
           : '';
       this.feedback
         ?.setText(
@@ -160,6 +169,9 @@ export class QuizScene extends Phaser.Scene {
         )
         .setColor('#367151');
       this.releaseStars(CHOICE_X(selected), CHOICE_Y(selected));
+      if (collectionResult.newlyRecovered.length > 0) {
+        this.showRecoveryReveal(collectionResult.newlyRecovered);
+      }
     } else {
       this.combo = 0;
       playSfx(this, 'wrong');
@@ -178,17 +190,103 @@ export class QuizScene extends Phaser.Scene {
     const status = document.querySelector<HTMLElement>('#game-status');
     if (status) {
       status.textContent = correct
-        ? 'せいかい! つぎの もんだいへ すすみます'
+        ? collectionResult.newlyRecovered.length > 0
+          ? 'せいかい! すみが はがれて こくごの たからを ずかんに とうろくしました'
+          : 'せいかい! つぎの もんだいへ すすみます'
         : `おしい! ${question.explanation}`;
     }
     if (window.__DSK_APP__) window.__DSK_APP__.score = this.score;
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const hasRecovery = collectionResult.newlyRecovered.length > 0;
     this.nextTimer = window.setTimeout(
       () => {
         this.questionIndex += 1;
         this.showQuestion();
       },
-      window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 250 : 850,
+      hasRecovery ? (reducedMotion ? 850 : 1300) : reducedMotion ? 250 : 850,
     );
+  }
+
+  private showRecoveryReveal(itemIds: string[]): void {
+    const displays = itemIds
+      .slice(0, 7)
+      .map((itemId) => curriculumItemById(itemId)?.display ?? '')
+      .filter(Boolean);
+    if (displays.length === 0) return;
+
+    this.recoveryLayer?.destroy(true);
+    const layer = this.add.container(0, 0).setDepth(100);
+    this.recoveryLayer = layer;
+    const shade = this.add.rectangle(405, 472, 720, 390, COLORS.ink, 0.18);
+    const panel = this.add.graphics();
+    panel.fillStyle(0xffefac).lineStyle(6, COLORS.ink, 1);
+    panel.fillRoundedRect(125, 300, 560, 315, 36).strokeRoundedRect(125, 300, 560, 315, 36);
+    const title = this.add
+      .text(405, 350, 'すみが はがれた!', {
+        fontFamily: GAME_FONT,
+        color: '#9b3f41',
+        fontSize: '34px',
+        fontStyle: 'bold',
+      })
+      .setOrigin(0.5);
+    const treasure = this.add
+      .text(405, 455, displays.join('　'), {
+        fontFamily: GAME_FONT,
+        color: '#3d3323',
+        fontSize: displays.some((display) => display.length > 3) ? '27px' : '46px',
+        fontStyle: 'bold',
+        align: 'center',
+        wordWrap: { width: 470 },
+      })
+      .setOrigin(0.5);
+    const registered = this.add
+      .text(405, 565, 'こくごの たからずかんに とうろく!', {
+        fontFamily: GAME_FONT,
+        color: '#176b72',
+        fontSize: '25px',
+        fontStyle: 'bold',
+      })
+      .setOrigin(0.5);
+    const ink = this.add.graphics();
+    ink.fillStyle(0x343938, 0.96);
+    ink.fillCircle(345, 445, 54);
+    ink.fillCircle(412, 467, 68);
+    ink.fillCircle(480, 440, 49);
+    ink.fillCircle(390, 420, 44);
+    layer.add([shade, panel, title, treasure, ink, registered]);
+
+    const shell = document.querySelector<HTMLElement>('#game-shell');
+    if (shell) {
+      shell.dataset.recoveryReveal = 'true';
+      shell.dataset.recoveredItems = displays.join(',');
+    }
+    playSfx(this, 'unlock');
+
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reducedMotion) {
+      ink.setAlpha(0);
+      return;
+    }
+    layer.setAlpha(0);
+    registered.setAlpha(0);
+    this.tweens.add({ targets: layer, alpha: 1, duration: 150, ease: 'Quad.easeOut' });
+    this.tweens.add({
+      targets: ink,
+      alpha: 0,
+      scale: 1.35,
+      angle: 18,
+      duration: 420,
+      delay: 150,
+      ease: 'Cubic.easeIn',
+    });
+    this.tweens.add({
+      targets: registered,
+      alpha: 1,
+      y: { from: 580, to: 565 },
+      duration: 280,
+      delay: 430,
+      ease: 'Back.easeOut',
+    });
   }
 
   private releaseStars(x: number, y: number): void {
@@ -251,6 +349,7 @@ export class QuizScene extends Phaser.Scene {
 
   private cleanup(): void {
     this.choiceType?.destroy();
+    this.recoveryLayer?.destroy(true);
     if (this.nextTimer !== undefined) window.clearTimeout(this.nextTimer);
   }
 }

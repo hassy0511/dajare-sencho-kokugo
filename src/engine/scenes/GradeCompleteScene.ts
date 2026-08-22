@@ -12,7 +12,7 @@ const COMPLETE_PAGES: StoryPage[] = [
   {
     speaker: 'スミゾー',
     role: 'sumizo',
-    text: 'まいった… じが へたで\nうらやましかったんだ。\nおたからは ぜんぶ かえすよ。\nすみませんでした! すみだけに な!',
+    text: 'まいった… じが へたで\nうらやましかったんだ。\nすみは ぜんぶ はがれたよ。\nすみませんでした! すみだけに な!',
   },
   {
     speaker: 'ダジャーレせんちょう',
@@ -22,7 +22,7 @@ const COMPLETE_PAGES: StoryPage[] = [
   {
     speaker: 'コンパス',
     role: 'buddy',
-    text: '1ねんせいの 41ステージ\nぜんぶ クリア!\nことばの だいぼうけんは だいせいこう!',
+    text: 'もじも かんじも ことばの わざも\n196この たからを ぜんぶ とりかえした!\nずかんも かんせい!\n1ねんの うみに ことばが もどったよ!',
   },
 ];
 
@@ -150,7 +150,8 @@ export class GradeCompleteScene extends Phaser.Scene {
       shell.dataset.scene = 'grade-complete';
       shell.dataset.inputReady = 'true';
     }
-    if (status) status.textContent = '1ねんせいの 41ステージを ぜんぶ クリアしました';
+    if (status)
+      status.textContent = '1ねんせいの 41ステージと 196この たからを ぜんぶ クリアしました';
     if (window.__DSK_APP__) {
       window.__DSK_APP__.ready = true;
       window.__DSK_APP__.scene = 'grade-complete';

@@ -115,7 +115,7 @@ export class StageIntroScene extends Phaser.Scene {
         405,
         610,
         collection.total > 0
-          ? `${collection.recovered} / ${collection.total} こ とりもどした`
+          ? `${collection.recovered} / ${collection.total} こ とりかえした`
           : `おたから: ${stage.treasure}`,
         {
           fontFamily: GAME_FONT,

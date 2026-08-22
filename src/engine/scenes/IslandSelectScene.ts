@@ -90,7 +90,7 @@ export class IslandSelectScene extends Phaser.Scene {
       })
       .setOrigin(0.5);
     this.add
-      .text(x, y + 98, `${collection.recovered} / ${collection.total} とりもどした`, {
+      .text(x, y + 98, `${collection.recovered} / ${collection.total} とりかえした`, {
         fontFamily: GAME_FONT,
         color: '#fff7d0',
         fontSize: '16px',

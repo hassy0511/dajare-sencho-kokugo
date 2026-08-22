@@ -135,7 +135,7 @@ export class IslandMapScene extends Phaser.Scene {
           position.y + 25,
           cleared
             ? collection.total > 0
-              ? `${collection.total}こ とりもどした`
+              ? `${collection.total}こ とりかえした`
               : 'クリアずみ'
             : available
               ? collection.total > 0
