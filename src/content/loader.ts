@@ -1,11 +1,13 @@
 import characterImagesJson from '../../data/assets/character_images.json';
 import worldImagesJson from '../../data/assets/world_images.json';
 import hiraWordsJson from '../../data/g1/pools/hira_words.json';
+import curriculumJson from '../../data/g1/curriculum_items.json';
 import grade1BankJson from '../../data/g1/pools/grade1_bank.json';
 import seaJson from '../../data/g1/sea.json';
 import wordImagesJson from '../../data/g1/assets/word_images.json';
 import type {
   CharacterImageLibrary,
+  CurriculumDefinition,
   Grade1Bank,
   HiraWordPool,
   SeaDefinition,
@@ -14,12 +16,17 @@ import type {
 } from '../types/content';
 import {
   characterImageLibrarySchema,
+  curriculumDefinitionSchema,
   grade1BankSchema,
   hiraWordPoolSchema,
   seaSchema,
   wordImageLibrarySchema,
   worldImageLibrarySchema,
 } from './schema';
+
+export function loadCurriculumDefinition(): CurriculumDefinition {
+  return curriculumDefinitionSchema.parse(curriculumJson);
+}
 
 export function loadCharacterImageLibrary(): CharacterImageLibrary {
   return characterImageLibrarySchema.parse(characterImagesJson);

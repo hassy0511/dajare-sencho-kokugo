@@ -40,6 +40,33 @@ export const hiraWordPoolSchema = z.object({
       }),
     )
     .min(8),
+  recoveryWords: z
+    .array(
+      z.object({
+        key: z.string().min(1),
+        prompt: z.string().min(1),
+        emphasis: z.string().min(1).nullable(),
+        choices: z.array(z.string().min(1)).length(4),
+        answer: z.string().min(1),
+        explanation: z.string().min(1),
+      }),
+    )
+    .min(8),
+});
+
+export const curriculumDefinitionSchema = z.object({
+  version: z.literal(1),
+  hiragana: z.array(z.string().length(1)).length(46),
+  katakana: z.array(z.string().length(1)).length(46),
+  concepts: z
+    .array(
+      z.object({
+        stageId: z.string().min(1),
+        display: z.string().min(1),
+        detail: z.string().min(1),
+      }),
+    )
+    .min(20),
 });
 
 const wrongsSchema = z.array(z.string().min(1)).length(3);

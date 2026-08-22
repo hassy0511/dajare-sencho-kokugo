@@ -120,6 +120,23 @@ async function answerQuiz(
   await expect(shell).toHaveAttribute('data-stars', '3');
 }
 
+async function recoverAndClearCurrentStage(
+  page: Page,
+  canvas: Locator,
+  shell: Locator,
+  questionCount: number,
+): Promise<void> {
+  for (let session = 0; session < 10; session += 1) {
+    await answerQuiz(page, canvas, shell, questionCount);
+    if ((await shell.getAttribute('data-stage-cleared')) === 'true') return;
+    await tapGamePoint(page, canvas, 580, 790);
+    await expect(shell).toHaveAttribute('data-scene', 'stage-intro');
+    await tapGamePoint(page, canvas, 405, 835);
+    await expect(shell).toHaveAttribute('data-scene', 'quiz');
+  }
+  throw new Error('10回のちょうせんで必修項目をすべて回収できませんでした。');
+}
+
 async function openIslandMap(
   page: Page,
   canvas: Locator,
@@ -134,8 +151,8 @@ async function openIslandMap(
   await expect(shell).toHaveAttribute('data-scene', 'island-map');
 }
 
-test('物語から入り、最初のステージをクリアして次へ進める', async ({ page }, testInfo) => {
-  test.setTimeout(90_000);
+test('物語から入り、文字を図鑑へ回収して最初のステージをクリアする', async ({ page }, testInfo) => {
+  test.setTimeout(180_000);
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.addInitScript(() => localStorage.clear());
   await page.goto('./');
@@ -174,6 +191,13 @@ test('物語から入り、最初のステージをクリアして次へ進め�
   await expect(shell).toHaveAttribute('data-scene', 'island-select');
   await page.screenshot({ path: testInfo.outputPath('island-select.png'), fullPage: true });
 
+  await tapGamePoint(page, canvas, 405, 1005);
+  await expect(shell).toHaveAttribute('data-scene', 'collection');
+  await expect(shell).toHaveAttribute('data-collection-total', '96');
+  await page.screenshot({ path: testInfo.outputPath('collection-before.png'), fullPage: true });
+  await tapGamePoint(page, canvas, 87, 60);
+  await expect(shell).toHaveAttribute('data-scene', 'island-select');
+
   await tapGamePoint(page, canvas, 220, 315);
   await expect(shell).toHaveAttribute('data-scene', 'island-map');
   await expect(shell).toHaveAttribute('data-island', 'g1-moji');
@@ -191,7 +215,7 @@ test('物語から入り、最初のステージをクリアして次へ進め�
   await expect(shell).toHaveAttribute('data-bgm', 'quiz');
   await page.screenshot({ path: testInfo.outputPath('quiz-first-question.png'), fullPage: true });
 
-  await answerQuiz(page, canvas, shell, 10);
+  await recoverAndClearCurrentStage(page, canvas, shell, 10);
   await page.screenshot({ path: testInfo.outputPath('result-three-stars.png'), fullPage: true });
 
   await expect(shell).toHaveAttribute('data-next-stage', 'g1-moji-dakuon');
@@ -201,6 +225,7 @@ test('物語から入り、最初のステージをクリアして次へ進め�
   await page.screenshot({ path: testInfo.outputPath('dakuon-stage-intro.png'), fullPage: true });
   const saved = await page.evaluate(() => localStorage.getItem('dsk_state'));
   expect(saved).toContain('g1-moji-seion');
+  expect(saved).toContain('g1-hira-あ');
 });
 
 test('おとのオン・オフを保存し、再読み込み後も引き継ぐ', async ({ page }, testInfo) => {
@@ -302,6 +327,7 @@ const additionalStageCases = [
 
 for (const stageCase of additionalStageCases) {
   test(`${stageCase.id}を規定問題数クリアできる`, async ({ page }, testInfo) => {
+    test.setTimeout(120_000);
     await page.emulateMedia({ reducedMotion: 'reduce' });
     await page.addInitScript((clearedStageIds) => {
       const stages = Object.fromEntries(
@@ -327,7 +353,7 @@ for (const stageCase of additionalStageCases) {
       path: testInfo.outputPath(`${stageCase.id}-first-question.png`),
       fullPage: true,
     });
-    await answerQuiz(page, canvas, shell, stageCase.questionCount);
+    await recoverAndClearCurrentStage(page, canvas, shell, stageCase.questionCount);
 
     const saved = await page.evaluate(() => localStorage.getItem('dsk_state'));
     expect(saved).toContain(stageCase.id);

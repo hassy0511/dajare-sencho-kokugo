@@ -6,7 +6,7 @@ import { addWorldBackground, worldImageTextureKey } from '../assets/world-image-
 import { enterSceneAudio } from '../audio/director';
 import { COLORS, GAME_FONT } from '../constants';
 import { addGameTapListener } from '../input/logical-input';
-import { loadState } from '../save/state';
+import { getIslandCollectionProgress, loadState } from '../save/state';
 
 const ISLAND_POSITIONS = [
   { x: 220, y: 285 },
@@ -64,7 +64,7 @@ export class IslandSelectScene extends Phaser.Scene {
 
   private drawIslandCard(island: IslandDefinition, x: number, y: number, index: number): void {
     const state = loadState();
-    const cleared = island.stages.filter((stage) => state.stages[stage.id]?.cleared).length;
+    const collection = getIslandCollectionProgress(island.id, state);
     const colors = [COLORS.coral, COLORS.green, 0xd69b52, 0x6f87b5, 0x9b72aa];
     const shadows = [COLORS.coralDark, COLORS.greenDark, 0x9d6a32, 0x495f8a, 0x6d4c78];
     const face = colors[index] ?? COLORS.green;
@@ -90,7 +90,7 @@ export class IslandSelectScene extends Phaser.Scene {
       })
       .setOrigin(0.5);
     this.add
-      .text(x, y + 98, `${cleared} / ${island.stages.length} クリア`, {
+      .text(x, y + 98, `${collection.recovered} / ${collection.total} とりもどした`, {
         fontFamily: GAME_FONT,
         color: '#fff7d0',
         fontSize: '16px',
@@ -107,6 +107,17 @@ export class IslandSelectScene extends Phaser.Scene {
         fontFamily: GAME_FONT,
         color: '#3d3323',
         fontSize: '19px',
+        fontStyle: 'bold',
+      })
+      .setOrigin(0.5);
+    const collection = this.add.graphics();
+    collection.fillStyle(COLORS.green).lineStyle(4, COLORS.ink, 1);
+    collection.fillRoundedRect(300, 967, 210, 78, 23).strokeRoundedRect(300, 967, 210, 78, 23);
+    this.add
+      .text(405, 1005, 'たからずかん', {
+        fontFamily: GAME_FONT,
+        color: '#fff7d0',
+        fontSize: '23px',
         fontStyle: 'bold',
       })
       .setOrigin(0.5);
@@ -132,6 +143,12 @@ export class IslandSelectScene extends Phaser.Scene {
       }
       if (x >= 625 && y <= 115) {
         this.go('ChallengeStory');
+        return;
+      }
+      if (x >= 285 && x <= 525 && y >= 945) {
+        this.leaving = true;
+        this.cleanupInput?.();
+        this.scene.start('Collection', { backScene: 'IslandSelect' });
         return;
       }
       const index = ISLAND_POSITIONS.findIndex(

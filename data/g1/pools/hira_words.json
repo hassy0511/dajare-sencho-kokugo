@@ -216,5 +216,143 @@
       "answer": "ほん",
       "explanation": "「ん」を いれて「ほん」だよ"
     }
+  ],
+  "recoveryWords": [
+    {
+      "key": "aoi-ie",
+      "prompt": "おとを つないだ ことばは どれ?",
+      "emphasis": "あ・お・い　い・え",
+      "choices": ["あおい いえ", "あかい いえ", "あおい うえ", "おおい いえ"],
+      "answer": "あおい いえ",
+      "explanation": "「あおい いえ」と つながるよ"
+    },
+    {
+      "key": "kitsune",
+      "prompt": "ばらばらの おとを ことばに しよう",
+      "emphasis": "き・つ・ね",
+      "choices": ["きつね", "きって", "きぬね", "けつね"],
+      "answer": "きつね",
+      "explanation": "「き・つ・ね」で「きつね」だよ"
+    },
+    {
+      "key": "kemushi",
+      "prompt": "おとを じゅんばんに つなげると どれ?",
+      "emphasis": "け・む・し",
+      "choices": ["けむし", "けしむ", "きむし", "けもし"],
+      "answer": "けむし",
+      "explanation": "「け・む・し」で「けむし」だよ"
+    },
+    {
+      "key": "suika",
+      "prompt": "おとの かけらから ことばを みつけよう",
+      "emphasis": "す・い・か",
+      "choices": ["すいか", "すかい", "せいか", "すいき"],
+      "answer": "すいか",
+      "explanation": "「す・い・か」で「すいか」だよ"
+    },
+    {
+      "key": "semi",
+      "prompt": "なつに なく むしの ことばは どれ?",
+      "emphasis": "せ・み",
+      "choices": ["せみ", "せめ", "そみ", "しみ"],
+      "answer": "せみ",
+      "explanation": "「せ・み」で「せみ」だよ"
+    },
+    {
+      "key": "chizu",
+      "prompt": "みちを しらべる ことばを つくろう",
+      "emphasis": "ち・ず",
+      "choices": ["ちず", "しず", "ちづ", "つず"],
+      "answer": "ちず",
+      "explanation": "「ち・ず」で「ちず」だよ"
+    },
+    {
+      "key": "tenugui",
+      "prompt": "おとを つないで ながい ことばに しよう",
+      "emphasis": "て・ぬ・ぐ・い",
+      "choices": ["てぬぐい", "てぐぬい", "てぬくい", "でぬぐい"],
+      "answer": "てぬぐい",
+      "explanation": "「て・ぬ・ぐ・い」で「てぬぐい」だよ"
+    },
+    {
+      "key": "niwatori",
+      "prompt": "おとの じゅんばんが あっているのは どれ?",
+      "emphasis": "に・わ・と・り",
+      "choices": ["にわとり", "にとわり", "にわたり", "みわとり"],
+      "answer": "にわとり",
+      "explanation": "「に・わ・と・り」で「にわとり」だよ"
+    },
+    {
+      "key": "nori",
+      "prompt": "うみに ある ことばを おとから みつけよう",
+      "emphasis": "の・り",
+      "choices": ["のり", "なり", "のる", "ねり"],
+      "answer": "のり",
+      "explanation": "「の・り」で「のり」だよ"
+    },
+    {
+      "key": "hikouki",
+      "prompt": "そらを とぶ ものの ことばは どれ?",
+      "emphasis": "ひ・こ・う・き",
+      "choices": ["ひこうき", "ひこき", "ひごうき", "ひこうけ"],
+      "answer": "ひこうき",
+      "explanation": "「ひ・こ・う・き」で「ひこうき」だよ"
+    },
+    {
+      "key": "heya",
+      "prompt": "おとの かけらを ふたつ つなごう",
+      "emphasis": "へ・や",
+      "choices": ["へや", "ひや", "へゆ", "ほや"],
+      "answer": "へや",
+      "explanation": "「へ・や」で「へや」だよ"
+    },
+    {
+      "key": "meron",
+      "prompt": "くだものの なまえを おとから つくろう",
+      "emphasis": "め・ろ・ん",
+      "choices": ["めろん", "めんろ", "めらん", "ねろん"],
+      "answer": "めろん",
+      "explanation": "「め・ろ・ん」で「めろん」だよ"
+    },
+    {
+      "key": "yuki",
+      "prompt": "ふゆに そらから ふる ものは どれ?",
+      "emphasis": "ゆ・き",
+      "choices": ["ゆき", "よき", "ゆく", "やき"],
+      "answer": "ゆき",
+      "explanation": "「ゆ・き」で「ゆき」だよ"
+    },
+    {
+      "key": "yoru",
+      "prompt": "おひさまが しずんだ あとの ことばは?",
+      "emphasis": "よ・る",
+      "choices": ["よる", "ゆる", "よろ", "やる"],
+      "answer": "よる",
+      "explanation": "「よ・る」で「よる」だよ"
+    },
+    {
+      "key": "rappa",
+      "prompt": "おとを つないで がっきの なまえに しよう",
+      "emphasis": "ら・っ・ぱ",
+      "choices": ["らっぱ", "らつぱ", "りっぱ", "らっば"],
+      "answer": "らっぱ",
+      "explanation": "「ら・っ・ぱ」で「らっぱ」だよ"
+    },
+    {
+      "key": "remon",
+      "prompt": "すっぱい くだものの ことばは どれ?",
+      "emphasis": "れ・も・ん",
+      "choices": ["れもん", "れんも", "らもん", "れめん"],
+      "answer": "れもん",
+      "explanation": "「れ・も・ん」で「れもん」だよ"
+    },
+    {
+      "key": "hon-wo-yomu",
+      "prompt": "ことばを つないで ぶんを つくろう",
+      "emphasis": "ほん　□　よむ",
+      "choices": ["ほんを よむ", "ほんは よむ", "ほんへ よむ", "ほんが よむ"],
+      "answer": "ほんを よむ",
+      "explanation": "「ほんを よむ」と つなぐよ"
+    }
   ]
 }

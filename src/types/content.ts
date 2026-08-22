@@ -9,6 +9,7 @@ export interface ChoiceQuestion {
   choices: string[];
   answer: number;
   explanation: string;
+  curriculumItemIds: string[];
 }
 
 export interface HiraWordItem {
@@ -32,6 +33,33 @@ export interface HiraWordPool {
   dakuon: MojiChoiceItem[];
   sokuon: MojiChoiceItem[];
   chouon: MojiChoiceItem[];
+  recoveryWords: MojiChoiceItem[];
+}
+
+export type CurriculumKind = 'hiragana' | 'katakana' | 'kanji' | 'concept';
+
+export interface CurriculumConceptDefinition {
+  stageId: string;
+  display: string;
+  detail: string;
+}
+
+export interface CurriculumDefinition {
+  version: 1;
+  hiragana: string[];
+  katakana: string[];
+  concepts: CurriculumConceptDefinition[];
+}
+
+export interface CurriculumItem {
+  id: string;
+  kind: CurriculumKind;
+  islandId: string;
+  stageId: string;
+  display: string;
+  reading: string;
+  detail: string;
+  order: number;
 }
 
 export type KanjiGroup = 'nature' | 'body' | 'number' | 'school' | 'action';

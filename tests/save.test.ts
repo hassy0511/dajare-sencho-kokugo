@@ -1,6 +1,13 @@
 import { describe, expect, it } from 'vitest';
 
-import { loadState, recordStageResult, SAVE_KEY, setAudioEnabled } from '../src/engine/save/state';
+import { curriculumItemsForStage } from '../src/content/curriculum';
+import {
+  loadState,
+  recordCurriculumAnswer,
+  recordStageResult,
+  SAVE_KEY,
+  setAudioEnabled,
+} from '../src/engine/save/state';
 
 function memoryStorage(): Pick<Storage, 'getItem' | 'setItem'> {
   const values = new Map<string, string>();
@@ -14,8 +21,9 @@ describe('進行保存', () => {
   it('不正な保存値では初期状態へ戻る', () => {
     const storage = { getItem: () => '{not-json' };
     expect(loadState(storage)).toEqual({
-      v: 1,
+      v: 2,
       stages: {},
+      collection: {},
       seen: {},
       settings: { bgm: true, sfx: true, reducedMotion: false },
     });
@@ -32,6 +40,24 @@ describe('進行保存', () => {
     });
   });
 
+  it('v1でクリア済みのステージは必修項目を回収済みとして移行する', () => {
+    const storage = {
+      getItem: () =>
+        JSON.stringify({
+          v: 1,
+          stages: { 'g1-kanji-shizen': { bestScore: 10, bestStars: 3, cleared: true } },
+          seen: {},
+        }),
+    };
+    const state = loadState(storage);
+    expect(state.v).toBe(2);
+    expect(
+      curriculumItemsForStage('g1-kanji-shizen').every(
+        (item) => state.collection[item.id]?.recovered,
+      ),
+    ).toBe(true);
+  });
+
   it('BGMと効果音のオン・オフをまとめて保存する', () => {
     const storage = memoryStorage();
     setAudioEnabled(false, storage);
@@ -42,15 +68,29 @@ describe('進行保存', () => {
 
   it('自己ベストを下げずにクリア状態を保存する', () => {
     const storage = memoryStorage();
-    recordStageResult('g1-moji-seion', 9, 10, 3, storage);
-    recordStageResult('g1-moji-seion', 6, 10, 1, storage);
+    recordStageResult('g1-moji-test1', 9, 10, 3, storage);
+    recordStageResult('g1-moji-test1', 6, 10, 1, storage);
     const saved = JSON.parse(storage.getItem(SAVE_KEY) ?? '{}') as {
       stages: Record<string, { bestScore: number; bestStars: number; cleared: boolean }>;
     };
-    expect(saved.stages['g1-moji-seion']).toEqual({
+    expect(saved.stages['g1-moji-test1']).toEqual({
       bestScore: 9,
       bestStars: 3,
       cleared: true,
     });
+  });
+
+  it('必修項目は正解したときだけ回収し、100%回収後にステージをクリアする', () => {
+    const storage = memoryStorage();
+    const itemIds = curriculumItemsForStage('g1-kanji-karada').map((item) => item.id);
+    const first = itemIds[0];
+    if (!first) throw new Error('必修漢字がありません。');
+    recordCurriculumAnswer([first], false, storage);
+    expect(loadState(storage).collection[first]?.recovered).toBe(false);
+    recordStageResult('g1-kanji-karada', 10, 10, 3, storage);
+    expect(loadState(storage).stages['g1-kanji-karada']?.cleared).toBe(false);
+    itemIds.forEach((itemId) => recordCurriculumAnswer([itemId], true, storage));
+    recordStageResult('g1-kanji-karada', 10, 10, 3, storage);
+    expect(loadState(storage).stages['g1-kanji-karada']?.cleared).toBe(true);
   });
 });

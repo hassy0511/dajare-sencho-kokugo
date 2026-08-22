@@ -6,6 +6,7 @@ export function makeMojiChoiceQuiz(
   items: readonly MojiChoiceItem[],
   count: number,
   seed: number,
+  curriculumItemIds: readonly string[] = [],
 ): ChoiceQuestion[] {
   if (count > items.length) throw new Error('問題数より多い問題データが必要です。');
   if (new Set(items.map((item) => item.key)).size !== items.length) {
@@ -32,6 +33,7 @@ export function makeMojiChoiceQuiz(
       choices,
       answer: choices.indexOf(item.answer),
       explanation: item.explanation,
+      curriculumItemIds: [...curriculumItemIds],
     };
   });
 }

@@ -8,6 +8,7 @@
 data/
 └─ g1/
    ├─ sea.json            # 海域定義(メタ+幹部+島+ステージ)
+   ├─ curriculum_items.json # 必修項目台帳(かな・概念カード。漢字はbankから合成)
    └─ pools/
       ├─ kanji.json       # 漢字プール(g1a/g1b サブセット構造含む)
       ├─ katakana.json
@@ -145,24 +146,27 @@ gen 関数は `(pools, rng) => Question` の純関数とし、**乱数は seed �
 
 ```jsonc
 {
-  "v": 1,                                   // スキーマバージョン。変更時はマイグレーション必須
+  "v": 2,                                   // v1はロード時に進捗を保って移行
   "buddyName": "ピカリ",
   "settings": { "bgm": true, "sfx": true, "reducedMotion": false },
   "owned": ["g1"],                          // 購入済み海域(現フェーズは全海域を初期投入)
-  "progress": {
-    "g1-moji-seion": { "stars": 3, "best": 8, "clearedAt": "2026-07-21" }
+  "stages": {
+    "g1-moji-seion": { "bestScore": 10, "bestStars": 3, "cleared": true }
   },
-  "treasures": ["g1-moji-seion"],           // 入手済み宝物 = ステージid
+  "collection": {
+    "g1-hira-あ": { "recovered": true, "firstTryCorrect": 1, "correctCount": 2, "missCount": 0, "lastAnsweredAt": "2026-08-22T00:00:00.000Z" }
+  },
   "seen": { "challenge:g1": true, "intro:g1-moji-seion": "2026-07-21" }  // 演出の既読管理
 }
 ```
 
 - 進捗キーはステージ `id` そのもの(全体一意なので名前空間不要)
 - エクスポート/インポート: JSON文字列をコピー/貼り付けできる画面を「おうちのひと」に用意(前作踏襲)
+- v1でクリア済みのステージに属する必修項目は、v2移行時に回収済みとする(既存利用者の進捗を減らさない)
 - **一度リリースした `id`・キー名・型を変えない。** 変更が必要になったら `v` を上げて `migrate(old): State` を書く
 
 ## 7. アンロック規則
 
 - うみ・しま: 常に選択可能(ロックなし)。ただし未購入海域は `trialStageId` 以外のステージが「たいけんばん」ロック表示
-- ステージ: 島内で直前のステージをクリア(正答率60%以上)していれば解放。島をまたぐ依存なし
+- ステージ: 島内で直前のステージをクリア(正答率60%以上かつ必修項目100%回収)していれば解放。島をまたぐ依存なし
 - かくにんテスト・ボスも同一規則(直前ステージクリアで解放)

@@ -3,6 +3,7 @@ import Phaser from 'phaser';
 import { GAME_HEIGHT, GAME_WIDTH } from './constants';
 import { BootScene } from './scenes/BootScene';
 import { ChallengeStoryScene } from './scenes/ChallengeStoryScene';
+import { CollectionScene } from './scenes/CollectionScene';
 import { GradeCompleteScene } from './scenes/GradeCompleteScene';
 import { IslandMapScene } from './scenes/IslandMapScene';
 import { IslandSelectScene } from './scenes/IslandSelectScene';
@@ -43,6 +44,7 @@ export function createGameConfig(parent: HTMLElement): Phaser.Types.Core.GameCon
       WelcomeScene,
       SeaSelectScene,
       ChallengeStoryScene,
+      CollectionScene,
       IslandSelectScene,
       IslandMapScene,
       StageIntroScene,

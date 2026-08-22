@@ -6,8 +6,10 @@ import { describe, expect, it } from 'vitest';
 import { makeGrade1Quiz } from '../src/content/gen/grade1';
 import { makeHiraSeionQuiz } from '../src/content/gen/hiraSeion';
 import { makeMojiChoiceQuiz } from '../src/content/gen/mojiChoice';
+import { loadCurriculumItems } from '../src/content/curriculum';
 import {
   loadCharacterImageLibrary,
+  loadCurriculumDefinition,
   loadGrade1Bank,
   loadHiraWordPool,
   loadSea,
@@ -33,6 +35,11 @@ describe('ひらがな清音の問題生成', () => {
     expect(pool.dakuon).toHaveLength(8);
     expect(pool.sokuon).toHaveLength(8);
     expect(pool.chouon).toHaveLength(8);
+    expect(pool.recoveryWords).toHaveLength(17);
+    const curriculum = loadCurriculumDefinition();
+    expect(curriculum.hiragana).toHaveLength(46);
+    expect(curriculum.katakana).toHaveLength(46);
+    expect(loadCurriculumItems()).toHaveLength(196);
     const bank = loadGrade1Bank();
     expect(bank.kanji).toHaveLength(80);
     expect(new Set(bank.kanji.map((item) => item.char)).size).toBe(80);
@@ -126,7 +133,7 @@ describe('ひらがな清音の問題生成', () => {
   it('1000種類のseedで、絵の正解語を含む重複なし4択を10問生成する', () => {
     const pool = loadHiraWordPool();
     for (let seed = 0; seed < 1000; seed += 1) {
-      const questions = makeHiraSeionQuiz(pool.items, 10, seed);
+      const questions = makeHiraSeionQuiz(pool, 10, seed);
       expect(questions).toHaveLength(10);
       expect(new Set(questions.map((question) => question.key)).size).toBe(10);
       questions.forEach((question) => {
@@ -137,6 +144,36 @@ describe('ひらがな清音の問題生成', () => {
         const item = pool.items.find((candidate) => candidate.visual === question.visual);
         expect(question.choices[question.answer]).toBe(item?.w);
       });
+    }
+  });
+
+  it('未回収項目を優先すると、かな46字と漢字80字を必ず回収できる', () => {
+    const bank = loadGrade1Bank();
+    const hira = loadHiraWordPool();
+    for (const stageId of [
+      'g1-moji-seion',
+      'g1-moji-katakana',
+      'g1-kanji-shizen',
+      'g1-kanji-karada',
+      'g1-kanji-kazu',
+      'g1-kanji-gakko',
+      'g1-kanji-muki',
+    ]) {
+      const missing = new Set(
+        loadCurriculumItems()
+          .filter((item) => item.stageId === stageId)
+          .map((item) => item.id),
+      );
+      for (let session = 0; session < 10 && missing.size > 0; session += 1) {
+        const questions =
+          stageId === 'g1-moji-seion'
+            ? makeHiraSeionQuiz(hira, 10, session, [...missing])
+            : makeGrade1Quiz(stageId, bank, hira, 10, session, [...missing]);
+        questions
+          .flatMap((question) => question.curriculumItemIds)
+          .forEach((id) => missing.delete(id));
+      }
+      expect([...missing], `${stageId}に回収できない項目があります`).toEqual([]);
     }
   });
 

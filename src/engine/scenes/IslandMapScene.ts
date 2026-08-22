@@ -7,7 +7,7 @@ import { enterSceneAudio, playSfx } from '../audio/director';
 import { COLORS, GAME_FONT } from '../constants';
 import { addGameTapListener } from '../input/logical-input';
 import { getStageAccess } from '../progression/stage-access';
-import { loadState } from '../save/state';
+import { getIslandCollectionProgress, getStageCollectionProgress, loadState } from '../save/state';
 
 interface IslandMapData {
   islandId?: string;
@@ -35,6 +35,7 @@ export class IslandMapScene extends Phaser.Scene {
     this.drawBackground(island);
     this.drawNodes(island);
     this.drawBackButton();
+    this.drawCollectionButton();
     this.notice = this.add
       .text(405, 1007, 'ステージを えらんでね', {
         fontFamily: GAME_FONT,
@@ -92,6 +93,7 @@ export class IslandMapScene extends Phaser.Scene {
       const position = nodePosition(index);
       const cleared = Boolean(state.stages[stage.id]?.cleared);
       const access = getStageAccess(island.stages, index, state);
+      const collection = getStageCollectionProgress(stage.id, state);
       const available = access === 'available';
       const face = cleared ? COLORS.green : available ? COLORS.coral : 0xaab5ad;
       const shadow = cleared ? COLORS.greenDark : available ? COLORS.coralDark : 0x718078;
@@ -132,9 +134,13 @@ export class IslandMapScene extends Phaser.Scene {
           position.x + 28,
           position.y + 25,
           cleared
-            ? 'クリアずみ'
+            ? collection.total > 0
+              ? `${collection.total}こ とりもどした`
+              : 'クリアずみ'
             : available
-              ? 'あそべるよ!'
+              ? collection.total > 0
+                ? `${collection.recovered} / ${collection.total} こ`
+                : 'あそべるよ!'
               : access === 'locked'
                 ? 'まえを クリアで ひらく'
                 : 'じゅんびちゅう',
@@ -162,6 +168,29 @@ export class IslandMapScene extends Phaser.Scene {
       .setOrigin(0.5);
   }
 
+  private drawCollectionButton(): void {
+    const state = loadState();
+    const collection = getIslandCollectionProgress(this.islandId, state);
+    const button = this.add.graphics();
+    button.fillStyle(COLORS.green).lineStyle(4, COLORS.ink, 1);
+    button.fillRoundedRect(665, 33, 120, 65, 21).strokeRoundedRect(665, 33, 120, 65, 21);
+    this.add
+      .text(725, 55, 'ずかん', {
+        fontFamily: GAME_FONT,
+        color: '#fff7d0',
+        fontSize: '18px',
+        fontStyle: 'bold',
+      })
+      .setOrigin(0.5);
+    this.add
+      .text(725, 82, `${collection.recovered}/${collection.total}`, {
+        fontFamily: GAME_FONT,
+        color: '#fff7d0',
+        fontSize: '14px',
+      })
+      .setOrigin(0.5);
+  }
+
   private bindInput(island: IslandDefinition): void {
     const state = loadState();
     this.cleanupInput = addGameTapListener(this.game.canvas, ({ x, y }) => {
@@ -170,6 +199,12 @@ export class IslandMapScene extends Phaser.Scene {
         this.leaving = true;
         this.cleanupInput?.();
         this.scene.start('IslandSelect');
+        return;
+      }
+      if (x >= 650 && y <= 115) {
+        this.leaving = true;
+        this.cleanupInput?.();
+        this.scene.start('Collection', { backScene: 'IslandMap', islandId: this.islandId });
         return;
       }
       const index = island.stages.findIndex((_, stageIndex) => {

@@ -7,6 +7,7 @@ import { addWorldBackground } from '../assets/world-image-library';
 import { enterSceneAudio, playSfx } from '../audio/director';
 import { COLORS, GAME_FONT, GAME_WIDTH } from '../constants';
 import { ChoiceQType } from '../qtypes/ChoiceQType';
+import { getStageCollectionProgress, loadState, recordCurriculumAnswer } from '../save/state';
 
 export class QuizScene extends Phaser.Scene {
   private islandId = 'g1-moji';
@@ -20,6 +21,7 @@ export class QuizScene extends Phaser.Scene {
   private choiceType?: ChoiceQType;
   private feedback?: Phaser.GameObjects.Text;
   private nextTimer?: number;
+  private recoveredItemIds: string[] = [];
 
   constructor() {
     super('Quiz');
@@ -39,9 +41,15 @@ export class QuizScene extends Phaser.Scene {
       ?.stages.find((candidate) => candidate.id === this.stageId);
     if (!stage) throw new Error(`ステージが見つかりません: ${this.stageId}`);
     if (!stage.gen) throw new Error('このステージの問題はまだ準備中です。');
+    const collectionProgress = getStageCollectionProgress(stage.id, loadState());
     enterSceneAudio(this, stage.id.endsWith('-boss') ? 'boss' : 'quiz');
     this.questions = questionGenerators[stage.gen](
-      { stageId: stage.id, hira, grade1 },
+      {
+        stageId: stage.id,
+        hira,
+        grade1,
+        missingItemIds: collectionProgress.missingItemIds,
+      },
       stage.n,
       Date.now(),
     );
@@ -49,6 +57,7 @@ export class QuizScene extends Phaser.Scene {
     this.score = 0;
     this.combo = 0;
     this.answering = false;
+    this.recoveredItemIds = [];
     this.drawFrame(stage.name);
     this.feedback = this.add
       .text(GAME_WIDTH / 2, 945, 'えらんでね', {
@@ -133,12 +142,22 @@ export class QuizScene extends Phaser.Scene {
     this.answering = true;
     this.choiceType?.reveal(selected, question.answer);
     const correct = selected === question.answer;
+    const collectionResult = recordCurriculumAnswer(question.curriculumItemIds, correct);
+    this.recoveredItemIds.push(...collectionResult.newlyRecovered);
     if (correct) {
       this.score += 1;
       this.combo += 1;
       playSfx(this, this.combo >= 3 ? 'combo' : 'correct');
+      const recoveredText =
+        collectionResult.newlyRecovered.length > 0
+          ? ` ${collectionResult.newlyRecovered.length}こ とりもどした!`
+          : '';
       this.feedback
-        ?.setText(this.combo >= 2 ? `せいかい! ${this.combo}れんぞく!` : 'せいかい!')
+        ?.setText(
+          this.combo >= 2
+            ? `せいかい! ${this.combo}れんぞく!${recoveredText}`
+            : `せいかい!${recoveredText}`,
+        )
         .setColor('#367151');
       this.releaseStars(CHOICE_X(selected), CHOICE_Y(selected));
     } else {
@@ -226,6 +245,7 @@ export class QuizScene extends Phaser.Scene {
       islandId: this.islandId,
       stageId: this.stageId,
       treasure: stage?.treasure ?? 'ひかりの ひらがなたま',
+      recoveredItemIds: [...new Set(this.recoveredItemIds)],
     });
   }
 

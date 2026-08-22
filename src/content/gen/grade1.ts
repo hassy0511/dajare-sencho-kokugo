@@ -5,6 +5,8 @@ import type {
   KanjiGroup,
   MojiChoiceItem,
 } from '../../types/content';
+import { curriculumIdsInText, curriculumItemsForStage } from '../curriculum';
+import { selectByCoverage } from './coverage';
 import { createSeededRng, shuffled } from './rng';
 
 interface Candidate {
@@ -26,13 +28,16 @@ export function makeGrade1Quiz(
   hira: HiraWordPool,
   count: number,
   seed: number,
+  priorityIds: readonly string[] = [],
 ): ChoiceQuestion[] {
   const rng = createSeededRng(seed);
   const candidates = candidatesForStage(stageId, bank, hira);
   if (count > candidates.length) {
     throw new Error(`${stageId}は${count}問に対して問題候補が不足しています。`);
   }
-  const selected = shuffled(candidates, rng).slice(0, count);
+  const selected = selectByCoverage(candidates, count, priorityIds, rng, (candidate) =>
+    candidateCurriculumIds(stageId, candidate),
+  );
   if (new Set(selected.map((item) => item.key)).size !== selected.length) {
     throw new Error(`${stageId}の問題keyが重複しています。`);
   }
@@ -65,7 +70,23 @@ function makeQuestion(
     choices,
     answer: choices.indexOf(item.correct),
     explanation: item.explanation,
+    curriculumItemIds: candidateCurriculumIds(stageId, item),
   };
+}
+
+function candidateCurriculumIds(stageId: string, item: Candidate): string[] {
+  const required = curriculumItemsForStage(stageId);
+  if (required.length === 0) return [];
+  const kind = required[0]?.kind;
+  if (kind === 'katakana') return curriculumIdsInText('katakana', item.correct);
+  if (kind === 'hiragana') return curriculumIdsInText('hiragana', item.correct);
+  if (kind === 'kanji') {
+    const match = required.find(
+      (candidate) => candidate.display === item.emphasis || candidate.display === item.correct,
+    );
+    return match ? [match.id] : [];
+  }
+  return required.map((candidate) => candidate.id);
 }
 
 function candidatesForStage(stageId: string, bank: Grade1Bank, hira: HiraWordPool): Candidate[] {

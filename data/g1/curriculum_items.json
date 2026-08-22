@@ -1,0 +1,201 @@
+{
+  "version": 1,
+  "hiragana": [
+    "あ",
+    "い",
+    "う",
+    "え",
+    "お",
+    "か",
+    "き",
+    "く",
+    "け",
+    "こ",
+    "さ",
+    "し",
+    "す",
+    "せ",
+    "そ",
+    "た",
+    "ち",
+    "つ",
+    "て",
+    "と",
+    "な",
+    "に",
+    "ぬ",
+    "ね",
+    "の",
+    "は",
+    "ひ",
+    "ふ",
+    "へ",
+    "ほ",
+    "ま",
+    "み",
+    "む",
+    "め",
+    "も",
+    "や",
+    "ゆ",
+    "よ",
+    "ら",
+    "り",
+    "る",
+    "れ",
+    "ろ",
+    "わ",
+    "を",
+    "ん"
+  ],
+  "katakana": [
+    "ア",
+    "イ",
+    "ウ",
+    "エ",
+    "オ",
+    "カ",
+    "キ",
+    "ク",
+    "ケ",
+    "コ",
+    "サ",
+    "シ",
+    "ス",
+    "セ",
+    "ソ",
+    "タ",
+    "チ",
+    "ツ",
+    "テ",
+    "ト",
+    "ナ",
+    "ニ",
+    "ヌ",
+    "ネ",
+    "ノ",
+    "ハ",
+    "ヒ",
+    "フ",
+    "ヘ",
+    "ホ",
+    "マ",
+    "ミ",
+    "ム",
+    "メ",
+    "モ",
+    "ヤ",
+    "ユ",
+    "ヨ",
+    "ラ",
+    "リ",
+    "ル",
+    "レ",
+    "ロ",
+    "ワ",
+    "ヲ",
+    "ン"
+  ],
+  "concepts": [
+    {
+      "stageId": "g1-moji-dakuon",
+      "display": "だくてん・まる",
+      "detail": "てんてんと まるの つく もじ"
+    },
+    { "stageId": "g1-moji-sokuon", "display": "ちいさい「っ」", "detail": "つまる おとの しるし" },
+    { "stageId": "g1-moji-chouon", "display": "のばす おと・ん", "detail": "のばす おとと「ん」" },
+    {
+      "stageId": "g1-moji-youon",
+      "display": "ちいさい「ゃゅょ」",
+      "detail": "おとを つなぐ ちいさい もじ"
+    },
+    {
+      "stageId": "g1-kanji-musubi",
+      "display": "かんじと よみ",
+      "detail": "かんじと よみを むすぶ ちから"
+    },
+    { "stageId": "g1-kanji-kakusu", "display": "かくすう", "detail": "かんじを かく せんの かず" },
+    {
+      "stageId": "g1-kanji-hori",
+      "display": "よみさがし",
+      "detail": "よみから かんじを みつける ちから"
+    },
+    {
+      "stageId": "g1-kotoba-nakama",
+      "display": "なかまことば",
+      "detail": "ことばを なかまに わける カギ"
+    },
+    { "stageId": "g1-kotoba-kazoe", "display": "かぞえかた", "detail": "ものに あう かぞえかた" },
+    {
+      "stageId": "g1-kotoba-teinei",
+      "display": "ていねいことば",
+      "detail": "ていねいに はなす ことば"
+    },
+    {
+      "stageId": "g1-kotoba-daredou",
+      "display": "だれが・どうした",
+      "detail": "ぶんの ふたつの はしら"
+    },
+    {
+      "stageId": "g1-kotoba-yousu",
+      "display": "ようすことば",
+      "detail": "ようすを つたえる ことば"
+    },
+    {
+      "stageId": "g1-kotoba-shiritori",
+      "display": "しりとり",
+      "detail": "さいごの おとを つなぐ カギ"
+    },
+    {
+      "stageId": "g1-yomi-dare",
+      "display": "だれ",
+      "detail": "おはなしの しゅじんこうを みつける しるし"
+    },
+    {
+      "stageId": "g1-yomi-nani",
+      "display": "なに・どこ",
+      "detail": "したことと ばしょを みつける しるし"
+    },
+    {
+      "stageId": "g1-yomi-junban",
+      "display": "おはなしの じゅんばん",
+      "detail": "できごとの じゅんばんを よむ しるし"
+    },
+    {
+      "stageId": "g1-yomi-kotoba",
+      "display": "だいじな ことば",
+      "detail": "おはなしの カギを みつける しるし"
+    },
+    {
+      "stageId": "g1-yomi-mukashi",
+      "display": "むかしばなし",
+      "detail": "むかしから つたわる おはなし"
+    },
+    {
+      "stageId": "g1-yomi-nagabun",
+      "display": "ながい おはなし",
+      "detail": "いくつもの ぶんを つなげて よむ しるし"
+    },
+    {
+      "stageId": "g1-kaki-kumitate",
+      "display": "ぶんの くみたて",
+      "detail": "ことばを じゅんばんに ならべる どうぐ"
+    },
+    { "stageId": "g1-kaki-teniwoha", "display": "は・へ・を", "detail": "ことばを つなぐ どうぐ" },
+    {
+      "stageId": "g1-kaki-kutouten",
+      "display": "まる・てん",
+      "detail": "ぶんを よみやすくする どうぐ"
+    },
+    {
+      "stageId": "g1-kaki-junsaku",
+      "display": "できごとの じゅんばん",
+      "detail": "じゅんばんに かく どうぐ"
+    },
+    {
+      "stageId": "g1-kaki-naoshi",
+      "display": "よみかえし",
+      "detail": "ぶんを もっと よくする どうぐ"
+    }
+  ]
+}
