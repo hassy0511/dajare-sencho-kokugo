@@ -292,6 +292,12 @@ test('2年生の海へ入り、意味からカタカナ語を選ぶ最初のス�
   await expect(shell).toHaveAttribute('data-scene', 'challenge-story');
   await page.screenshot({ path: testInfo.outputPath('grade2-challenge.png'), fullPage: true });
   await tapGamePoint(page, canvas, 405, 910);
+  await expect.poll(() => page.evaluate(() => window.__DSK_APP__?.storyPage)).toBe(1);
+  await page.screenshot({
+    path: testInfo.outputPath('grade2-challenge-uragaeru.png'),
+    fullPage: true,
+  });
+  await tapGamePoint(page, canvas, 405, 910);
   await tapGamePoint(page, canvas, 405, 910);
   await tapGamePoint(page, canvas, 405, 910);
   await expect(shell).toHaveAttribute('data-scene', 'island-select');

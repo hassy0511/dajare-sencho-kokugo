@@ -123,7 +123,7 @@ export interface WordImageLibrary {
   items: WordImageAsset[];
 }
 
-export type CharacterImageRole = 'dajare-sencho' | 'sumizo';
+export type CharacterImageRole = 'dajare-sencho' | 'sumizo' | 'uragaeru';
 export type CharacterImageExpression = 'normal' | 'angry' | 'oops';
 
 export interface CharacterImageAsset {
@@ -200,9 +200,11 @@ export interface IslandDefinition {
   stages: StageDefinition[];
 }
 
+export type StoryRole = CharacterImageRole | 'buddy';
+
 export interface StoryPage {
   speaker: string;
-  role: 'dajare-sencho' | 'sumizo' | 'buddy';
+  role: StoryRole;
   text: string;
 }
 

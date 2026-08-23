@@ -99,9 +99,9 @@ describe('ひらがな清音の問題生成', () => {
     expect(library.generator.model).toBe('Images 2.0');
     expect(library.generator.styleGuide).toBe('art/prompts/character-mascot-style.md');
     expect(existsSync(resolve(library.generator.styleGuide))).toBe(true);
-    expect(library.items).toHaveLength(2);
+    expect(library.items).toHaveLength(3);
     expect(new Set(library.items.map((item) => item.role))).toEqual(
-      new Set(['dajare-sencho', 'sumizo']),
+      new Set(['dajare-sencho', 'sumizo', 'uragaeru']),
     );
 
     for (const asset of library.items) {
@@ -315,6 +315,15 @@ describe('canonical character name', () => {
     expect(sea.challenge[0]).toMatchObject({
       speaker: 'ダジャーレせんちょう',
       role: 'dajare-sencho',
+    });
+  });
+
+  it('2年生の挑戦状に承認済みのウラガエルが登場する', () => {
+    const sea = loadSea('g2');
+    expect(sea.challenge).toContainEqual({
+      speaker: 'ウラガエル',
+      role: 'uragaeru',
+      text: expect.stringContaining('カエルだけに な!'),
     });
   });
 });

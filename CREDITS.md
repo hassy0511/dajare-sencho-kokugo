@@ -27,7 +27,7 @@ The audio is generated deterministically as mono 16-bit PCM at 22.05 kHz, then b
 - Prompt and word-to-file provenance: `data/g1/assets/word_images.json`
 - The images contain no third-party logos, text, or source artwork.
 
-- **ダジャーレせんちょう / スミゾー** — OpenAI Images 2.0で制作し、2026-07-23に開発者が正式採用
+- **ダジャーレせんちょう / スミゾー / ウラガエル** — OpenAI Images 2.0で制作。ダジャーレせんちょうとスミゾーは2026-07-23、ウラガエルは2026-08-23に開発者が正式採用
 - Original approved assets: `art/source/characters/*.png`
 - Runtime assets: `public/assets/images/characters/*.png`
 - Approval and file provenance: `data/assets/character_images.json`

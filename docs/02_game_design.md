@@ -37,6 +37,8 @@
 
 スミゾーの正式normal画像は `public/assets/images/characters/sumizo-normal.png`。原本・承認日はキャラクター画像台帳で管理する。
 
+ウラガエルの正式normal画像は `public/assets/images/characters/uragaeru-normal.png`。2026-08-23にA案を正式採用し、原本・承認日はキャラクター画像台帳で管理する。
+
 ## 3. ダジャレ品質基準(全セリフ必須・前作 concept_v6 §2 を継承)
 
 **セリフのダジャレは以下4基準をすべて満たすこと。校正時は一覧表で機械的に確認する。**

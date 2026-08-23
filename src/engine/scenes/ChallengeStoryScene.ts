@@ -43,7 +43,7 @@ export class ChallengeStoryScene extends Phaser.Scene {
     background.fillStyle(COLORS.cream).lineStyle(6, COLORS.ink, 1);
     background.fillRoundedRect(45, 55, 720, 915, 42).strokeRoundedRect(45, 55, 720, 915, 42);
     this.add
-      .text(405, 105, 'ダジャレかいぞくだんの ちょうせんじょう', {
+      .text(405, 105, 'ダジャーレかいぞくだんの ちょうせんじょう', {
         fontFamily: GAME_FONT,
         color: '#9b3f41',
         fontSize: '30px',
@@ -72,7 +72,9 @@ export class ChallengeStoryScene extends Phaser.Scene {
             ? '#9b3f41'
             : page.role === 'sumizo'
               ? '#60467d'
-              : '#176b72',
+              : page.role === 'uragaeru'
+                ? '#367151'
+                : '#176b72',
         fontSize: '27px',
         fontStyle: 'bold',
       })
@@ -142,7 +144,7 @@ export class ChallengeStoryScene extends Phaser.Scene {
       shell.dataset.inputReady = 'true';
     }
     if (status)
-      status.textContent = `${loadSea(this.seaId).name}への ダジャレかいぞくだんの ちょうせんじょうです`;
+      status.textContent = `${loadSea(this.seaId).name}への ダジャーレかいぞくだんの ちょうせんじょうです`;
     if (window.__DSK_APP__) {
       window.__DSK_APP__.scene = 'challenge-story';
       window.__DSK_APP__.storyPage = 0;

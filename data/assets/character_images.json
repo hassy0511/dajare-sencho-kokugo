@@ -24,6 +24,15 @@
       "source": "art/source/characters/sumizo-approved.png",
       "alt": "赤いバンダナを巻き、大きな筆を持った丸いスミイカのスミゾー",
       "approvedAt": "2026-07-23"
+    },
+    {
+      "key": "uragaeru",
+      "role": "uragaeru",
+      "expression": "normal",
+      "src": "assets/images/characters/uragaeru-normal.png",
+      "source": "art/source/characters/uragaeru-approved.png",
+      "alt": "小さな帽子と後ろ前の紺色コートを着て、長い舌を出しながら反対を指さす緑色のカエル、ウラガエル",
+      "approvedAt": "2026-08-23"
     }
   ]
 }

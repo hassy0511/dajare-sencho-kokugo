@@ -1,11 +1,12 @@
 import type Phaser from 'phaser';
 
+import type { StoryRole } from '../../types/content';
 import { characterImageTextureKey } from '../assets/character-image-library';
 import { COLORS } from '../constants';
 
 export function drawStoryPortrait(
   scene: Phaser.Scene,
-  role: 'dajare-sencho' | 'sumizo' | 'buddy',
+  role: StoryRole,
   x: number,
   y: number,
 ): Phaser.GameObjects.Container {

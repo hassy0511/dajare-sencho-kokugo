@@ -251,7 +251,7 @@ export const characterImageLibrarySchema = z.object({
     .array(
       z.object({
         key: z.string().min(1),
-        role: z.enum(['dajare-sencho', 'sumizo']),
+        role: z.enum(['dajare-sencho', 'sumizo', 'uragaeru']),
         expression: z.enum(['normal', 'angry', 'oops']),
         src: z.string().regex(/^assets\/images\/characters\/[a-z-]+\.png$/),
         source: z.string().regex(/^art\/source\/characters\/[a-z-]+\.png$/),
@@ -301,7 +301,7 @@ export const seaSchema = z.object({
     .array(
       z.object({
         speaker: z.string().min(1),
-        role: z.enum(['dajare-sencho', 'sumizo', 'buddy']),
+        role: z.enum(['dajare-sencho', 'sumizo', 'uragaeru', 'buddy']),
         text: z.string().min(1),
       }),
     )
