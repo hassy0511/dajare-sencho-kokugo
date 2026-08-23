@@ -30,6 +30,7 @@
     { "w": "へや", "visual": "room" },
     { "w": "ゆき", "visual": "snow" },
     { "w": "よる", "visual": "night" },
+    { "w": "えんぴつ", "visual": "pencil" },
     { "w": "れもん", "visual": "lemon" },
     { "w": "わに", "visual": "crocodile" }
   ],

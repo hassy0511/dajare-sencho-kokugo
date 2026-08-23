@@ -38,7 +38,7 @@ describe('ひらがな清音の問題生成', () => {
       sea.islands.flatMap((island) => island.stages).every((stage) => stage.gen !== null),
     ).toBe(true);
     const pool = loadHiraWordPool();
-    expect(pool.items).toHaveLength(30);
+    expect(pool.items).toHaveLength(31);
     expect(pool.dakuon).toHaveLength(8);
     expect(pool.sokuon).toHaveLength(8);
     expect(pool.chouon).toHaveLength(8);
@@ -119,13 +119,13 @@ describe('ひらがな清音の問題生成', () => {
     }
   });
 
-  it('画像ライブラリの30語が問題プールと1対1で対応し、実ファイルが存在する', () => {
+  it('画像ライブラリの31語が問題プールと1対1で対応し、実ファイルが存在する', () => {
     const pool = loadHiraWordPool();
     const library = loadWordImageLibrary();
     expect(library.generator.model).toBe('Images 2.0');
-    expect(library.items).toHaveLength(30);
-    expect(new Set(library.items.map((item) => item.key)).size).toBe(30);
-    expect(new Set(library.items.map((item) => item.src)).size).toBe(30);
+    expect(library.items).toHaveLength(31);
+    expect(new Set(library.items.map((item) => item.key)).size).toBe(31);
+    expect(new Set(library.items.map((item) => item.src)).size).toBe(31);
 
     for (const poolItem of pool.items) {
       const asset = library.items.find((item) => item.key === poolItem.visual);
@@ -198,6 +198,9 @@ describe('ひらがな清音の問題生成', () => {
 
   it('ひらがな46字の必須観点を、文字と絵を往復する別問題で出題できる', () => {
     const pool = loadHiraWordPool();
+    const wordsWithN = pool.items.map((item) => item.w).filter((word) => word.includes('ん'));
+    expect(wordsWithN.some((word) => word.endsWith('ん'))).toBe(true);
+    expect(wordsWithN.some((word) => !word.endsWith('ん'))).toBe(true);
     const items = loadCurriculumItems().filter(
       (item) => item.stageId === 'g1-moji-seion' && item.kind === 'hiragana',
     );

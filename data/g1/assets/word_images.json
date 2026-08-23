@@ -211,6 +211,13 @@
       "subjectPrompt": "One whole bright yellow lemon with one small green leaf."
     },
     {
+      "key": "pencil",
+      "word": "えんぴつ",
+      "src": "assets/images/words/pencil.png",
+      "alt": "きいろい えんぴつ",
+      "subjectPrompt": "One simple yellow wooden pencil with a pink eraser and a graphite tip, placed diagonally."
+    },
+    {
       "key": "crocodile",
       "word": "わに",
       "src": "assets/images/words/crocodile.png",
