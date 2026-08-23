@@ -11,7 +11,68 @@ const sea = JSON.parse(
   readFileSync(new URL('../data/g1/sea.json', import.meta.url), 'utf8'),
 ) as SeaDefinition;
 const grade1StageIds = sea.islands.flatMap((island) => island.stages.map((stage) => stage.id));
+const curriculum = JSON.parse(
+  readFileSync(new URL('../data/g1/curriculum_items.json', import.meta.url), 'utf8'),
+) as {
+  hiragana: string[];
+  katakana: string[];
+  concepts: { stageId: string }[];
+};
+const grade1Bank = JSON.parse(
+  readFileSync(new URL('../data/g1/pools/grade1_bank.json', import.meta.url), 'utf8'),
+) as { kanji: { char: string; group: 'nature' | 'body' | 'number' | 'school' | 'action' }[] };
+const kanjiStageByGroup = {
+  nature: 'g1-kanji-shizen',
+  body: 'g1-kanji-karada',
+  number: 'g1-kanji-kazu',
+  school: 'g1-kanji-gakko',
+  action: 'g1-kanji-muki',
+} as const;
+const grade1CurriculumItems = [
+  ...curriculum.hiragana.map((character) => ({
+    id: `g1-hira-${character}`,
+    stageId: 'g1-moji-seion',
+  })),
+  ...curriculum.katakana.map((character) => ({
+    id: `g1-kata-${character}`,
+    stageId: 'g1-moji-katakana',
+  })),
+  ...grade1Bank.kanji.map((item) => ({
+    id: `g1-kanji-${item.char}`,
+    stageId: kanjiStageByGroup[item.group],
+  })),
+  ...curriculum.concepts.map((concept) => ({
+    id: `g1-concept-${concept.stageId}`,
+    stageId: concept.stageId,
+  })),
+];
 const APP_BASE = '/dajare-sencho-kokugo/';
+
+function completedGrade1State(stageIds: readonly string[]) {
+  const clearedStageIds = new Set(stageIds);
+  return {
+    v: 3,
+    stages: Object.fromEntries(
+      stageIds.map((stageId) => [stageId, { bestScore: 8, bestStars: 3, cleared: true }]),
+    ),
+    collection: Object.fromEntries(
+      grade1CurriculumItems
+        .filter((item) => clearedStageIds.has(item.stageId))
+        .map((item) => [
+          item.id,
+          {
+            recovered: true,
+            firstTryCorrect: 1,
+            correctCount: 1,
+            missCount: 0,
+            lastAnsweredAt: '2026-08-23T00:00:00.000Z',
+          },
+        ]),
+    ),
+    seen: { 'challenge:g1': true },
+    settings: { bgm: true, sfx: true, reducedMotion: false },
+  };
+}
 
 async function startUpdateTestServer(): Promise<{
   activateUpdate: () => void;
@@ -328,6 +389,55 @@ test('2年生の海へ入り、意味からカタカナ語を選ぶ最初のス�
   expect(saved).toContain('g2-concept-g2-moji-gairaigo');
 });
 
+test('v2で自動コンプリートされた1年生図鑑を未回収へ戻す', async ({ page }, testInfo) => {
+  const autoCollection = Object.fromEntries(
+    grade1CurriculumItems.map((item) => [
+      item.id,
+      {
+        recovered: true,
+        firstTryCorrect: 1,
+        correctCount: 1,
+        missCount: 0,
+        lastAnsweredAt: '1970-01-01T00:00:00.000Z',
+      },
+    ]),
+  );
+  await page.addInitScript(
+    ({ collection, stageIds }) => {
+      localStorage.setItem(
+        'dsk_state',
+        JSON.stringify({
+          v: 2,
+          stages: Object.fromEntries(
+            stageIds.map((stageId) => [stageId, { bestScore: 8, bestStars: 3, cleared: true }]),
+          ),
+          collection,
+          seen: { 'challenge:g1': true },
+          settings: { bgm: true, sfx: true, reducedMotion: false },
+        }),
+      );
+    },
+    { collection: autoCollection, stageIds: grade1StageIds },
+  );
+  await page.goto('./');
+
+  const shell = page.locator('#game-shell');
+  const canvas = page.locator('canvas');
+  await expect(shell).toHaveAttribute('data-ready', 'true');
+  await tapGamePoint(page, canvas, 405, 882);
+  await expect(shell).toHaveAttribute('data-scene', 'sea-select');
+  await tapGamePoint(page, canvas, 405, 315);
+  await expect(shell).toHaveAttribute('data-scene', 'island-select');
+  await tapGamePoint(page, canvas, 405, 1005);
+  await expect(shell).toHaveAttribute('data-scene', 'collection');
+  await expect(shell).toHaveAttribute('data-collection-total', '96');
+  await expect(shell).toHaveAttribute('data-collection-recovered', '0');
+  await page.screenshot({
+    path: testInfo.outputPath('v2-auto-collection-reset.png'),
+    fullPage: true,
+  });
+});
+
 test('おとのオン・オフを保存し、再読み込み後も引き継ぐ', async ({ page }, testInfo) => {
   await page.goto('./');
 
@@ -429,15 +539,10 @@ for (const stageCase of additionalStageCases) {
   test(`${stageCase.id}を規定問題数クリアできる`, async ({ page }, testInfo) => {
     test.setTimeout(120_000);
     await page.emulateMedia({ reducedMotion: 'reduce' });
-    await page.addInitScript((clearedStageIds) => {
-      const stages = Object.fromEntries(
-        clearedStageIds.map((stageId) => [stageId, { bestScore: 8, bestStars: 3, cleared: true }]),
-      );
-      localStorage.setItem(
-        'dsk_state',
-        JSON.stringify({ v: 1, stages, seen: { 'challenge:g1': true } }),
-      );
-    }, stageCase.cleared);
+    await page.addInitScript(
+      (state) => localStorage.setItem('dsk_state', JSON.stringify(state)),
+      completedGrade1State(stageCase.cleared),
+    );
     await page.goto('./');
 
     const shell = page.locator('#game-shell');
@@ -466,16 +571,8 @@ test('全41ステージをクリアすると1年生の海のエンディング�
   expect(grade1StageIds).toHaveLength(41);
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.addInitScript(
-    (stageIds) => {
-      const stages = Object.fromEntries(
-        stageIds.map((stageId) => [stageId, { bestScore: 8, bestStars: 3, cleared: true }]),
-      );
-      localStorage.setItem(
-        'dsk_state',
-        JSON.stringify({ v: 1, stages, seen: { 'challenge:g1': true } }),
-      );
-    },
-    grade1StageIds.filter((stageId) => stageId !== 'g1-kaki-boss'),
+    (state) => localStorage.setItem('dsk_state', JSON.stringify(state)),
+    completedGrade1State(grade1StageIds.filter((stageId) => stageId !== 'g1-kaki-boss')),
   );
   await page.goto('./');
 
@@ -510,7 +607,7 @@ test('横長画面でもCanvas全体が収まり、下部の操作へ進める',
   await page.addInitScript(() => {
     localStorage.setItem(
       'dsk_state',
-      JSON.stringify({ v: 1, stages: {}, seen: { 'challenge:g1': true } }),
+      JSON.stringify({ v: 3, stages: {}, collection: {}, seen: { 'challenge:g1': true } }),
     );
   });
   await page.goto('./');

@@ -28,7 +28,7 @@ export interface GameSettings {
 }
 
 export interface SaveState {
-  v: 2;
+  v: 3;
   stages: Record<string, StageProgress>;
   collection: Record<string, CollectionProgress>;
   seen: Record<string, boolean>;
@@ -42,9 +42,19 @@ interface SaveStateV1 {
   settings?: Partial<GameSettings>;
 }
 
+interface SaveStateV2 {
+  v: 2;
+  stages?: Record<string, StageProgress>;
+  collection?: Partial<Record<string, Partial<CollectionProgress>>>;
+  seen?: Record<string, boolean>;
+  settings?: Partial<GameSettings>;
+}
+
+const AUTO_MIGRATION_TIMESTAMP = new Date(0).toISOString();
+
 export function createDefaultState(): SaveState {
   return {
-    v: 2,
+    v: 3,
     stages: {},
     collection: {},
     seen: {},
@@ -56,13 +66,14 @@ export function loadState(storage: Pick<Storage, 'getItem'> = localStorage): Sav
   try {
     const value = storage.getItem(SAVE_KEY);
     if (!value) return createDefaultState();
-    const parsed = JSON.parse(value) as Partial<SaveState> | SaveStateV1;
+    const parsed = JSON.parse(value) as Partial<SaveState> | SaveStateV1 | SaveStateV2;
     if (parsed.v === 1) return migrateV1(parsed);
-    if (parsed.v !== 2 || typeof parsed.stages !== 'object' || parsed.stages === null) {
+    if (parsed.v === 2) return migrateV2(parsed);
+    if (parsed.v !== 3 || typeof parsed.stages !== 'object' || parsed.stages === null) {
       return createDefaultState();
     }
     return {
-      v: 2,
+      v: 3,
       stages: parsed.stages as Record<string, StageProgress>,
       collection: normalizeCollection(parsed.collection),
       seen: normalizeSeen(parsed.seen),
@@ -74,28 +85,67 @@ export function loadState(storage: Pick<Storage, 'getItem'> = localStorage): Sav
 }
 
 function migrateV1(oldState: SaveStateV1): SaveState {
-  const stages = oldState.stages ?? {};
-  const collection: Record<string, CollectionProgress> = {};
-  const migratedAt = new Date(0).toISOString();
-  Object.entries(stages).forEach(([stageId, progress]) => {
-    if (!progress.cleared) return;
-    curriculumItemsForStage(stageId).forEach((item) => {
-      collection[item.id] = {
-        recovered: true,
-        firstTryCorrect: 1,
-        correctCount: 1,
-        missCount: 0,
-        lastAnsweredAt: migratedAt,
-      };
-    });
-  });
+  const stages = resetStagesWithRequiredItems(oldState.stages ?? {});
   return {
-    v: 2,
+    v: 3,
     stages,
+    collection: {},
+    seen: normalizeSeen(oldState.seen),
+    settings: normalizeSettings(oldState.settings),
+  };
+}
+
+function migrateV2(oldState: SaveStateV2): SaveState {
+  const collection = normalizeCollection(oldState.collection);
+  const autoRecoveredItemIds = new Set(
+    Object.entries(collection)
+      .filter(([, progress]) => isAutoMigratedProgress(progress))
+      .map(([itemId]) => itemId),
+  );
+  autoRecoveredItemIds.forEach((itemId) => delete collection[itemId]);
+  return {
+    v: 3,
+    stages: resetStagesContainingItems(oldState.stages ?? {}, autoRecoveredItemIds),
     collection,
     seen: normalizeSeen(oldState.seen),
     settings: normalizeSettings(oldState.settings),
   };
+}
+
+function isAutoMigratedProgress(progress: CollectionProgress): boolean {
+  return (
+    progress.recovered === true &&
+    progress.firstTryCorrect === 1 &&
+    progress.correctCount === 1 &&
+    progress.missCount === 0 &&
+    progress.lastAnsweredAt === AUTO_MIGRATION_TIMESTAMP
+  );
+}
+
+function resetStagesWithRequiredItems(
+  stages: Record<string, StageProgress>,
+): Record<string, StageProgress> {
+  return Object.fromEntries(
+    Object.entries(stages).map(([stageId, progress]) => [
+      stageId,
+      curriculumItemsForStage(stageId).length > 0 ? { ...progress, cleared: false } : progress,
+    ]),
+  );
+}
+
+function resetStagesContainingItems(
+  stages: Record<string, StageProgress>,
+  itemIds: ReadonlySet<string>,
+): Record<string, StageProgress> {
+  if (itemIds.size === 0) return stages;
+  return Object.fromEntries(
+    Object.entries(stages).map(([stageId, progress]) => [
+      stageId,
+      curriculumItemsForStage(stageId).some((item) => itemIds.has(item.id))
+        ? { ...progress, cleared: false }
+        : progress,
+    ]),
+  );
 }
 
 function normalizeCollection(

@@ -11,7 +11,7 @@ import { curriculumItemsForStage } from '../src/content/curriculum';
 
 function stateWithClears(...stageIds: string[]): SaveState {
   return {
-    v: 2,
+    v: 3,
     stages: Object.fromEntries(
       stageIds.map((stageId) => [stageId, { bestScore: 8, bestStars: 3, cleared: true }]),
     ),
