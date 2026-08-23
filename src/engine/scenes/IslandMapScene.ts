@@ -138,11 +138,11 @@ export class IslandMapScene extends Phaser.Scene {
           position.y + 25,
           cleared
             ? collection.total > 0
-              ? `${collection.total}こ とりかえした`
+              ? `${collection.total}こ コンプリート`
               : 'クリアずみ'
             : available
               ? collection.total > 0
-                ? `${collection.recovered} / ${collection.total} こ`
+                ? `${collection.mastered} / ${collection.total} こ`
                 : 'あそべるよ!'
               : access === 'locked'
                 ? 'まえを クリアで ひらく'
@@ -186,7 +186,7 @@ export class IslandMapScene extends Phaser.Scene {
       })
       .setOrigin(0.5);
     this.add
-      .text(725, 82, `${collection.recovered}/${collection.total}`, {
+      .text(725, 82, `${collection.mastered}/${collection.total}`, {
         fontFamily: GAME_FONT,
         color: '#fff7d0',
         fontSize: '14px',

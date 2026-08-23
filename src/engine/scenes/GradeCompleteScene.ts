@@ -22,7 +22,7 @@ const COMPLETE_PAGES: StoryPage[] = [
   {
     speaker: 'コンパス',
     role: 'buddy',
-    text: 'もじも かんじも ことばの わざも\n196この たからを ぜんぶ とりかえした!\nずかんも かんせい!\n1ねんの うみに ことばが もどったよ!',
+    text: 'もじも かんじも ことばの わざも\n197この たからを ぜんぶ コンプリート!\nずかんも かんせい!\n1ねんの うみに ことばが もどったよ!',
   },
 ];
 
@@ -151,7 +151,7 @@ export class GradeCompleteScene extends Phaser.Scene {
       shell.dataset.inputReady = 'true';
     }
     if (status)
-      status.textContent = '1ねんせいの 41ステージと 196この たからを ぜんぶ クリアしました';
+      status.textContent = '1ねんせいの 41ステージと 197この たからを ぜんぶ クリアしました';
     if (window.__DSK_APP__) {
       window.__DSK_APP__.ready = true;
       window.__DSK_APP__.scene = 'grade-complete';

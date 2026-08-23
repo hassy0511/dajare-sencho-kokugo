@@ -1,13 +1,13 @@
 import Phaser from 'phaser';
 
-import { curriculumItemsForIsland } from '../../content/curriculum';
+import { curriculumFacetRequirements, curriculumItemsForIsland } from '../../content/curriculum';
 import { loadSea } from '../../content/loader';
 import type { CurriculumItem, SeaId } from '../../types/content';
 import { addWorldBackground } from '../assets/world-image-library';
 import { enterSceneAudio, playSfx } from '../audio/director';
 import { COLORS, GAME_FONT } from '../constants';
 import { addGameTapListener } from '../input/logical-input';
-import { getIslandCollectionProgress, loadState } from '../save/state';
+import { getIslandCollectionProgress, isCurriculumItemComplete, loadState } from '../save/state';
 
 const PAGE_SIZE = 20;
 
@@ -116,31 +116,41 @@ export class CollectionScene extends Phaser.Scene {
     const items = curriculumItemsForIsland(category.islandId);
     const pageItems = items.slice(this.page * PAGE_SIZE, (this.page + 1) * PAGE_SIZE);
     this.add
-      .text(405, 240, `${progress.recovered} / ${progress.total} こ とりかえした`, {
+      .text(405, 240, `${progress.mastered} / ${progress.total} こ コンプリート`, {
         fontFamily: GAME_FONT,
         color: progress.complete ? '#367151' : '#176b72',
         fontSize: '25px',
         fontStyle: 'bold',
       })
       .setOrigin(0.5);
-    pageItems.forEach((item, index) =>
+    pageItems.forEach((item, index) => {
+      const itemProgress = state.collection[item.id];
       this.drawItem(
         item,
         index,
-        state.collection[item.id]?.recovered,
+        itemProgress?.recovered,
+        isCurriculumItemComplete(item.id, itemProgress),
         item.id === this.selectedItemId,
-      ),
-    );
+        itemProgress?.facets ?? {},
+      );
+    });
   }
 
-  private drawItem(item: CurriculumItem, index: number, recovered = false, selected = false): void {
+  private drawItem(
+    item: CurriculumItem,
+    index: number,
+    recovered = false,
+    mastered = false,
+    selected = false,
+    facets: Record<string, boolean> = {},
+  ): void {
     const column = index % 5;
     const row = Math.floor(index / 5);
     const x = 105 + column * 150;
     const y = 335 + row * 140;
     const card = this.add.graphics();
     card
-      .fillStyle(recovered ? 0xffefac : 0x5f6663)
+      .fillStyle(mastered ? 0xffefac : recovered ? 0xf2dfb6 : 0x5f6663)
       .lineStyle(selected ? 7 : 4, selected ? COLORS.coralDark : COLORS.ink, 1);
     card
       .fillRoundedRect(x - 62, y - 53, 124, 112, 22)
@@ -170,6 +180,18 @@ export class CollectionScene extends Phaser.Scene {
         })
         .setOrigin(0.5);
     }
+    const requirements = curriculumFacetRequirements(item);
+    if (recovered && requirements.length > 0) {
+      const cleared = requirements.filter((requirement) => facets[requirement.id] === true).length;
+      this.add
+        .text(x, y + 42, mastered ? 'できた!' : `${cleared}/${requirements.length}`, {
+          fontFamily: GAME_FONT,
+          color: mastered ? '#367151' : '#9b6a24',
+          fontSize: '13px',
+          fontStyle: 'bold',
+        })
+        .setOrigin(0.5);
+    }
   }
 
   private drawDetail(): void {
@@ -181,15 +203,25 @@ export class CollectionScene extends Phaser.Scene {
           (candidate) => candidate.id === this.selectedItemId,
         )
       : undefined;
-    const recovered = item ? state.collection[item.id]?.recovered === true : false;
+    const itemProgress = item ? state.collection[item.id] : undefined;
+    const recovered = itemProgress?.recovered === true;
+    const mastered = item ? isCurriculumItemComplete(item.id, itemProgress) : false;
+    const requirements = item ? curriculumFacetRequirements(item) : [];
+    const facetDetail = requirements
+      .map(
+        (requirement) => `${itemProgress?.facets[requirement.id] ? '●' : '○'}${requirement.label}`,
+      )
+      .join(' / ');
     const detail = item
       ? recovered
-        ? `${item.display}  ${item.detail}  ずかんに とうろく ずみ!`
+        ? requirements.length > 0
+          ? `${item.display} / ${facetDetail} / ${mastered ? 'コンプリート!' : 'ちょうさちゅう'}`
+          : `${item.display}  ${item.detail}  ずかんに とうろく ずみ!`
         : 'まだ すみに かくれているよ。もんだいに せいかいして とりかえそう!'
       : 'カードを タップすると たからの せつめいが よめるよ';
     const panel = this.add.graphics();
     panel
-      .fillStyle(recovered ? 0xffefac : 0xe7dfc8)
+      .fillStyle(mastered ? 0xffefac : recovered ? 0xf2dfb6 : 0xe7dfc8)
       .lineStyle(3, COLORS.ink, 0.9)
       .fillRoundedRect(70, 822, 670, 68, 20)
       .strokeRoundedRect(70, 822, 670, 68, 20);
@@ -302,6 +334,7 @@ export class CollectionScene extends Phaser.Scene {
       shell.dataset.scene = 'collection';
       shell.dataset.collectionIsland = category.islandId;
       shell.dataset.collectionRecovered = String(progress.recovered);
+      shell.dataset.collectionMastered = String(progress.mastered);
       shell.dataset.collectionTotal = String(progress.total);
       if (this.selectedItemId) {
         const selected = curriculumItemsForIsland(category.islandId).find(
@@ -311,9 +344,15 @@ export class CollectionScene extends Phaser.Scene {
         shell.dataset.collectionItemRecovered = String(
           selected ? loadState().collection[selected.id]?.recovered === true : false,
         );
+        shell.dataset.collectionItemMastered = String(
+          selected
+            ? isCurriculumItemComplete(selected.id, loadState().collection[selected.id])
+            : false,
+        );
       } else {
         delete shell.dataset.collectionItem;
         delete shell.dataset.collectionItemRecovered;
+        delete shell.dataset.collectionItemMastered;
       }
       shell.dataset.inputReady = 'true';
     }
@@ -321,7 +360,7 @@ export class CollectionScene extends Phaser.Scene {
     if (status)
       status.textContent = this.selectedItemId
         ? `${shell?.dataset.collectionItem ?? 'たから'}の せつめいです`
-        : `${category.label}を ${progress.recovered}こ とりかえしました`;
+        : `${category.label}を ${progress.mastered}こ コンプリートしました`;
     if (window.__DSK_APP__) window.__DSK_APP__.scene = 'collection';
   }
 }

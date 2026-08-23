@@ -7,7 +7,11 @@ import { makeGrade1Quiz } from '../src/content/gen/grade1';
 import { makeGrade2Quiz } from '../src/content/gen/grade2';
 import { makeHiraSeionQuiz } from '../src/content/gen/hiraSeion';
 import { makeMojiChoiceQuiz } from '../src/content/gen/mojiChoice';
-import { loadCurriculumItems } from '../src/content/curriculum';
+import {
+  curriculumConceptId,
+  curriculumFacetRequirements,
+  loadCurriculumItems,
+} from '../src/content/curriculum';
 import {
   loadCharacterImageLibrary,
   loadCurriculumDefinition,
@@ -34,7 +38,7 @@ describe('ひらがな清音の問題生成', () => {
       sea.islands.flatMap((island) => island.stages).every((stage) => stage.gen !== null),
     ).toBe(true);
     const pool = loadHiraWordPool();
-    expect(pool.items).toHaveLength(16);
+    expect(pool.items).toHaveLength(30);
     expect(pool.dakuon).toHaveLength(8);
     expect(pool.sokuon).toHaveLength(8);
     expect(pool.chouon).toHaveLength(8);
@@ -42,7 +46,7 @@ describe('ひらがな清音の問題生成', () => {
     const curriculum = loadCurriculumDefinition();
     expect(curriculum.hiragana).toHaveLength(46);
     expect(curriculum.katakana).toHaveLength(46);
-    expect(loadCurriculumItems()).toHaveLength(196);
+    expect(loadCurriculumItems()).toHaveLength(197);
     const bank = loadGrade1Bank();
     expect(bank.kanji).toHaveLength(80);
     expect(new Set(bank.kanji.map((item) => item.char)).size).toBe(80);
@@ -115,13 +119,13 @@ describe('ひらがな清音の問題生成', () => {
     }
   });
 
-  it('画像ライブラリの16語が問題プールと1対1で対応し、実ファイルが存在する', () => {
+  it('画像ライブラリの30語が問題プールと1対1で対応し、実ファイルが存在する', () => {
     const pool = loadHiraWordPool();
     const library = loadWordImageLibrary();
     expect(library.generator.model).toBe('Images 2.0');
-    expect(library.items).toHaveLength(16);
-    expect(new Set(library.items.map((item) => item.key)).size).toBe(16);
-    expect(new Set(library.items.map((item) => item.src)).size).toBe(16);
+    expect(library.items).toHaveLength(30);
+    expect(new Set(library.items.map((item) => item.key)).size).toBe(30);
+    expect(new Set(library.items.map((item) => item.src)).size).toBe(30);
 
     for (const poolItem of pool.items) {
       const asset = library.items.find((item) => item.key === poolItem.visual);
@@ -172,7 +176,7 @@ describe('ひらがな清音の問題生成', () => {
     }
   });
 
-  it('1000種類のseedで、絵の正解語を含む重複なし4択を10問生成する', () => {
+  it('1000種類のseedで、4択10問を重複なく生成する', () => {
     const pool = loadHiraWordPool();
     for (let seed = 0; seed < 1000; seed += 1) {
       const questions = makeHiraSeionQuiz(pool, 10, seed);
@@ -183,17 +187,102 @@ describe('ひらがな清音の問題生成', () => {
         expect(new Set(question.choices).size).toBe(4);
         expect(question.answer).toBeGreaterThanOrEqual(0);
         expect(question.answer).toBeLessThan(4);
-        const item = pool.items.find((candidate) => candidate.visual === question.visual);
-        expect(question.choices[question.answer]).toBe(item?.w);
+        if (question.choiceVisuals) {
+          expect(question.choiceVisuals).toHaveLength(4);
+          expect(new Set(question.choiceVisuals).size).toBe(4);
+        }
+        expect(question.curriculumEvidence?.length ?? 0).toBeLessThanOrEqual(1);
       });
     }
   });
 
-  it('未回収項目を優先すると、かな46字と漢字80字を必ず回収できる', () => {
+  it('ひらがな46字の必須観点を、文字と絵を往復する別問題で出題できる', () => {
+    const pool = loadHiraWordPool();
+    const items = loadCurriculumItems().filter(
+      (item) => item.stageId === 'g1-moji-seion' && item.kind === 'hiragana',
+    );
+    expect(items).toHaveLength(46);
+    for (const item of items) {
+      for (const requirement of curriculumFacetRequirements(item)) {
+        const evidence = { itemId: item.id, facet: requirement.id };
+        const [question] = makeHiraSeionQuiz(pool, 1, item.order, [], [evidence]);
+        expect(question?.curriculumEvidence).toEqual([evidence]);
+        expect(question?.curriculumItemIds).toEqual([item.id]);
+        if (requirement.id === 'hira-letter-to-word') {
+          expect(question?.emphasis).toBe(item.display);
+          expect(question?.choiceVisuals).toHaveLength(4);
+          expect(question?.choices[question.answer]).toContain(item.display);
+          question?.choices.forEach((choice, index) => {
+            if (index !== question.answer) expect(choice).not.toContain(item.display);
+          });
+        } else if (requirement.id === 'hira-word-to-letter') {
+          expect(question?.visual).toBeTruthy();
+          expect(question?.prompt).toContain('□');
+          expect(question?.choices[question.answer]).toBe(item.display);
+        } else {
+          expect(item.display).toBe('を');
+          expect(question?.choices[question.answer]).toBe('を');
+        }
+      }
+    }
+  });
+
+  it('ことば全体を読む問題は個別文字ではなく独立項目だけを回収する', () => {
+    const pool = loadHiraWordPool();
+    const conceptId = curriculumConceptId('g1-moji-seion');
+    const [question] = makeHiraSeionQuiz(pool, 1, 7, [conceptId]);
+    expect(question?.curriculumItemIds).toEqual([conceptId]);
+    expect(question?.curriculumEvidence).toBeUndefined();
+    expect(question?.emphasis).toBeTruthy();
+    expect(question?.choiceVisuals).toHaveLength(4);
+  });
+
+  it('未達観点を優先すると、ひらがな46字とことば読みを10回以内で出題できる', () => {
+    const hira = loadHiraWordPool();
+    const stageItems = loadCurriculumItems().filter((item) => item.stageId === 'g1-moji-seion');
+    const missingItemIds = new Set(stageItems.map((item) => item.id));
+    const missingEvidence = new Map(
+      stageItems.flatMap((item) =>
+        curriculumFacetRequirements(item).map((requirement) => {
+          const evidence = { itemId: item.id, facet: requirement.id };
+          return [`${evidence.itemId}:${evidence.facet}`, evidence] as const;
+        }),
+      ),
+    );
+    for (let session = 0; session < 10 && missingItemIds.size > 0; session += 1) {
+      const questions = makeHiraSeionQuiz(
+        hira,
+        10,
+        session,
+        [...missingItemIds],
+        [...missingEvidence.values()],
+      );
+      questions.forEach((question) => {
+        question.curriculumEvidence?.forEach((evidence) => {
+          missingEvidence.delete(`${evidence.itemId}:${evidence.facet}`);
+        });
+        if (question.curriculumItemIds.includes(curriculumConceptId('g1-moji-seion'))) {
+          missingItemIds.delete(curriculumConceptId('g1-moji-seion'));
+        }
+      });
+      stageItems.forEach((item) => {
+        const requirements = curriculumFacetRequirements(item);
+        if (
+          requirements.length > 0 &&
+          requirements.every((requirement) => !missingEvidence.has(`${item.id}:${requirement.id}`))
+        ) {
+          missingItemIds.delete(item.id);
+        }
+      });
+    }
+    expect([...missingEvidence.keys()]).toEqual([]);
+    expect([...missingItemIds]).toEqual([]);
+  });
+
+  it('未回収項目を優先すると、カタカナ46字と漢字80字を必ず出題できる', () => {
     const bank = loadGrade1Bank();
     const hira = loadHiraWordPool();
     for (const stageId of [
-      'g1-moji-seion',
       'g1-moji-katakana',
       'g1-kanji-shizen',
       'g1-kanji-karada',
@@ -207,10 +296,7 @@ describe('ひらがな清音の問題生成', () => {
           .map((item) => item.id),
       );
       for (let session = 0; session < 10 && missing.size > 0; session += 1) {
-        const questions =
-          stageId === 'g1-moji-seion'
-            ? makeHiraSeionQuiz(hira, 10, session, [...missing])
-            : makeGrade1Quiz(stageId, bank, hira, 10, session, [...missing]);
+        const questions = makeGrade1Quiz(stageId, bank, hira, 10, session, [...missing]);
         questions
           .flatMap((question) => question.curriculumItemIds)
           .forEach((id) => missing.delete(id));

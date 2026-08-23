@@ -7,11 +7,11 @@ import {
   isSeaComplete,
 } from '../src/engine/progression/stage-access';
 import type { SaveState } from '../src/engine/save/state';
-import { curriculumItemsForStage } from '../src/content/curriculum';
+import { curriculumFacetRequirements, curriculumItemsForStage } from '../src/content/curriculum';
 
 function stateWithClears(...stageIds: string[]): SaveState {
   return {
-    v: 3,
+    v: 4,
     stages: Object.fromEntries(
       stageIds.map((stageId) => [stageId, { bestScore: 8, bestStars: 3, cleared: true }]),
     ),
@@ -21,6 +21,9 @@ function stateWithClears(...stageIds: string[]): SaveState {
           item.id,
           {
             recovered: true,
+            facets: Object.fromEntries(
+              curriculumFacetRequirements(item).map((requirement) => [requirement.id, true]),
+            ),
             firstTryCorrect: 1,
             correctCount: 1,
             missCount: 0,

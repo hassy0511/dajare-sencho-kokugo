@@ -17,7 +17,21 @@
     { "w": "とり", "visual": "bird" },
     { "w": "さる", "visual": "monkey" },
     { "w": "むし", "visual": "bug" },
-    { "w": "いえ", "visual": "house" }
+    { "w": "いえ", "visual": "house" },
+    { "w": "あひる", "visual": "duck" },
+    { "w": "おに", "visual": "oni" },
+    { "w": "きつね", "visual": "fox" },
+    { "w": "けむし", "visual": "caterpillar" },
+    { "w": "すずめ", "visual": "sparrow" },
+    { "w": "せみ", "visual": "cicada" },
+    { "w": "ちず", "visual": "map" },
+    { "w": "てぶくろ", "visual": "gloves" },
+    { "w": "のこぎり", "visual": "saw" },
+    { "w": "へや", "visual": "room" },
+    { "w": "ゆき", "visual": "snow" },
+    { "w": "よる", "visual": "night" },
+    { "w": "れもん", "visual": "lemon" },
+    { "w": "わに", "visual": "crocodile" }
   ],
   "dakuon": [
     {

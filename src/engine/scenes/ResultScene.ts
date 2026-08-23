@@ -18,6 +18,7 @@ interface ResultData {
   stageId?: string;
   treasure?: string;
   recoveredItemIds?: string[];
+  masteredItemIds?: string[];
 }
 
 export function starsForResult(score: number, total: number): number {
@@ -36,6 +37,7 @@ export class ResultScene extends Phaser.Scene {
   private stageId = 'g1-moji-seion';
   private treasure = 'ひかりの ひらがなたま';
   private recoveredItemIds: string[] = [];
+  private masteredItemIds: string[] = [];
   private cleanupInput?: () => void;
   private leaving = false;
 
@@ -51,6 +53,7 @@ export class ResultScene extends Phaser.Scene {
     this.stageId = data.stageId ?? 'g1-moji-seion';
     this.treasure = data.treasure ?? 'ひかりの ひらがなたま';
     this.recoveredItemIds = data.recoveredItemIds ?? [];
+    this.masteredItemIds = data.masteredItemIds ?? [];
     this.leaving = false;
   }
 
@@ -76,7 +79,7 @@ export class ResultScene extends Phaser.Scene {
   private drawResult(
     stars: number,
     stageCleared: boolean,
-    collection: { recovered: number; total: number; complete: boolean },
+    collection: { recovered: number; mastered: number; total: number; complete: boolean },
     nextStage?: StageDefinition,
     seaComplete = false,
   ): void {
@@ -120,14 +123,19 @@ export class ResultScene extends Phaser.Scene {
       .text(
         405,
         535,
-        this.recoveredItemIds.length > 0
-          ? `ずかんに とうろくしたよ!\n${this.recoveredItemIds
+        this.masteredItemIds.length > 0
+          ? `コンプリートしたよ!\n${this.masteredItemIds
               .slice(0, 8)
               .map((itemId) => curriculumItemById(itemId)?.display ?? '')
               .join('　')}`
-          : stars > 0
-            ? 'すみに かくれた たからを\nもうすこし さがそう!'
-            : 'つぎは きっと みつかるよ!',
+          : this.recoveredItemIds.length > 0
+            ? `ずかんに とうろくしたよ!\n${this.recoveredItemIds
+                .slice(0, 8)
+                .map((itemId) => curriculumItemById(itemId)?.display ?? '')
+                .join('　')}`
+            : stars > 0
+              ? 'すみに かくれた たからを\nもうすこし さがそう!'
+              : 'つぎは きっと みつかるよ!',
         {
           fontFamily: GAME_FONT,
           color: '#176b72',
@@ -145,7 +153,7 @@ export class ResultScene extends Phaser.Scene {
         stageCleared
           ? `おたから: ${this.treasure}`
           : collection.total > 0
-            ? `${collection.recovered} / ${collection.total} こ とりかえした`
+            ? `${collection.mastered} / ${collection.total} こ コンプリート`
             : 'つぎは きっと みつかるよ!',
         {
           fontFamily: GAME_FONT,
@@ -221,7 +229,7 @@ export class ResultScene extends Phaser.Scene {
   private markReady(
     stars: number,
     stageCleared: boolean,
-    collection: { recovered: number; total: number },
+    collection: { recovered: number; mastered: number; total: number },
     nextStage?: StageDefinition,
     seaComplete = false,
   ): void {
@@ -235,6 +243,7 @@ export class ResultScene extends Phaser.Scene {
       shell.dataset.seaComplete = String(seaComplete);
       shell.dataset.stageCleared = String(stageCleared);
       shell.dataset.collectionRecovered = String(collection.recovered);
+      shell.dataset.collectionMastered = String(collection.mastered);
       shell.dataset.collectionTotal = String(collection.total);
       if (nextStage) shell.dataset.nextStage = nextStage.id;
       else delete shell.dataset.nextStage;

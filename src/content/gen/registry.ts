@@ -1,4 +1,10 @@
-import type { ChoiceQuestion, Grade1Bank, Grade2Bank, HiraWordPool } from '../../types/content';
+import type {
+  ChoiceQuestion,
+  CurriculumEvidence,
+  Grade1Bank,
+  Grade2Bank,
+  HiraWordPool,
+} from '../../types/content';
 import { makeGrade1Quiz } from './grade1';
 import { makeGrade2Quiz } from './grade2';
 import { makeHiraSeionQuiz } from './hiraSeion';
@@ -10,11 +16,18 @@ export interface QuestionGeneratorContext {
   grade1: Grade1Bank;
   grade2: Grade2Bank;
   missingItemIds: string[];
+  missingEvidence: CurriculumEvidence[];
 }
 
 export const questionGenerators = {
   hiraPicture(context: QuestionGeneratorContext, count: number, seed: number): ChoiceQuestion[] {
-    return makeHiraSeionQuiz(context.hira, count, seed, context.missingItemIds);
+    return makeHiraSeionQuiz(
+      context.hira,
+      count,
+      seed,
+      context.missingItemIds,
+      context.missingEvidence,
+    );
   },
   hiraDakuon(context: QuestionGeneratorContext, count: number, seed: number): ChoiceQuestion[] {
     return makeMojiChoiceQuiz(

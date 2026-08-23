@@ -51,7 +51,7 @@ const APP_BASE = '/dajare-sencho-kokugo/';
 function completedGrade1State(stageIds: readonly string[]) {
   const clearedStageIds = new Set(stageIds);
   return {
-    v: 3,
+    v: 4,
     stages: Object.fromEntries(
       stageIds.map((stageId) => [stageId, { bestScore: 8, bestStars: 3, cleared: true }]),
     ),
@@ -62,6 +62,11 @@ function completedGrade1State(stageIds: readonly string[]) {
           item.id,
           {
             recovered: true,
+            facets: item.id.startsWith('g1-hira-')
+              ? item.id === 'g1-hira-を'
+                ? { 'hira-use': true }
+                : { 'hira-letter-to-word': true, 'hira-word-to-letter': true }
+              : {},
             firstTryCorrect: 1,
             correctCount: 1,
             missCount: 0,
@@ -161,6 +166,23 @@ const choiceCenters = [
   { x: 590, y: 855 },
 ] as const;
 
+const pictureChoiceCenters = [
+  { x: 220, y: 570 },
+  { x: 590, y: 570 },
+  { x: 220, y: 815 },
+  { x: 590, y: 815 },
+] as const;
+
+async function answerCenter(shell: Locator, answer: number): Promise<{ x: number; y: number }> {
+  const centers =
+    (await shell.getAttribute('data-choice-layout')) === 'picture'
+      ? pictureChoiceCenters
+      : choiceCenters;
+  const center = centers[answer];
+  if (!center) throw new Error(`正解位置 ${answer} が選択肢の範囲外です。`);
+  return center;
+}
+
 async function answerQuiz(
   page: Page,
   canvas: Locator,
@@ -180,8 +202,7 @@ async function answerQuizFrom(
   for (let index = startIndex; index < questionCount; index += 1) {
     const answer = await page.evaluate(() => window.__DSK_APP__?.answerIndex);
     if (answer === undefined) throw new Error(`${index + 1}問目の正解位置を取得できません。`);
-    const center = choiceCenters[answer];
-    if (!center) throw new Error(`正解位置 ${answer} が選択肢の範囲外です。`);
+    const center = await answerCenter(shell, answer);
     await tapGamePoint(page, canvas, center.x, center.y);
     if (index < questionCount - 1) {
       await expect(shell).toHaveAttribute('data-question', String(index + 1));
@@ -223,7 +244,7 @@ async function openIslandMap(
 }
 
 test('物語から入り、文字を図鑑へ回収して最初のステージをクリアする', async ({ page }, testInfo) => {
-  test.setTimeout(180_000);
+  test.setTimeout(360_000);
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.addInitScript(() => localStorage.clear());
   await page.goto('./');
@@ -267,7 +288,7 @@ test('物語から入り、文字を図鑑へ回収して最初のステージ�
 
   await tapGamePoint(page, canvas, 405, 1005);
   await expect(shell).toHaveAttribute('data-scene', 'collection');
-  await expect(shell).toHaveAttribute('data-collection-total', '96');
+  await expect(shell).toHaveAttribute('data-collection-total', '97');
   await page.screenshot({ path: testInfo.outputPath('collection-before.png'), fullPage: true });
   await tapGamePoint(page, canvas, 87, 60);
   await expect(shell).toHaveAttribute('data-scene', 'island-select');
@@ -293,8 +314,7 @@ test('物語から入り、文字を図鑑へ回収して最初のステージ�
   await page.clock.pauseAt(Date.now() + 1000);
   const firstAnswer = await page.evaluate(() => window.__DSK_APP__?.answerIndex);
   if (firstAnswer === undefined) throw new Error('1もんめの正解位置を取得できませんでした。');
-  const firstCenter = choiceCenters[firstAnswer];
-  if (!firstCenter) throw new Error(`正解位置 ${firstAnswer} が選択肢の範囲外です。`);
+  const firstCenter = await answerCenter(shell, firstAnswer);
   await tapGamePoint(page, canvas, firstCenter.x, firstCenter.y);
   await expect(shell).toHaveAttribute('data-recovery-reveal', 'true');
   await expect(shell).toHaveAttribute('data-recovered-items', /.+/);
@@ -430,7 +450,7 @@ test('v2で自動コンプリートされた1年生図鑑を未回収へ戻す',
   await expect(shell).toHaveAttribute('data-scene', 'island-select');
   await tapGamePoint(page, canvas, 405, 1005);
   await expect(shell).toHaveAttribute('data-scene', 'collection');
-  await expect(shell).toHaveAttribute('data-collection-total', '96');
+  await expect(shell).toHaveAttribute('data-collection-total', '97');
   await expect(shell).toHaveAttribute('data-collection-recovered', '0');
   await page.screenshot({
     path: testInfo.outputPath('v2-auto-collection-reset.png'),
@@ -607,7 +627,7 @@ test('横長画面でもCanvas全体が収まり、下部の操作へ進める',
   await page.addInitScript(() => {
     localStorage.setItem(
       'dsk_state',
-      JSON.stringify({ v: 3, stages: {}, collection: {}, seen: { 'challenge:g1': true } }),
+      JSON.stringify({ v: 4, stages: {}, collection: {}, seen: { 'challenge:g1': true } }),
     );
   });
   await page.goto('./');

@@ -1,4 +1,4 @@
-import type { CurriculumItem, KanjiGroup, SeaId } from '../types/content';
+import type { CurriculumFacet, CurriculumItem, KanjiGroup, SeaId } from '../types/content';
 import {
   loadCurriculumDefinition,
   loadGrade1Bank,
@@ -131,6 +131,27 @@ export function curriculumItemsForIsland(islandId: string): CurriculumItem[] {
 
 export function curriculumItemById(itemId: string): CurriculumItem | undefined {
   return loadCurriculumItems(seaIdFromContentId(itemId)).find((item) => item.id === itemId);
+}
+
+export interface CurriculumFacetRequirement {
+  id: CurriculumFacet;
+  label: string;
+}
+
+const HIRAGANA_REQUIREMENTS: readonly CurriculumFacetRequirement[] = [
+  { id: 'hira-letter-to-word', label: 'もじから ことば' },
+  { id: 'hira-word-to-letter', label: 'ことばから もじ' },
+];
+
+const HIRAGANA_WO_REQUIREMENTS: readonly CurriculumFacetRequirement[] = [
+  { id: 'hira-use', label: 'ぶんで つかう' },
+];
+
+export function curriculumFacetRequirements(
+  item: Pick<CurriculumItem, 'kind' | 'display'>,
+): readonly CurriculumFacetRequirement[] {
+  if (item.kind !== 'hiragana') return [];
+  return item.display === 'を' ? HIRAGANA_WO_REQUIREMENTS : HIRAGANA_REQUIREMENTS;
 }
 
 export function curriculumIdsInText(kind: 'hiragana' | 'katakana', text: string): string[] {

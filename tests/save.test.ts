@@ -1,7 +1,9 @@
 import { describe, expect, it } from 'vitest';
 
-import { curriculumItemsForStage } from '../src/content/curriculum';
+import { curriculumCharacterId, curriculumItemsForStage } from '../src/content/curriculum';
 import {
+  getStageCollectionProgress,
+  isCurriculumItemComplete,
   loadState,
   recordCurriculumAnswer,
   recordStageResult,
@@ -21,7 +23,7 @@ describe('進行保存', () => {
   it('不正な保存値では初期状態へ戻る', () => {
     const storage = { getItem: () => '{not-json' };
     expect(loadState(storage)).toEqual({
-      v: 3,
+      v: 4,
       stages: {},
       collection: {},
       seen: {},
@@ -50,7 +52,7 @@ describe('進行保存', () => {
         }),
     };
     const state = loadState(storage);
-    expect(state.v).toBe(3);
+    expect(state.v).toBe(4);
     expect(state.collection).toEqual({});
     expect(state.stages['g1-kanji-shizen']).toEqual({
       bestScore: 10,
@@ -89,7 +91,7 @@ describe('進行保存', () => {
         }),
     };
     const state = loadState(storage);
-    expect(state.v).toBe(3);
+    expect(state.v).toBe(4);
     expect(state.collection[autoItem.id]).toBeUndefined();
     expect(state.collection[playedItem.id]?.recovered).toBe(true);
     expect(state.stages[stageId]).toEqual({ bestScore: 9, bestStars: 3, cleared: false });
@@ -122,6 +124,32 @@ describe('進行保存', () => {
     expect(state.stages[stageId]?.cleared).toBe(true);
   });
 
+  it('v3で回収済みのひらがなは図鑑に残すが、2観点は未達として移行する', () => {
+    const itemId = curriculumCharacterId('hiragana', 'あ');
+    const storage = {
+      getItem: () =>
+        JSON.stringify({
+          v: 3,
+          stages: { 'g1-moji-seion': { bestScore: 10, bestStars: 3, cleared: true } },
+          collection: {
+            [itemId]: {
+              recovered: true,
+              firstTryCorrect: 1,
+              correctCount: 1,
+              missCount: 0,
+              lastAnsweredAt: '2026-08-23T00:00:00.000Z',
+            },
+          },
+          seen: {},
+          settings: { bgm: true, sfx: true, reducedMotion: false },
+        }),
+    };
+    const state = loadState(storage);
+    expect(state.v).toBe(4);
+    expect(state.collection[itemId]).toMatchObject({ recovered: true, facets: {} });
+    expect(isCurriculumItemComplete(itemId, state.collection[itemId])).toBe(false);
+  });
+
   it('BGMと効果音のオン・オフをまとめて保存する', () => {
     const storage = memoryStorage();
     setAudioEnabled(false, storage);
@@ -144,7 +172,7 @@ describe('進行保存', () => {
     });
   });
 
-  it('必修項目は正解したときだけ回収し、100%回収後にステージをクリアする', () => {
+  it('必修項目は正解したときだけ回収し、100%コンプリート後にステージをクリアする', () => {
     const storage = memoryStorage();
     const itemIds = curriculumItemsForStage('g1-kanji-karada').map((item) => item.id);
     const first = itemIds[0];
@@ -156,5 +184,24 @@ describe('進行保存', () => {
     itemIds.forEach((itemId) => recordCurriculumAnswer([itemId], true, storage));
     recordStageResult('g1-kanji-karada', 10, 10, 3, storage);
     expect(loadState(storage).stages['g1-kanji-karada']?.cleared).toBe(true);
+  });
+
+  it('ひらがなは2観点がそろったときだけコンプリートになる', () => {
+    const storage = memoryStorage();
+    const itemId = curriculumCharacterId('hiragana', 'あ');
+    const first = recordCurriculumAnswer([itemId], true, storage, [
+      { itemId, facet: 'hira-letter-to-word' },
+    ]);
+    expect(first.newlyRecovered).toEqual([itemId]);
+    expect(first.newlyMastered).toEqual([]);
+    expect(isCurriculumItemComplete(itemId, first.state.collection[itemId])).toBe(false);
+    expect(getStageCollectionProgress('g1-moji-seion', first.state).complete).toBe(false);
+
+    const second = recordCurriculumAnswer([itemId], true, storage, [
+      { itemId, facet: 'hira-word-to-letter' },
+    ]);
+    expect(second.newlyRecovered).toEqual([]);
+    expect(second.newlyMastered).toEqual([itemId]);
+    expect(isCurriculumItemComplete(itemId, second.state.collection[itemId])).toBe(true);
   });
 });

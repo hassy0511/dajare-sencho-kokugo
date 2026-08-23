@@ -53,7 +53,7 @@ export class StageIntroScene extends Phaser.Scene {
   private drawBeach(
     stage: StageDefinition,
     islandSymbol: string,
-    collection: { recovered: number; total: number; missingItemIds: string[] },
+    collection: { mastered: number; total: number; missingItemIds: string[] },
   ): void {
     addWorldBackground(this, 'welcome-background');
 
@@ -118,7 +118,7 @@ export class StageIntroScene extends Phaser.Scene {
         405,
         610,
         collection.total > 0
-          ? `${collection.recovered} / ${collection.total} こ とりかえした`
+          ? `${collection.mastered} / ${collection.total} こ コンプリート`
           : `おたから: ${stage.treasure}`,
         {
           fontFamily: GAME_FONT,

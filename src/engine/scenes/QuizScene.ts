@@ -25,6 +25,7 @@ export class QuizScene extends Phaser.Scene {
   private recoveryLayer: Phaser.GameObjects.Container | undefined;
   private nextTimer?: number;
   private recoveredItemIds: string[] = [];
+  private masteredItemIds: string[] = [];
 
   constructor() {
     super('Quiz');
@@ -55,6 +56,7 @@ export class QuizScene extends Phaser.Scene {
         grade1,
         grade2,
         missingItemIds: collectionProgress.missingItemIds,
+        missingEvidence: collectionProgress.missingEvidence,
       },
       stage.n,
       Date.now(),
@@ -64,6 +66,7 @@ export class QuizScene extends Phaser.Scene {
     this.combo = 0;
     this.answering = false;
     this.recoveredItemIds = [];
+    this.masteredItemIds = [];
     this.drawFrame(stage.name);
     this.feedback = this.add
       .text(GAME_WIDTH / 2, 945, 'えらんでね', {
@@ -155,16 +158,24 @@ export class QuizScene extends Phaser.Scene {
     this.answering = true;
     this.choiceType?.reveal(selected, question.answer);
     const correct = selected === question.answer;
-    const collectionResult = recordCurriculumAnswer(question.curriculumItemIds, correct);
+    const collectionResult = recordCurriculumAnswer(
+      question.curriculumItemIds,
+      correct,
+      localStorage,
+      question.curriculumEvidence,
+    );
     this.recoveredItemIds.push(...collectionResult.newlyRecovered);
+    this.masteredItemIds.push(...collectionResult.newlyMastered);
     if (correct) {
       this.score += 1;
       this.combo += 1;
       playSfx(this, this.combo >= 3 ? 'combo' : 'correct');
       const recoveredText =
-        collectionResult.newlyRecovered.length > 0
-          ? ` ${collectionResult.newlyRecovered.length}こ とりかえした!`
-          : '';
+        collectionResult.newlyMastered.length > 0
+          ? ` ${collectionResult.newlyMastered.length}こ コンプリート!`
+          : collectionResult.newlyRecovered.length > 0
+            ? ` ${collectionResult.newlyRecovered.length}こ とりかえした!`
+            : '';
       this.feedback
         ?.setText(
           this.combo >= 2
@@ -172,9 +183,15 @@ export class QuizScene extends Phaser.Scene {
             : `せいかい!${recoveredText}`,
         )
         .setColor('#367151');
-      this.releaseStars(CHOICE_X(selected), CHOICE_Y(selected));
-      if (collectionResult.newlyRecovered.length > 0) {
-        this.showRecoveryReveal(collectionResult.newlyRecovered);
+      const choiceCenter = this.choiceType?.getChoiceCenter(selected);
+      this.releaseStars(
+        choiceCenter?.x ?? CHOICE_X(selected),
+        choiceCenter?.y ?? CHOICE_Y(selected),
+      );
+      if (collectionResult.newlyMastered.length > 0) {
+        this.showRecoveryReveal(collectionResult.newlyMastered, true);
+      } else if (collectionResult.newlyRecovered.length > 0) {
+        this.showRecoveryReveal(collectionResult.newlyRecovered, false);
       }
     } else {
       this.combo = 0;
@@ -194,14 +211,17 @@ export class QuizScene extends Phaser.Scene {
     const status = document.querySelector<HTMLElement>('#game-status');
     if (status) {
       status.textContent = correct
-        ? collectionResult.newlyRecovered.length > 0
-          ? 'せいかい! すみが はがれて こくごの たからを ずかんに とうろくしました'
-          : 'せいかい! つぎの もんだいへ すすみます'
+        ? collectionResult.newlyMastered.length > 0
+          ? 'せいかい! ふたつの ちからを たしかめて コンプリートしました'
+          : collectionResult.newlyRecovered.length > 0
+            ? 'せいかい! すみが はがれて こくごの たからを ずかんに とうろくしました'
+            : 'せいかい! つぎの もんだいへ すすみます'
         : `おしい! ${question.explanation}`;
     }
     if (window.__DSK_APP__) window.__DSK_APP__.score = this.score;
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const hasRecovery = collectionResult.newlyRecovered.length > 0;
+    const hasRecovery =
+      collectionResult.newlyRecovered.length > 0 || collectionResult.newlyMastered.length > 0;
     this.nextTimer = window.setTimeout(
       () => {
         this.questionIndex += 1;
@@ -211,7 +231,7 @@ export class QuizScene extends Phaser.Scene {
     );
   }
 
-  private showRecoveryReveal(itemIds: string[]): void {
+  private showRecoveryReveal(itemIds: string[], mastered: boolean): void {
     const displays = itemIds
       .slice(0, 7)
       .map((itemId) => curriculumItemById(itemId)?.display ?? '')
@@ -226,7 +246,7 @@ export class QuizScene extends Phaser.Scene {
     panel.fillStyle(0xffefac).lineStyle(6, COLORS.ink, 1);
     panel.fillRoundedRect(125, 300, 560, 315, 36).strokeRoundedRect(125, 300, 560, 315, 36);
     const title = this.add
-      .text(405, 350, 'すみが はがれた!', {
+      .text(405, 350, mastered ? 'コンプリート!' : 'すみが はがれた!', {
         fontFamily: GAME_FONT,
         color: '#9b3f41',
         fontSize: '34px',
@@ -244,12 +264,17 @@ export class QuizScene extends Phaser.Scene {
       })
       .setOrigin(0.5);
     const registered = this.add
-      .text(405, 565, 'こくごの たからずかんに とうろく!', {
-        fontFamily: GAME_FONT,
-        color: '#176b72',
-        fontSize: '25px',
-        fontStyle: 'bold',
-      })
+      .text(
+        405,
+        565,
+        mastered ? 'ふたつの ちからが そろった!' : 'こくごの たからずかんに とうろく!',
+        {
+          fontFamily: GAME_FONT,
+          color: '#176b72',
+          fontSize: '25px',
+          fontStyle: 'bold',
+        },
+      )
       .setOrigin(0.5);
     const ink = this.add.graphics();
     ink.fillStyle(0x343938, 0.96);
@@ -319,6 +344,7 @@ export class QuizScene extends Phaser.Scene {
       shell.dataset.scene = 'quiz';
       shell.dataset.question = String(this.questionIndex);
       shell.dataset.inputReady = 'true';
+      shell.dataset.choiceLayout = question.choiceVisuals ? 'picture' : 'text';
     }
     if (status) {
       status.textContent = question.visual
@@ -349,6 +375,7 @@ export class QuizScene extends Phaser.Scene {
       stageId: this.stageId,
       treasure: stage?.treasure ?? 'ひかりの ひらがなたま',
       recoveredItemIds: [...new Set(this.recoveredItemIds)],
+      masteredItemIds: [...new Set(this.masteredItemIds)],
     });
   }
 

@@ -1,5 +1,12 @@
 export type QTypeName = 'choice';
 
+export type CurriculumFacet = 'hira-letter-to-word' | 'hira-word-to-letter' | 'hira-use';
+
+export interface CurriculumEvidence {
+  itemId: string;
+  facet: CurriculumFacet;
+}
+
 export interface ChoiceQuestion {
   key: string;
   type: 'choice';
@@ -10,6 +17,8 @@ export interface ChoiceQuestion {
   answer: number;
   explanation: string;
   curriculumItemIds: string[];
+  curriculumEvidence?: CurriculumEvidence[];
+  choiceVisuals?: string[];
 }
 
 export interface HiraWordItem {

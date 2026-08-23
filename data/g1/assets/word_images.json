@@ -118,6 +118,104 @@
       "src": "assets/images/words/house.png",
       "alt": "あかい やねの いえ",
       "subjectPrompt": "One simple complete house with a coral roof, cream walls, teal door, and two windows."
+    },
+    {
+      "key": "duck",
+      "word": "あひる",
+      "src": "assets/images/words/duck.png",
+      "alt": "きいろい あひる",
+      "subjectPrompt": "One cute yellow duck, full-body and standing in a friendly pose."
+    },
+    {
+      "key": "oni",
+      "word": "おに",
+      "src": "assets/images/words/oni.png",
+      "alt": "あかい おに",
+      "subjectPrompt": "One friendly small red oni with a round body and one short rounded horn, smiling, no weapon."
+    },
+    {
+      "key": "fox",
+      "word": "きつね",
+      "src": "assets/images/words/fox.png",
+      "alt": "だいだいいろの きつね",
+      "subjectPrompt": "One cute orange fox, full-body and standing, with one fluffy tail."
+    },
+    {
+      "key": "caterpillar",
+      "word": "けむし",
+      "src": "assets/images/words/caterpillar.png",
+      "alt": "みどりの けむし",
+      "subjectPrompt": "One cute green caterpillar with a segmented body and tiny legs."
+    },
+    {
+      "key": "sparrow",
+      "word": "すずめ",
+      "src": "assets/images/words/sparrow.png",
+      "alt": "ちゃいろの すずめ",
+      "subjectPrompt": "One cute brown sparrow, full-body and standing in side-three-quarter view."
+    },
+    {
+      "key": "cicada",
+      "word": "せみ",
+      "src": "assets/images/words/cicada.png",
+      "alt": "ちゃいろの せみ",
+      "subjectPrompt": "One friendly cute cicada with simple child-safe details and both wings visible."
+    },
+    {
+      "key": "map",
+      "word": "ちず",
+      "src": "assets/images/words/map.png",
+      "alt": "ひらいた ちず",
+      "subjectPrompt": "One folded paper map opened to show a path, river and mountain symbols, with no text."
+    },
+    {
+      "key": "gloves",
+      "word": "てぶくろ",
+      "src": "assets/images/words/gloves.png",
+      "alt": "あかい てぶくろ",
+      "subjectPrompt": "One matching pair of warm red mittens."
+    },
+    {
+      "key": "saw",
+      "word": "のこぎり",
+      "src": "assets/images/words/saw.png",
+      "alt": "きの もちての のこぎり",
+      "subjectPrompt": "One child-safe hand saw with a wooden handle and a short rounded metal blade, not being used."
+    },
+    {
+      "key": "room",
+      "word": "へや",
+      "src": "assets/images/words/room.png",
+      "alt": "べっどと まどの ある へや",
+      "subjectPrompt": "One cozy simple child's room with one bed, one window and a small rug."
+    },
+    {
+      "key": "snow",
+      "word": "ゆき",
+      "src": "assets/images/words/snow.png",
+      "alt": "つもった ゆきと ゆきの けっしょう",
+      "subjectPrompt": "A small snow-covered mound with several large snowflakes falling, no people or animals."
+    },
+    {
+      "key": "night",
+      "word": "よる",
+      "src": "assets/images/words/night.png",
+      "alt": "つきと ほしの でている よる",
+      "subjectPrompt": "A simple night scene with a dark navy sky, one crescent moon, a few stars and a sleeping town silhouette."
+    },
+    {
+      "key": "lemon",
+      "word": "れもん",
+      "src": "assets/images/words/lemon.png",
+      "alt": "きいろい れもん",
+      "subjectPrompt": "One whole bright yellow lemon with one small green leaf."
+    },
+    {
+      "key": "crocodile",
+      "word": "わに",
+      "src": "assets/images/words/crocodile.png",
+      "alt": "みどりの わに",
+      "subjectPrompt": "One friendly cute green crocodile, full-body in side-three-quarter view, not scary."
     }
   ]
 }

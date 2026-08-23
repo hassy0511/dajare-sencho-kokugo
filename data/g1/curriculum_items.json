@@ -98,6 +98,11 @@
   ],
   "concepts": [
     {
+      "stageId": "g1-moji-seion",
+      "display": "ことばの よみ",
+      "detail": "もじを つないで ことばを よむ ちから"
+    },
+    {
       "stageId": "g1-moji-dakuon",
       "display": "だくてん・まる",
       "detail": "てんてんと まるの つく もじ"

@@ -96,7 +96,7 @@ export class SeaSelectScene extends Phaser.Scene {
       )
       .setOrigin(0.5);
     this.add
-      .text(485, y + 143, `${collection.recovered} / ${collection.total} こ とりかえした`, {
+      .text(485, y + 143, `${collection.mastered} / ${collection.total} こ コンプリート`, {
         fontFamily: GAME_FONT,
         color: collection.complete ? '#367151' : '#176b72',
         fontSize: '20px',
